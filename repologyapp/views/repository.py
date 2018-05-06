@@ -1,4 +1,5 @@
 # Copyright (C) 2016-2018 Dmitry Marakasov <amdmi3@amdmi3.ru>
+# Copyright (C) 2020 Paul Wise <pabs3@bonedaddy.net>
 #
 # This file is part of repology
 #
@@ -50,3 +51,22 @@ def repository_problems(repo: str) -> Any:
         flask.abort(404)
 
     return flask.render_template('repository-problems.html', repo=repo, problems=get_db().get_repository_problems(repo, config['PROBLEMS_PER_PAGE']))
+
+
+@ViewRegistrar('/repository/<repo>/package/<package>/problems')
+def package_problems(repo: str, package: str) -> Any:
+    autorefresh = flask.request.args.to_dict().get('autorefresh')
+
+    if not repo or repo not in repometadata:
+        flask.abort(404)
+
+    page_size = config['PROBLEMS_PER_PAGE']
+    problems = get_db().get_package_problems(repo, package, page_size)
+
+    return flask.render_template(
+        'repo-package-problems.html',
+        repo=repo,
+        package=package,
+        problems=problems,
+        autorefresh=autorefresh
+    )
