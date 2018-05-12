@@ -39,6 +39,11 @@ class MetapackagesFilterInfo:
             False,
             lambda request, value: request.require_name_substring(value.strip().lower()),
         ),
+        'package': _FieldDescriptor(
+            str,
+            True,
+            lambda request, value: request.require_package_substring(value.strip().lower()),
+        ),
         'maintainer': _FieldDescriptor(
             str,
             True,

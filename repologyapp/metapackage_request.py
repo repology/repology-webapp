@@ -31,6 +31,8 @@ class MetapackageRequest:
 
     search: Optional[str]
 
+    package: Optional[str]
+
     maintainer: Optional[str]
 
     min_repos: Optional[int]
@@ -58,6 +60,9 @@ class MetapackageRequest:
         self.reverse = False
 
         self.search = None
+
+        # package (packages table)
+        self.package = None
 
         # maintainer (maintainer_metapackages)
         self.maintainer = None
@@ -111,6 +116,11 @@ class MetapackageRequest:
         if self.search:
             raise RuntimeError('duplicate effname substring condition')
         self.search = substring
+
+    def require_package_substring(self, substring: str) -> None:
+        if self.package:
+            raise RuntimeError('duplicate package substring condition')
+        self.package = substring
 
     def require_maintainer(self, maintainer: str) -> None:
         if self.maintainer:
