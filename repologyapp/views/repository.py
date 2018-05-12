@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Any
+from typing import Any, Optional
 
 import flask
 
@@ -24,6 +24,8 @@ from repologyapp.config import config
 from repologyapp.db import get_db
 from repologyapp.globals import repometadata
 from repologyapp.view_registry import ViewRegistrar
+
+from werkzeug.routing import BuildError
 
 
 @ViewRegistrar('/repository/<repo>')
@@ -70,3 +72,30 @@ def package_problems(repo: str, package: str) -> Any:
         problems=problems,
         autorefresh=autorefresh
     )
+
+
+@ViewRegistrar('/repository/<repo>/package/<package>/<page>')
+def package_metapackage(repo: str, package: str, page: Optional[str] = None) -> Any:
+    if not repo or repo not in repometadata or not package:
+        flask.abort(404)
+
+    metapackages = get_db().get_package_metapackage(package)
+    metapackage_count = len(metapackages)
+
+    if metapackage_count == 0:
+        flask.abort(404)
+    elif metapackage_count == 1:
+        page_base = 'metapackage'
+        if page:
+            page = '_' + page
+        else:
+            page = ''
+        page_type = page_base + page
+        metapackage = metapackages[0]
+        try:
+            url = flask.url_for(page_type, name=metapackage)
+        except BuildError:
+            flask.abort(404)
+    else:
+        url = flask.url_for('metapackages', repo=repo, package=package)
+    return flask.redirect(url, 307)
