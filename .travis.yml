@@ -5,15 +5,7 @@ addons:
   postgresql: "10"
   apt:
     packages:
-      - libyajl-dev  # for jsonslicer python module
       - postgresql-server-dev-10  # for postgresql-libversion
-      #- python3-rpm  # stock package is python3.5, useless for us
-      - libnss3-dev  # for rpm
-      - libnspr4-dev  # for rpm
-      - libmagic-dev  # for rpm
-      - libpopt-dev  # for rpm
-      - libarchive-dev  # for rpm
-      - libdb5.3-dev  # for rpm
 env:
   global:
     - REPOLOGY_CONFIG=repology-test.conf.default
@@ -29,16 +21,6 @@ matrix:
     - python: nightly
 before_install:
   - export REAL_PYTHON=$(basename $(dirname $(python-config --configdir)))
-  - |-
-    mkdir -p dep-rpm
-    (
-        cd dep-rpm &&
-        wget -qO- http://ftp.rpm.org/releases/rpm-4.14.x/rpm-4.14.2.1.tar.bz2 | tar -x -j -f- --strip-components 1 &&
-        env PYTHON_CFLAGS="$(python-config --cflags)" PYTHON_LIBS="-L$(python-config --configdir) $(python-config --ldflags)" ./configure --enable-python --without-lua &&
-        make &&
-        sudo make install &&
-        cp -Rfv "/usr/local/lib/${REAL_PYTHON}/site-packages/rpm" "${VIRTUAL_ENV}/lib/${REAL_PYTHON}/site-packages/"
-    )
   - |-
     mkdir -p dep-libversion
     (
@@ -72,16 +54,10 @@ before_install:
   - pip install Jinja2
   - pip install PyYAML
   - pip install flask
-  - pip install jsonslicer
   - pip install libversion
-  - pip install lxml
   - pip install pillow
   - pip install psycopg2
-  - pip install pyparsing
   - pip install pytz
-  - pip install requests
-  - pip install rubymarshal
-  - pip install protobuf
 
   # install extra python dependencies
   - pip install coveralls
@@ -91,10 +67,6 @@ before_install:
   - pip install flake8-quotes
   - pip install mypy>=0.720
   - pip install pytidylib # uses newer libtidy installed above
-  - pip install voluptuous
-
-  # get rules
-  - git clone --depth=1 https://github.com/repology/repology-rules.git rules.d
 before_script:
   - sudo -u postgres psql -c "CREATE DATABASE repology_test;"
   - sudo -u postgres psql -c "CREATE USER repology_test WITH PASSWORD 'repology_test'"
@@ -116,16 +88,8 @@ script:
   # check python types
   - make mypy
 
-  # fill database with test data
-  - ./repology-update.py --initdb --parse --database --postupdate
-
-  # smoke test bits
-  - ./repology-dump.py --help
-  - ./repology-gensitemap.py --main > sitemap-main.xml
-  - ./repology-gensitemap.py --metapackages > sitemap-metapackages.xml
-
   # run unit tests with coverage
-  - coverage run --source="repology,repologyapp" --omit="repology/fetchers/*" -m unittest discover
+  - coverage run --source=repologyapp -m unittest discover
 
 after_success:
   - if [ -n "$COVERAGE" ]; then coveralls; fi

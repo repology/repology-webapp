@@ -1,8 +1,8 @@
 # Repology
 
-[![Build Status](https://travis-ci.org/repology/repology.svg?branch=master)](https://travis-ci.org/repology/repology)
-[![Coverage Status](https://coveralls.io/repos/github/repology/repology/badge.svg?branch=master)](https://coveralls.io/github/repology/repology?branch=master)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/80aef8f1486a4d7fbf3ab6a60a41af27)](https://www.codacy.com/app/AMDmi3/repology)
+[![Build Status](https://travis-ci.org/repology/repology-webapp.svg?branch=master)](https://travis-ci.org/repology/repology-webapp)
+[![Coverage Status](https://coveralls.io/repos/github/repology/repology-webapp/badge.svg?branch=master)](https://coveralls.io/github/repology/repology-webapp?branch=master)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/512717bda0cc4fb58a695f83d5c7fee6)](https://www.codacy.com/manual/AMDmi3/repology-webapp)
 
 Repology tracks and compares package versions in more than 120
 package repositories.
