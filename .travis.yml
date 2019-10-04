@@ -87,7 +87,7 @@ script:
   - make mypy
 
   # run unit tests with coverage
-  - coverage run --source=repologyapp -m unittest discover
+  - coverage run --source=repologyapp --omit="repologyapp/test/*" -m unittest discover
 
 after_success:
   - if [ -n "$COVERAGE" ]; then coveralls; fi
