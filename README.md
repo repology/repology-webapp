@@ -4,118 +4,70 @@
 [![Coverage Status](https://coveralls.io/repos/github/repology/repology-webapp/badge.svg?branch=master)](https://coveralls.io/github/repology/repology-webapp?branch=master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/512717bda0cc4fb58a695f83d5c7fee6)](https://www.codacy.com/manual/AMDmi3/repology-webapp)
 
-Repology tracks and compares package versions in more than 120
-package repositories.
+Repology is a service which monitors *a lot* of package repositories
+and other sources and aggregates data on software package versions,
+reporting new releases and packaging problems.
 
-## Uses
+This repository contains Repology web application code. [See](https://repology.org/) it online.
+See also the [updater](https://github.com/repology/repology-updater) code, a backend service
+which updates the repository information.
 
-- **Users**:
-  - Compare completeness and freshness of package repositories,
-    choose most up to date distro
-  - Find out what repositories contain newest versions of packages
-    you need
-- **Package/port maintainers**:
-  - Another way to track new releases of software you package
-  - Compete with other distros in keeping up to date
-  - Find fellow maintainers to resolve packaging problems together
-  - Keep package naming and versioning schemes in sync to other
-    repos for your and your user's convenience
-- **Software authors**:
-  - Keep track of how well your project is packaged
-  - Keep in touch with your product package maintainers
-  - If you're not using [semantic versioning](http://semver.org/)
-    yet, see how useful it is
+## Dependencies
 
-## Status
+- [Python](https://www.python.org/) 3.7+
+- Python module [flask](http://flask.pocoo.org/)
+- Python module [libversion](https://pypi.python.org/pypi/libversion) (also requires [libversion](https://github.com/repology/libversion) C library)
+- Python module [pillow](https://pypi.python.org/pypi/Pillow)
+- Python module [psycopg2](http://initd.org/psycopg/)
+- Python module [pytz](https://pypi.python.org/pypi/pytz)
+- [PostgreSQL](https://www.postgresql.org/) 10.0+
+- PostgreSQL extension [libversion](https://github.com/repology/postgresql-libversion)
 
-Repology is ready to use, official production setup is available
-at [repology.org](https://repology.org).
+### For development
 
-## Repository support
+For HTML validation in tests:
+- Python module [pytidylib](https://pypi.python.org/pypi/pytidylib) and [tidy-html5](http://www.html-tidy.org/) library
 
-As much data as possible is parsed from each repo. Package name and
-version are always parsed.
+For python code linting:
+- Python module [flake8](https://pypi.python.org/pypi/flake8)
+- Python module [flake8-builtins](https://pypi.python.org/pypi/flake8-builtins)
+- Python module [flake8-import-order](https://pypi.python.org/pypi/flake8-import-order)
+- Python module [flake8-quotes](https://pypi.python.org/pypi/flake8-quotes)
+- Python module [mypy](http://mypy-lang.org/)
 
-| Repository                       | Summary | Maint-r | Categ | WWW   | License | Download |
-|----------------------------------|:-------:|:-------:|:-----:|:-----:|:-------:|:--------:|
-| Adélie                           | ✔       | ✔       |       | ✔     | ✔       |          |
-| AIX Open Source Packages         |         |         |       |       |         |          |
-| Alpine                           | ✔       | ✔       |       | ✔     | ✔       |          |
-| ALT Sisyphus                     | ✔       | ✔       | ✔     |       |         |          |
-| AOSC                             | ✔       |         | ✔     |       |         |          |
-| Arch, Parabola, Manjaro          | ✔       | ✔       |       | ✔     | ✔       |          |
-| Buckaroo                         |         |         |       | ✔     | ✔       |          |
-| CentOS, Fedora, Mageia, OpenSUSE | ✔       |         | ✔     | ✔     | ✔       |          |
-| Chocolatey                       | ✔       |         |       | ✔     |         |          |
-| CPAN                             |         | ✔       |       | ✔ (2) |         |          |
-| CRAN                             |         |         |       | ✔ (2) |         |          |
-| crates.io                        | ✔       |         |       | ✔     |         |          |
-| CRUX                             | ✔       | ✔       |       | ✔     |         |          |
-| Cygwin                           | ✔       | ✔       | ✔     |       |         |          |
-| Debian, Ubuntu, other deb-based  |         | ✔       | ✔     | ✔     |         |          |
-| Distri                           |         |         |       |       |         | ✔        |
-| DistroWatch.com                  | ✔       |         |       | ✔     |         | ✔        |
-| Exherbo                          |         |         | ✔     |       |         |          |
-| F-Droid                          |         |         | ✔     | ✔     | ✔       |          |
-| FreeBSD                          | ✔       | ✔       | ✔     | ✔     |         |          |
-| freshcode.club                   | ✔       |         |       | ✔     | ✔       |          |
-| Gentoo, Funtoo                   | ✔       | ✔       | ✔     | ✔     | ✔ (1)   | ✔ (1)    |
-| Guix                             | ✔       |         |       | ✔     | ✔       |          |
-| GoboLinux                        | ✔       |         |       | ✔     | ✔       |          |
-| Hackage                          | ✔       | ✔ (3)   | ✔     | ✔     | ✔       |          |
-| HaikuPorts                       |         |         | ✔     |       |         |          |
-| Homebrew                         | ✔       |         |       | ✔     |         |          |
-| HP-UX                            |         |         |       |       |         |          |
-| just-install                     |         |         |       |       |         | ✔        |
-| KaOS                             |         |         |       |       |         |          |
-| KISS                             |         |         |       |       |         | ✔        |
-| Linuxbrew                        | ✔       |         |       | ✔     |         |          |
-| LuaRocks                         |         |         |       |       |         |          |
-| MacPorts                         | ✔       | ✔       | ✔     | ✔     | ✔       |          |
-| MSYS2                            | ✔       | ✔       | ✔     | ✔     | ✔       |          |
-| MX Linux                         |         | ✔       | ✔     | ✔     |         |          |
-| nixpkgs                          | ✔       | ✔       |       | ✔     | ✔       |          |
-| Npackd                           | ✔       |         | ✔     | ✔     | ✔       | ✔        |
-| OpenBSD                          | ✔       | ✔       | ✔     |       |         |          |
-| OpenIndiana                      | ✔       |         | ✔     | ✔     |         | ✔        |
-| OpenMandriva                     | ✔       | ✔       | ✔     | ✔     | ✔       |          |
-| OpenPKG                          | ✔       |         | ✔     | ✔     | ✔       | ✔        |
-| OS4Depot                         | ✔       |         | ✔     |       |         |          |
-| PCLinuxOS                        | ✔       | ✔       | ✔     |       |         |          |
-| Pisi                             | ✔       | ✔       | ✔     | ✔     | ✔       | ✔        |
-| pkgsrc                           | ✔       | ✔       | ✔     |       |         |          |
-| PyPi                             | ✔       |         |       | ✔ (2) |         |          |
-| PLD                              |         |         |       |       |         |          |
-| Ravenports                       | ✔       |         | ✔     | ✔     |         |          |
-| ReactOS rapps                    | ✔       |         |       | ✔     | ✔       | ✔        |
-| RubyGems                         |         |         |       | ✔ (2) |         |          |
-| Rudix                            | ✔       |         |       |       | ✔       |          |
-| Salix                            | ✔       |         |       |       |         |          |
-| Scoop                            |         |         |       | ✔     | ✔       | ✔        |
-| SlackBuilds                      |         | ✔ (3)   | ✔     | ✔     |         | ✔        |
-| Slackware                        |         |         |       |       |         |          |
-| SliTaz                           | ✔       |         | ✔     | ✔     |         |          |
-| Solus                            | ✔       | ✔       | ✔     |       | ✔       |          |
-| Stackage                         | ✔       |         |       |       |         |          |
-| T2 SDE                           | ✔       | ✔       | ✔     | ✔     | ✔       | ✔        |
-| Termux                           | ✔       |         |       | ✔     |         | ✔        |
-| Vcpkg                            | ✔       |         |       | ✔     |         |          |
-| Void                             | ✔       | ✔       |       | ✔     | ✔       |          |
-| Wikidata                         | ✔       |         |       | ✔     | ✔       |          |
-| YACP                             | ✔       |         | ✔     |       |         |          |
+## Running
 
-(1) Gentoo support is not complete, complex cases like conditional downloads and licenses
-are ignored for now.
+### Preparing the database
 
-(2) WWWs are autogenerated for upstream package repos like CPAN, PyPi
+To run the webapp, you first need a database created and filled
+by repology-updater as [explained](https://github.com/repology/repology-updater#running)
+in its documentation.
 
-(3) It's common to obfuscate maintainer emails in Hackage and SlackBuilds. Obfuscated emails are ignored.
+### Running the webapp
 
-## Documentation
+Repology is a flask application, so as long as you've set up
+database and configuration, you may just run the application
+locally:
 
-- How to [run](docs/RUNNING.md) repology tools on your own
-- How to extend or fix [rules](https://github.com/repology/repology-rules/blob/master/README.md) for package matching
-- How repology [compares versions](https://github.com/repology/libversion/blob/master/doc/ALGORITHM.md)
+```
+./repology-app.py
+```
+
+and point your browser to http://127.0.0.1:5000/ to view the
+site. This should be enough for personal use, experiments and
+testing.
+
+Alternatively, you may deploy the application in numerous ways,
+including mod_wsgi, uwsgi, fastcgi and plain CGI application. See
+[flask documentation on deployment](http://flask.pocoo.org/docs/deploying/)
+for more info.
+
+For instance, you can deploy with `uwsgi` with the following command
+line arguments:
+
+```
+uwsgi --mount /=repology-app:app --pythonpath=<path-to-repology-checkout>
+```
 
 ## Author
 
