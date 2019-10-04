@@ -81,9 +81,6 @@ script:
   # test all target
   - make
 
-  # check yaml schemas
-  - make check
-
   # check python syntax
   - make flake8
 
