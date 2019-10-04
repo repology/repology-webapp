@@ -18,10 +18,9 @@
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 from repologyapp import app
+from repologyapp.config import config
 
 from werkzeug.contrib.profiler import ProfilerMiddleware
-
-from repology.config import config
 
 
 if __name__ == '__main__':
