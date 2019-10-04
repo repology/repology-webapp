@@ -68,7 +68,6 @@ before_install:
   - pip install mypy>=0.720
   - pip install pytidylib # uses newer libtidy installed above
 before_script:
-  - export REPOLOGY_CONFIG=./repology-test.conf.default
   - sudo -u postgres psql -c "CREATE DATABASE repology_test;"
   - sudo -u postgres psql -c "CREATE USER repology_test WITH PASSWORD 'repology_test'"
   - sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE repology_test TO repology_test"
