@@ -28,8 +28,6 @@ import jinja2
 
 import psycopg2.extras
 
-from repology.package import Package
-
 
 __all__ = ['QueryLoadingError', 'QueryMetadataParsingError', 'QueryManager']
 
@@ -50,12 +48,10 @@ class QueryMetadata:
     RET_ARRAY_OF_VALUES: ClassVar[int] = 4
     RET_ARRAY_OF_DICTS: ClassVar[int] = 5
     RET_ARRAY_OF_TUPLES: ClassVar[int] = 6
-    RET_ARRAY_OF_PACKAGES: ClassVar[int] = 7
     RET_DICT_AS_DICTS: ClassVar[int] = 8
 
     ARGSMODE_NORMAL: ClassVar[int] = 0
     ARGSMODE_MANY_VALUES: ClassVar[int] = 1
-    ARGSMODE_MANY_PACKAGES: ClassVar[int] = 2
     ARGSMODE_MANY_DICTS: ClassVar[int] = 3
 
     name: str
@@ -106,10 +102,6 @@ class QueryMetadata:
             self.argsmode = QueryMetadata.ARGSMODE_MANY_VALUES
             return
 
-        if string == 'many packages':
-            self.argsmode = QueryMetadata.ARGSMODE_MANY_PACKAGES
-            return
-
         if string == 'many dicts':
             self.argsmode = QueryMetadata.ARGSMODE_MANY_DICTS
             return
@@ -155,8 +147,6 @@ class QueryMetadata:
             self.rettype = QueryMetadata.RET_ARRAY_OF_DICTS
         elif string == 'array of tuples':
             self.rettype = QueryMetadata.RET_ARRAY_OF_TUPLES
-        elif string == 'array of packages':
-            self.rettype = QueryMetadata.RET_ARRAY_OF_PACKAGES
         elif string == 'dict of dicts':
             self.rettype = QueryMetadata.RET_DICT_AS_DICTS
         else:
@@ -201,9 +191,6 @@ class QueryManager:
             if query.argsmode == QueryMetadata.ARGSMODE_MANY_VALUES:
                 return [[value] for value in args[0]]
 
-            if query.argsmode == QueryMetadata.ARGSMODE_MANY_PACKAGES:
-                return [adapt_dict_arguments(package.__dict__) for package in args[0]]
-
             if query.argsmode == QueryMetadata.ARGSMODE_MANY_DICTS:
                 return [adapt_dict_arguments(item) for item in args[0]]
 
@@ -247,10 +234,6 @@ class QueryManager:
 
             elif query.rettype == QueryMetadata.RET_ARRAY_OF_TUPLES:
                 return cursor.fetchall()
-
-            elif query.rettype == QueryMetadata.RET_ARRAY_OF_PACKAGES:
-                names = [desc.name for desc in cursor.description]
-                return [Package(**dict(zip(names, row))) for row in cursor.fetchall()]
 
             elif query.rettype == QueryMetadata.RET_DICT_AS_DICTS:
                 names = [desc.name for desc in cursor.description]
