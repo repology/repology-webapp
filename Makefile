@@ -11,7 +11,7 @@ gzip-static:
 clean:
 	rm -f ${STATICDIR}/*.gz
 
-lint:: check test flake8 mypy
+lint:: test flake8 mypy
 
 test::
 	python3 -m unittest discover
@@ -21,13 +21,8 @@ full-test::
 	env REPOLOGY_CONFIG=./repology-test.conf.default python3 -m unittest discover
 
 flake8:
-	${FLAKE8} --count --application-import-names=repology *.py repology repologyapp
+	${FLAKE8} --count *.py repologyapp
 
 mypy:
-	${MYPY} *.py repology repologyapp
-	${MYPY} repology/fetchers/fetchers
-	${MYPY} repology/parsers/parsers
+	${MYPY} *.py repologyapp
 	${MYPY} repologyapp/views
-
-check:
-	python3 repology-schemacheck.py -s repos $$(find repos.d -name "*.yaml")
