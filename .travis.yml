@@ -68,13 +68,15 @@ before_install:
   - pip install mypy>=0.720
   - pip install pytidylib # uses newer libtidy installed above
 before_script:
+  - export REPOLOGY_CONFIG=./repology-test.conf.default
   - sudo -u postgres psql -c "CREATE DATABASE repology_test;"
   - sudo -u postgres psql -c "CREATE USER repology_test WITH PASSWORD 'repology_test'"
   - sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE repology_test TO repology_test"
   - sudo -u postgres psql -d repology_test -c "CREATE EXTENSION IF NOT EXISTS pg_trgm"
   - sudo -u postgres psql -d repology_test -c "CREATE EXTENSION IF NOT EXISTS libversion"
-  - echo "BADGE_FONT = '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf'" >> repology-test.conf.default
-  - echo "BADGE_FONT_BOLD = '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf'" >> repology-test.conf.default
+  - psql -U repology_test < testdata/repology_test.sql
+  - echo "BADGE_FONT = '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf'" >> $REPOLOGY_CONFIG
+  - echo "BADGE_FONT_BOLD = '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf'" >> $REPOLOGY_CONFIG
 script:
   # test all target
   - make

@@ -16,8 +16,8 @@ lint:: test flake8 mypy
 test::
 	python3 -m unittest discover
 
-full-test::
-	env REPOLOGY_CONFIG=./repology-test.conf.default ./repology-update.py -ippd
+test-with-dump::
+	psql -U repology_test < testdata/repology_test.sql
 	env REPOLOGY_CONFIG=./repology-test.conf.default python3 -m unittest discover
 
 flake8:
