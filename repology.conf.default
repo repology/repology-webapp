@@ -1,15 +1,14 @@
 #
-# Repology default configuration file
+# Repology webapp default configuration
 #
-# These settings are used in web application and as defaults
-# for all command line utilities. You may override them in
-# repology.conf file in project root or in any custom file,
-# as long as you set path to it in REPOLOGY_CONF environment
-# variable
-
-############################################################################
-# COMMON SETTINGS
-############################################################################
+# This file contains default values for all Repology webapp
+# settings. You may override them in `repology.conf` file,
+# or any other file specifying path to it in REPOLOGY_CONF
+# environment variable.
+#
+# Since this file is managed by git, you're advised to not
+# change values for your local setup here. Instead, override them
+# in `repology.conf`
 
 #
 # Postgresql database connect string
@@ -20,64 +19,12 @@
 DSN = "dbname=repology user=repology password=repology"
 
 #
-# Directory to store repository data in
-#
-# Used in repology-update and repology-dump
-# Overridable via --statedir command line arg
-#
-STATE_DIR = "_state"
-
-#
-# Directory to store parsed repository data in
-#
-# Used in repology-update and repology-dump
-# Overridable via --parseddir command line arg
-#
-PARSED_DIR = "_parsed"
-
-#
-# Path to directory containing repository configuration YAML files
-#
-# Used by repology-update, repology-app, repology-dump
-# Overridable via --repos-dir command line arg
-#
-REPOS_DIR = "repos.d"
-
-#
-# Path to directory containing package transformation rules YAML files
-#
-# Used by repology-update
-# Overridable via --rules-dir command line arg
-#
-RULES_DIR = "rules.d"
-
-#
 # Path to directory containing SQL queries
 #
 # Use by repology-update and repology-app
 # Overridable with --sql-dir command line arg
 #
 SQL_DIR = "sql.d"
-
-#
-# Array of repository names or tags to work with
-#
-# Used by repology-update and repology-dump
-# Overridable via free command line args
-#
-REPOSITORIES = ['production']
-
-#
-# Enable safety checks, such as check for minimal package count
-#
-# Used by repology-update
-# Overridable via free command line args
-#
-ENABLE_SAFETY_CHECKS = True
-
-############################################################################
-# WEBAPP SETTINGS
-############################################################################
 
 #
 # Secret key for flask, see
