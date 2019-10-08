@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/repology/repology-webapp.svg?branch=master)](https://travis-ci.org/repology/repology-webapp)
 [![Coverage Status](https://coveralls.io/repos/github/repology/repology-webapp/badge.svg?branch=master)](https://coveralls.io/github/repology/repology-webapp?branch=master)
+[![codecov](https://codecov.io/gh/repology/repology-webapp/branch/master/graph/badge.svg)](https://codecov.io/gh/repology/repology-webapp)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/512717bda0cc4fb58a695f83d5c7fee6)](https://www.codacy.com/manual/AMDmi3/repology-webapp)
 
 Repology is a service which monitors *a lot* of package repositories
