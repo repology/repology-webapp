@@ -24,5 +24,5 @@ flake8:
 	${FLAKE8} --count *.py repologyapp
 
 mypy:
-	${MYPY} *.py repologyapp
+	${MYPY} repology-app.py repologyapp
 	${MYPY} repologyapp/views
