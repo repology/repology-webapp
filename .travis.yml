@@ -52,7 +52,6 @@ before_install:
 
   # install mandatory python dependencies
   - pip install Jinja2
-  - pip install PyYAML
   - pip install flask
   - pip install libversion
   - pip install pillow
