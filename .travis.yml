@@ -49,8 +49,6 @@ before_install:
         make &&
         sudo make install
     )
-
-  - pip install -r requirements.txt
   - pip install -r requirements-dev.txt
   - pip install codecov
   - pip install coveralls
