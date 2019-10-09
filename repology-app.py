@@ -20,7 +20,7 @@
 from repologyapp import app
 from repologyapp.config import config
 
-from werkzeug.contrib.profiler import ProfilerMiddleware
+from werkzeug.middleware.profiler import ProfilerMiddleware
 
 
 if __name__ == '__main__':
