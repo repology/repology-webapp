@@ -1,0 +1,6 @@
+Jinja2
+flask
+libversion
+pillow
+psycopg2
+pytz

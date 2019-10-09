@@ -3,6 +3,11 @@
 from setuptools import setup
 
 
+def read_requirements(filename):
+    with open(filename, 'r') as f:
+        return [line for line in f.readlines() if not line.startswith('-')]
+
+
 setup(
     name='repology',
     version='0.0.0',
@@ -28,12 +33,5 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: C',
     ],
-    install_requires=[
-        'Jinja2',
-        'flask',
-        'libversion',
-        'pillow',
-        'psycopg2',
-        'pytz',
-    ]
+    install_requires=read_requirements('requirements.txt')
 )
