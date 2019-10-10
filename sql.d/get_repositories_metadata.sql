@@ -33,6 +33,8 @@ SELECT
 	repolinks,
 	packagelinks,
 
+	COALESCE(used_package_fields, '{}'::text[]) AS used_package_fields,
+
 	state != 'legacy'::repository_state AS active
 FROM repositories
 ORDER BY sortname;

@@ -6,5 +6,6 @@
 	<a href="{{ url_for("repositories_packages") }}" class="btn btn-default{% if request.endpoint == "repositories_packages" %} active{% endif %}">Packages</a>
 	<a href="{{ url_for("repositories_graphs") }}" class="btn btn-default{% if request.endpoint == "repositories_graphs" %} active{% endif %}">Graphs</a>
 	<a href="{{ url_for("repositories_updates") }}" class="btn btn-default{% if request.endpoint == "repositories_updates" %} active{% endif %}">Updates</a>
+	<a href="{{ url_for("repositories_fields") }}" class="btn btn-default{% if request.endpoint == "repositories_fields" %} active{% endif %}">Fields</a>
 </div>
 {% endblock %}

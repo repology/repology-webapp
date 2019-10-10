@@ -1,0 +1,51 @@
+{% extends "repositories.html" %}
+{% import "macros/autorefresh.html" as _autorefresh with context %}
+
+{% block extrameta %}
+{{ _autorefresh.meta(3600 + randrange(60)) }}
+{% endblock %}
+
+{% block title %}Repository support details - Repology{% endblock %}
+{% block header %}Repository support details{% endblock %}
+
+{% block content %}
+<div class="container">
+
+<p>A table of supported data fields for each repository. Note that homepage information is crucial for distinguishing unrelated projects with similar names, so it will become mandatory in the near future, and repositories not providing are subject for removal.</p>
+
+{{ _autorefresh.toggler() }}
+
+<div class="table-responsive">
+<table class="table table-striped table-hover">
+	<thead>
+		<tr>
+			<th class="text-right">Repository</th>
+			<th class="text-center">Summary</th>
+			<th class="text-center">Maintainer</th>
+			<th class="text-center">Categories</th>
+			<th class="text-center">Homepage</th>
+			<th class="text-center">License</th>
+			<th class="text-center">Downloads</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for reponame in repometadata.active_names() %}
+		<tr id="{{ reponame }}">
+			<th class="text-right">
+				<a href="{{ url_for('repository', repo=reponame) }}">{{ repometadata[reponame].desc }}</a>
+			</th>
+
+			<td class="text-center">{% if 'comment' in repometadata[reponame].used_package_fields %}✔{% endif %}</td>
+			<td class="text-center">{% if 'maintainers' in repometadata[reponame].used_package_fields %}✔{% endif %}</td>
+			<td class="text-center">{% if 'category' in repometadata[reponame].used_package_fields %}✔{% endif %}</td>
+			<td class="text-center">{% if 'homepage' in repometadata[reponame].used_package_fields %}✔{% else %}<span class="text-danger">✘</span>{% endif %}</td>
+			<td class="text-center">{% if 'licenses' in repometadata[reponame].used_package_fields %}✔{% endif %}</td>
+			<td class="text-center">{% if 'downloads' in repometadata[reponame].used_package_fields %}✔{% endif %}</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+</div>
+
+</div> {#- container #}
+{% endblock %}

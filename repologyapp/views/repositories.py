@@ -95,3 +95,13 @@ def repositories_graphs() -> Any:
         'repositories-graphs.html',
         autorefresh=autorefresh
     )
+
+
+@ViewRegistrar('/repositories/fields')
+def repositories_fields() -> Any:
+    autorefresh = flask.request.args.to_dict().get('autorefresh')
+
+    return flask.render_template(
+        'repositories-fields.html',
+        autorefresh=autorefresh
+    )
