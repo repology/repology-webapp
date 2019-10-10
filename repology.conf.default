@@ -73,9 +73,14 @@ MAX_REPORTS = 20
 REPOLOGY_HOME = 'https://repology.org'
 
 #
-# Address of Repology main repository
+# Address of Repology webapp repository
 #
-REPOLOGY_MAIN_REPO_URL = 'https://github.com/repology/repology'
+REPOLOGY_WEBAPP_REPO_URL = 'https://github.com/repology/repology-webapp'
+
+#
+# Address of Repology updater repository
+#
+REPOLOGY_UPDATER_REPO_URL = 'https://github.com/repology/repology-updater'
 
 #
 # Address of Repology rules repository

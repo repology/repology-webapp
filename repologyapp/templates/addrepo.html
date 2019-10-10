@@ -276,7 +276,7 @@ related to both source and binary packages without duplication.</p>
 
 <h3>Easy way</h3>
 
-<p>Just file an issue on <a href="{{ config['REPOLOGY_MAIN_REPO_URL'] }}/issues">GitHub</a>.</p>
+<p>Just file an issue on <a href="{{ config['REPOLOGY_UPDATER_REPO_URL'] }}/issues">GitHub</a>.</p>
 
 <h3>Hard way</h3>
 
@@ -288,20 +288,20 @@ In general, a new repository support would consist of 3 things:</p>
 		Repository config file. This fully describes the repository,
 		e.g. the name, URLs, how to fetch and parse it. Sorry, not
 		documentation on the format yet - see
-		<a href="{{ config['REPOLOGY_MAIN_REPO_URL'] }}/tree/master/repos.d">existing repositories</a>
+		<a href="{{ config['REPOLOGY_UPDATER_REPO_URL'] }}/tree/master/repos.d">existing repositories</a>
 		as examples, don't hesitate asking.
 	</li>
 	<li>
 		Parser class, which converts the data you've published into
 		per-package entries in Repology. See
-		<a href="{{ config['REPOLOGY_MAIN_REPO_URL'] }}/tree/master/repology/parsers/parsers">existing parsers</a>
+		<a href="{{ config['REPOLOGY_UPDATER_REPO_URL'] }}/tree/master/repology/parsers/parsers">existing parsers</a>
 		as examples. If you're publishing JSON as recommended,
 		parsing would be more than trivial, see particularly good
 		examples:
-		<a href="{{ config['REPOLOGY_MAIN_REPO_URL'] }}/blob/master/repology/parsers/parsers/homebrew.py">Homebrew</a>,
-		<a href="{{ config['REPOLOGY_MAIN_REPO_URL'] }}/blob/master/repology/parsers/parsers/ravenports.py">Ravenports</a>,
-		<a href="{{ config['REPOLOGY_MAIN_REPO_URL'] }}/blob/master/repology/parsers/parsers/slitaz.py">SliTaz</a>,
-		<a href="{{ config['REPOLOGY_MAIN_REPO_URL'] }}/blob/master/repology/parsers/parsers/termux.py">Termux</a>.
+		<a href="{{ config['REPOLOGY_UPDATER_REPO_URL'] }}/blob/master/repology/parsers/parsers/homebrew.py">Homebrew</a>,
+		<a href="{{ config['REPOLOGY_UPDATER_REPO_URL'] }}/blob/master/repology/parsers/parsers/ravenports.py">Ravenports</a>,
+		<a href="{{ config['REPOLOGY_UPDATER_REPO_URL'] }}/blob/master/repology/parsers/parsers/slitaz.py">SliTaz</a>,
+		<a href="{{ config['REPOLOGY_UPDATER_REPO_URL'] }}/blob/master/repology/parsers/parsers/termux.py">Termux</a>.
 	</li>
 	<li>
 		Very likely, some
@@ -310,7 +310,7 @@ In general, a new repository support would consist of 3 things:</p>
 		A handful of rules for individual packages will likely be needed
 		too, but you generally need to run repology instance to discover
 		these, and this is out of this page's scope. See
-		<a href="{{ config['REPOLOGY_MAIN_REPO_URL'] }}/blob/master/docs/RUNNING.md">documentation</a>
+		<a href="{{ config['REPOLOGY_UPDATER_REPO_URL'] }}/blob/master/README.md#Running">documentation</a>
 		if still interested.
 	</li>
 </ul>
