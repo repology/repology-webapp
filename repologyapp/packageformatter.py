@@ -25,6 +25,13 @@ from repologyapp.package import PackageDataDetailed
 __all__ = ['PackageFormatter']
 
 
+def _safe_int(arg: str) -> int:
+    try:
+        return int(arg)
+    except ValueError:
+        return 0
+
+
 class PackageFormatter(string.Formatter):
     _all_filters: ClassVar[Dict[str, Callable[[str], str]]] = {
         'lowercase': lambda x: x.lower(),
@@ -33,6 +40,8 @@ class PackageFormatter(string.Formatter):
         'stripdmo': lambda x: x[:-4] if x.endswith('-dmo') else x,
         'basename': lambda x: x.rsplit('/', 1)[-1],
         'dirname': lambda x: x.rsplit('/', 1)[0],
+        'dec': lambda x: str(_safe_int(x) - 1),
+        'inc': lambda x: str(_safe_int(x) + 1),
     }
 
     _escape_mode: Optional[str]

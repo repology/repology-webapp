@@ -69,6 +69,14 @@ class TestPackageFormatter(unittest.TestCase):
         self.assertEqual(fmt.format('{basename}', spawn_package(name='foo', basename='bar')), 'bar')
         self.assertEqual(fmt.format('{basename}', spawn_package(name='foo')), 'foo')
 
+    def test_incdec(self) -> None:
+        fmt = PackageFormatter()
+
+        self.assertEqual(fmt.format('{num|inc}', spawn_package(name='foo')), '1')
+        self.assertEqual(fmt.format('{num|inc}', spawn_package(name='foo', extrafields={'num': 'NaN'})), '1')
+        self.assertEqual(fmt.format('{num|inc}', spawn_package(name='foo', extrafields={'num': 1})), '2')
+        self.assertEqual(fmt.format('{num|dec}', spawn_package(name='foo', extrafields={'num': 1})), '0')
+
     def test_escaping(self) -> None:
         self.assertEqual(
             PackageFormatter().format(
