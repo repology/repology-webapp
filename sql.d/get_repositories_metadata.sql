@@ -35,6 +35,8 @@ SELECT
 
 	COALESCE(used_package_fields, '{}'::text[]) AS used_package_fields,
 
-	state != 'legacy'::repository_state AS active
+	state != 'legacy'::repository_state AS active,
+
+	num_metapackages
 FROM repositories
 ORDER BY sortname;
