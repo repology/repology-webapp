@@ -29,8 +29,9 @@ from repologyapp.config import config
 from repologyapp.db import get_db
 from repologyapp.globals import repometadata
 from repologyapp.metapackages import packages_to_summary_items
-from repologyapp.package import PackageDataDetailed, PackageDataSummarizable, PackageStatus
+from repologyapp.package import PackageDataDetailed, PackageDataMinimal, PackageDataSummarizable, PackageStatus
 from repologyapp.packageproc import packageset_aggregate_by_version, packageset_sort_by_name_version, packageset_sort_by_version
+from repologyapp.version import UserVisibleVersionInfo, iter_aggregate_versions
 from repologyapp.view_registry import ViewRegistrar
 
 
@@ -109,6 +110,36 @@ def project_versions(name: str) -> Any:
         packages=packages,
         packages_by_repo=packages_by_repo,
         reponames_absent=[reponame for reponame in repometadata.active_names() if reponame not in packages_by_repo]
+    )
+
+
+@ViewRegistrar('/project/<name>/versions-compact')
+def project_versions_compact(name: str) -> Any:
+    metapackage = get_db().get_metapackage(name)
+
+    if not metapackage or metapackage['num_repos'] == 0:
+        return handle_nonexisting_project(name, metapackage)
+
+    packages = [
+        PackageDataMinimal(**item)
+        for item in get_db().get_metapackage_packages(name, minimal=True)
+    ]
+
+    packages_by_repo: Dict[str, List[PackageDataMinimal]] = defaultdict(list)
+    for package in packages:
+        packages_by_repo[package.repo].append(package)
+
+    versions: Dict[str, List[UserVisibleVersionInfo]] = {
+        repo: sorted(iter_aggregate_versions(repo_packages), reverse=True)
+        for repo, repo_packages in packages_by_repo.items()
+    }
+
+    return flask.render_template(
+        'project-versions-compact.html',
+        name=name,
+        metapackage=metapackage,
+        packages=packages,
+        versions=versions,
     )
 
 

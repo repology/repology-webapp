@@ -18,7 +18,7 @@
 
 from copy import copy
 from functools import total_ordering
-from typing import Any
+from typing import Any, Iterable, Set, Tuple
 
 from libversion import ANY_IS_PATCH, P_IS_PATCH, version_compare
 
@@ -88,3 +88,16 @@ class UserVisibleVersionInfo:
 
     def __hash__(self) -> int:
         return hash((self.metaorder, self.versionclass, self.version, self.spread))
+
+
+def iter_aggregate_versions(packages: Iterable[AnyPackageDataMinimal]) -> Iterable[UserVisibleVersionInfo]:
+    seen: Set[Tuple[str, int, int]] = set()
+
+    for package in packages:
+        version = UserVisibleVersionInfo(package)
+
+        key = (version.version, version.versionclass, version.metaorder)
+
+        if key not in seen:
+            seen.add(key)
+            yield version
