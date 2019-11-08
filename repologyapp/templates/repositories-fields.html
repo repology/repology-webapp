@@ -26,6 +26,15 @@
 			<th class="text-center">Homepage</th>
 			<th class="text-center">License</th>
 			<th class="text-center">Downloads</th>
+			{% if session.admin %}
+			<th class="text-center">N</th>
+			<th class="text-center">BN</th>
+			<th class="text-center">KN</th>
+			<th class="text-center">TN</th>
+			<th class="text-center">RNG</th>
+			<th class="text-center">RNS</th>
+			<th class="text-center">RNB</th>
+			{% endif %}
 		</tr>
 	</thead>
 	<tbody>
@@ -41,6 +50,15 @@
 			<td class="text-center">{% if 'homepage' in repometadata[reponame].used_package_fields %}✔{% else %}<span class="text-danger">✘</span>{% endif %}</td>
 			<td class="text-center">{% if 'licenses' in repometadata[reponame].used_package_fields %}✔{% endif %}</td>
 			<td class="text-center">{% if 'downloads' in repometadata[reponame].used_package_fields %}✔{% endif %}</td>
+			{% if session.admin %}
+			<td class="text-center">{% if 'name' in repometadata[reponame].used_package_fields %}<span class="text-danger">✔</span>{% endif %}</td>
+			<td class="text-center">{% if 'basename' in repometadata[reponame].used_package_fields %}<span class="text-danger">✔</span>{% endif %}</td>
+			<td class="text-center">{% if 'keyname' in repometadata[reponame].used_package_fields %}<span class="text-danger">✔</span>{% endif %}</td>
+			<td class="text-center">{% if 'trackname' in repometadata[reponame].used_package_fields %}✔{% else %}<span class="text-danger">✘</span>{% endif %}</td>
+			<td class="text-center">{% if 'refname_generic' in repometadata[reponame].used_package_fields %}✔{% endif %}</td>
+			<td class="text-center">{% if 'refname_source' in repometadata[reponame].used_package_fields %}✔{% endif %}</td>
+			<td class="text-center">{% if 'refname_binary' in repometadata[reponame].used_package_fields %}✔{% endif %}</td>
+			{% endif %}
 		</tr>
 	{% endfor %}
 	</tbody>
