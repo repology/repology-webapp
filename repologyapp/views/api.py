@@ -32,9 +32,13 @@ def api_v1_package_to_json(package: PackageDataDetailed) -> Dict[str, Any]:
         field: getattr(package, field) for field in (
             'repo',
             'subrepo',
+
             'name',
+            'srcname',
+            'binname',
             'keyname',
             'visiblename',
+
             'version',
             #'origversion',
             #'status',

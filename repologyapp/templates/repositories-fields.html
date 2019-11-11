@@ -27,13 +27,12 @@
 			<th class="text-center">License</th>
 			<th class="text-center">Downloads</th>
 			{% if session.admin %}
-			<th class="text-center">N</th>
-			<th class="text-center">BN</th>
-			<th class="text-center">KN</th>
-			<th class="text-center">TN</th>
-			<th class="text-center">RNG</th>
-			<th class="text-center">RNS</th>
-			<th class="text-center">RNB</th>
+			<th class="text-center" title="name">N</th>
+			<th class="text-center" title="srcname">sN</th>
+			<th class="text-center" title="binname">bN</th>
+			<th class="text-center" title="trackname">TN</th>
+			<th class="text-center deprecated-field" title="basename">BN</th>
+			<th class="text-center deprecated-field" title="keyname">KN</th>
 			{% endif %}
 		</tr>
 	</thead>
@@ -44,26 +43,29 @@
 				<a href="{{ url_for('repository', repo=reponame) }}">{{ repometadata[reponame].desc }}</a>
 			</th>
 
-			<td class="text-center">{% if 'comment' in repometadata[reponame].used_package_fields %}✔{% endif %}</td>
-			<td class="text-center">{% if 'maintainers' in repometadata[reponame].used_package_fields %}✔{% endif %}</td>
-			<td class="text-center">{% if 'category' in repometadata[reponame].used_package_fields %}✔{% endif %}</td>
+			{% set used = repometadata[reponame].used_package_fields %}
+
+			{% set anyurl = 'homepage' in used or 'downloads' in used %}
+			<td class="text-center">{% if 'comment' in used %}✔{% endif %}</td>
+			<td class="text-center">{% if 'maintainers' in used %}✔{% endif %}</td>
+			<td class="text-center">{% if 'category' in used %}✔{% endif %}</td>
 			<td class="text-center">
-				{%- if 'homepage' in repometadata[reponame].used_package_fields %}✔
-				{%- elif 'downloads' not in repometadata[reponame].used_package_fields %}<span class="text-danger">✘</span>{% endif -%}
+				{%- if 'homepage' in used %}✔
+				{%- elif not anyurl %}<span class="text-danger" title="Either Homepage or Downloads are required">✘</span>{% endif -%}
 			</td>
-			<td class="text-center">{% if 'licenses' in repometadata[reponame].used_package_fields %}✔{% endif %}</td>
+			<td class="text-center">{% if 'licenses' in used %}✔{% endif %}</td>
 			<td class="text-center">
-				{%- if 'downloads' in repometadata[reponame].used_package_fields %}✔
-				{%- elif 'homepage' not in repometadata[reponame].used_package_fields %}<span class="text-danger">✘</span>{% endif -%}
+				{%- if 'downloads' in used %}✔
+				{%- elif not anyurl %}<span class="text-danger" title="Either Homepage or Downloads are required">✘</span>{% endif -%}
 			</td>
 			{% if session.admin %}
-			<td class="text-center">{% if 'name' in repometadata[reponame].used_package_fields %}<span class="text-danger">✔</span>{% endif %}</td>
-			<td class="text-center">{% if 'basename' in repometadata[reponame].used_package_fields %}<span class="text-danger">✔</span>{% endif %}</td>
-			<td class="text-center">{% if 'keyname' in repometadata[reponame].used_package_fields %}<span class="text-danger">✔</span>{% endif %}</td>
-			<td class="text-center">{% if 'trackname' in repometadata[reponame].used_package_fields %}✔{% else %}<span class="text-danger">✘</span>{% endif %}</td>
-			<td class="text-center">{% if 'refname_generic' in repometadata[reponame].used_package_fields %}✔{% endif %}</td>
-			<td class="text-center">{% if 'refname_source' in repometadata[reponame].used_package_fields %}✔{% endif %}</td>
-			<td class="text-center">{% if 'refname_binary' in repometadata[reponame].used_package_fields %}✔{% endif %}</td>
+			{% set anyname = 'name' in used or 'srcname' in used or 'binname' in used %}
+			<td class="text-center">{% if 'name' in used %}✔{% elif not anyname %}<span class="text-danger" title="Either of name, srcname, binname eventually required">✘</span>{% endif %}</td>
+			<td class="text-center">{% if 'srcname' in used %}✔{% elif not anyname %}<span class="text-danger" title="Either of name, srcname, binname eventually required">✘</span>{% endif %}</td>
+			<td class="text-center">{% if 'binname' in used %}✔{% elif not anyname %}<span class="text-danger" title="Either of name, srcname, binname eventually required">✘</span>{% endif %}</td>
+			<td class="text-center">{% if 'trackname' in used %}✔{% else %}<span class="text-danger" title="Eventually required">✘</span>{% endif %}</td>
+			<td class="text-center">{% if 'basename' in used %}<span class="text-danger" title="Deprecated">✔</span>{% endif %}</td>
+			<td class="text-center">{% if 'keyname' in used %}<span class="text-danger" title="Deprecated">✔</span>{% endif %}</td>
 			{% endif %}
 		</tr>
 	{% endfor %}

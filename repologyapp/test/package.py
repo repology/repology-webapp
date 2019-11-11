@@ -35,6 +35,9 @@ def spawn_package(**custom_args: Any) -> PackageDataDetailed:
         'keyname': None,
         'visiblename': 'dummyname',
         'effname': 'dummyname',
+        'trackname': None,
+        'srcname': None,
+        'binname': None,
 
         'version': '0',
         'origversion': '0',

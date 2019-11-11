@@ -45,8 +45,11 @@ SELECT
 	subrepo,
 
 	name,
+	srcname,
+	binname,
 	keyname,
 	basename,
+	trackname,
 
 	origversion,
 	rawversion,

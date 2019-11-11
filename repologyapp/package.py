@@ -159,8 +159,11 @@ class PackageDataDetailed(PackageDataSummarizable):
     subrepo: Optional[str]
 
     name: Optional[str]
+    srcname: Optional[str]
+    binname: Optional[str]
     keyname: Optional[str]
     basename: Optional[str]
+    trackname: Optional[str]
 
     origversion: str
     rawversion: str
