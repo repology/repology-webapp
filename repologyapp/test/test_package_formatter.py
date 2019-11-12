@@ -72,7 +72,6 @@ class TestPackageFormatter(unittest.TestCase):
     def test_incdec(self) -> None:
         fmt = PackageFormatter()
 
-        self.assertEqual(fmt.format('{num|inc}', spawn_package(name='foo')), '1')
         self.assertEqual(fmt.format('{num|inc}', spawn_package(name='foo', extrafields={'num': 'NaN'})), '1')
         self.assertEqual(fmt.format('{num|inc}', spawn_package(name='foo', extrafields={'num': 1})), '2')
         self.assertEqual(fmt.format('{num|dec}', spawn_package(name='foo', extrafields={'num': 1})), '0')

@@ -17,6 +17,7 @@
 
 import shlex
 import string
+import sys
 import urllib.parse
 from typing import Any, Callable, ClassVar, Dict, Mapping, Optional, Sequence, Union
 
@@ -54,7 +55,7 @@ class PackageFormatter(string.Formatter):
         pkgdata = args[0].__dict__ if isinstance(args[0], PackageDataDetailed) else args[0]
         key, *filters = str(key).split('|')
 
-        value = ''
+        value: Optional[str] = None
 
         if key == 'name':
             value = pkgdata['name']
@@ -81,6 +82,11 @@ class PackageFormatter(string.Formatter):
         elif key in pkgdata['extrafields']:
             value = pkgdata['extrafields'][key]
 
+        if value is None:
+            # XXX: need a proper logging facility, but using stderr for now
+            print('PackageFormatter failure: key={} repo={} names={}'.format(key, pkgdata['repo'], '|'.join(pkgdata[key] for key in ['name', 'srcname', 'binname'] if pkgdata[key])), file=sys.stderr)
+            return ''
+
         for filtername in filters:
             if filtername in PackageFormatter._all_filters:
                 value = PackageFormatter._all_filters[filtername](value)
@@ -92,9 +98,5 @@ class PackageFormatter(string.Formatter):
             value = shlex.quote(value)
         elif self._escape_mode is not None:
             raise RuntimeError('unknown PackageFormatter escape mode {}'.format(self._escape_mode))
-
-        # XXX: we should handle errors here, e.g. unknown fields and unknown filters
-        # but that way bebsite users will get errors first. Need some kind of log facility
-        # instead
 
         return value
