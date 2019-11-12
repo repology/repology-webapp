@@ -15,8 +15,8 @@
 <pre>
 {
 	"repo": "freebsd",
-	"name": "firefox",
-	"keyname": "www/firefox",
+	"srcname": "www/firefox",
+	"binname": "firefox",
 	"visiblename": "www/firefox",
 	"version": "50.1.0",
 	"origversion": "50.1.0_4,1",
@@ -34,10 +34,9 @@
 <dl class="dl-horizontal">
 	<dt>repo</dt><dd>name of repository for this package</dd>
 	<dt>subrepo</dt><dd>name of subrepository (if applicable; for example, <em>main</em> or <em>contrib</em> or <em>non-free</em> for Debian)</dd>
-	<dt>name</dt><dd>package name as in repository (if applicable; for instance, non-repository sources have no package names, but may have <b>keyname</b> instead)</dd>
-	<dt>keyname</dt><dd>unique identifier of a package (if applicable; may be package path in repository file hierarchy, for instance)</dd>
+	<dt>name, srcname, binname</dt><dd>package name(s) as used in repository - generic one and/or source package name and/or binary package name, whichever is applicable (all fields are optional)</dd>
 	<dt>visiblename</dt><dd>package name as shown to the user by Repology</dd>
-	<dt>version</dt><dd>package version (sanitized, as shown by repology) </dd>
+	<dt>version</dt><dd>package version (sanitized, as shown by Repology) </dd>
 	<dt>origversion</dt><dd>package version as in repository</dd>
 	<dt>status</dt><dd>package status, one of <em>newest</em>, <em>devel</em>, <em>unique</em>, <em>outdated</em>, <em>legacy</em>, <em>rolling</em>, <em>noscheme</em>, <em>incorrect</em>, <em>untrusted</em>, <em>ignored</em></dd>
 	<dt>summary</dt><dd>one-line description of the package</dd>
