@@ -164,8 +164,7 @@ def project_information(name: str) -> Any:
         information[infokey][infoval].add(package.family)
 
     for package in packages:
-        if package.name is not None:
-            append_info('names', package.name, package)
+        append_info('names', package.visiblename, package)
         append_info('versions', package.version, package)
         append_info('repos', package.repo, package)
 
