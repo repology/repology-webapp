@@ -34,6 +34,8 @@ def index() -> Any:
         if repometadata[repo['name']]['type'] == 'repository'
     ]
 
+    top_size = 10
+
     top_repos = {
         'by_total': [
             {
@@ -41,21 +43,21 @@ def index() -> Any:
                 'value': repo['num_metapackages'],
             }
             for repo in sorted(repostats, key=lambda repo: repo['num_metapackages'], reverse=True)
-        ][:10],
+        ][:top_size],
         'by_nonunique': [
             {
                 'name': repo['name'],
                 'value': repo['num_metapackages'] - repo['num_metapackages_unique'],
             }
             for repo in sorted(repostats, key=lambda repo: repo['num_metapackages'] - repo['num_metapackages_unique'], reverse=True)
-        ][:10],
+        ][:top_size],
         'by_newest': [
             {
                 'name': repo['name'],
                 'value': repo['num_metapackages_newest'],
             }
             for repo in sorted(repostats, key=lambda repo: repo['num_metapackages_newest'], reverse=True)
-        ][:10],
+        ][:top_size],
         'by_pnewest': [
             {
                 'name': repo['name'],
@@ -63,7 +65,7 @@ def index() -> Any:
             }
             for repo in sorted(repostats, key=lambda repo: safe_percent(repo['num_metapackages_newest'], repo['num_metapackages_comparable']), reverse=True)
             if repo['num_metapackages'] > 1000
-        ][:8]
+        ][:top_size - 2]
     }
 
     important_packages = [
