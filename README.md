@@ -15,7 +15,7 @@ which updates the repository information.
 
 ## Dependencies
 
-- [Python](https://www.python.org/) 3.7+
+- [Python](https://www.python.org/) 3.8+
 - Python module [flask](http://flask.pocoo.org/)
 - Python module [libversion](https://pypi.python.org/pypi/libversion) (also requires [libversion](https://github.com/repology/libversion) C library)
 - Python module [pillow](https://pypi.python.org/pypi/Pillow)

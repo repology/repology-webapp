@@ -16,7 +16,7 @@
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 from dataclasses import dataclass
-from typing import ClassVar, Dict, List, Optional, TypeVar
+from typing import ClassVar, Dict, List, Optional, Protocol, TypeVar
 
 from libversion import ANY_IS_PATCH, P_IS_PATCH, version_compare
 
@@ -181,7 +181,12 @@ AnyPackageDataMinimal = TypeVar('AnyPackageDataMinimal', bound=PackageDataMinima
 AnyPackageDataSummarizable = TypeVar('AnyPackageDataSummarizable', bound=PackageDataSummarizable)
 
 
-def package_version_compare(a: AnyPackageDataMinimal, b: AnyPackageDataMinimal) -> int:
+class VersionComparable(Protocol):
+    flags: int
+    version: str
+
+
+def package_version_compare(a: VersionComparable, b: VersionComparable) -> int:
     metaorder_a = 1 if a.flags & PackageFlags.ROLLING else -1 if a.flags & PackageFlags.OUTDATED else 0
     metaorder_b = 1 if b.flags & PackageFlags.ROLLING else -1 if b.flags & PackageFlags.OUTDATED else 0
 
