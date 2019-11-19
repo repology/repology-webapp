@@ -70,7 +70,7 @@
 	{%- endif -%}
 {%- endmacro -%}
 
-{%- macro link_status(link, link_statuses) -%}
+{%- macro link_status(link, link_statuses, use_archive=False) -%}
 	{%- if link in link_statuses -%}
 	<sup class="link-status non-selectable"><a href="{{ url_for('link', url=link) }}" rel="nofollow">
 			{%- if link_statuses[link].ipv4_success is none -%}
@@ -89,7 +89,9 @@
 			{%- else -%}
 			<span class="link-error">6</span>
 			{%- endif -%}
-	</a></sup>
+	</a>
+	{%- if use_archive and link_statuses[link].ipv4_success == False %}<a href="{{ 'https://web.archive.org/web/*/' + link }}">(archive)</a>{% endif -%}
+	</sup>
 	{%- endif -%}
 {%- endmacro -%}
 
