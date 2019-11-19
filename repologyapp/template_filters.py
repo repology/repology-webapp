@@ -16,6 +16,7 @@
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 from typing import Iterable, List, Optional
+from urllib.parse import urlparse
 
 from repologyapp.package import PackageDataDetailed, PackageStatus
 from repologyapp.packageformatter import PackageFormatter
@@ -87,3 +88,7 @@ def css_for_versionclass(value: int) -> str:
         return 'rolling'
     else:
         raise RuntimeError('unknown versionclass {}'.format(value))
+
+
+def extract_netloc(url: str) -> str:
+    return urlparse(url).netloc
