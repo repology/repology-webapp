@@ -8,7 +8,8 @@
 {% block title %}Link check status - Repology{% endblock %}
 {% block header %}Link check status{% endblock %}
 
-{%- macro format_status_code(code, ipver) -%}
+{%- macro format_status_code(url, code) -%}
+<b class="link-error">
 {%- if code == -1 %}Unknown error {{ code }}
 
 {%- elif code == -100 %}Connect timeout (60 seconds)
@@ -43,13 +44,18 @@
 {%- elif code >= 0 and code < 1000 %}HTTP {{ code }}
 {%- else %}{{ code }}
 {%- endif -%}
+</b>
+
+{%- if code >= -399 and code <= -300 or code in (-100,-203,-204) %} (check on <a href="https://www.uptrends.com/tools/uptime" rel="nofollow">uptrends</a>, <a href="https://www.site24x7.com/check-website-availability.html" rel="nofollow">site24x7</a>){% endif -%}
+{%- if code == -205 %} (<a href="https://bb6-ie.blogspot.com/2017/04/do-not-put-ipv4-mapped-ipv6-addresses.html" rel="nofollow">related reading</a>){% endif -%}
+{%- if code >= -599 and code <= -500 %} (<a href="https://www.ssllabs.com/ssltest/analyze.html?d={{ url|extract_netloc }}" rel="nofollow">check on SSL Labs</a>){% endif -%}
 {%- endmacro -%}
 
 {% block content %}
 <div class="container">
 
 <ul class="list-unstyled">
-	<li>URL: <b><a href="{{ linkinfo.url }}">{{ linkinfo.url }}</a></b></li>
+	<li>URL: <b><a href="{{ linkinfo.url }}">{{ linkinfo.url }}</a></b> (<a href="{{ 'https://web.archive.org/web/*/' + linkinfo.url }}">see on archive.org</a>)</li>
 	<li>First seen: <b>{{ macros.format_absolute_time_sec(linkinfo.first_extracted) }}</b> (<b>{{ macros.format_time_interval(now() - linkinfo.first_extracted) }} ago</b>)</li>
 	<li>Last seen: <b>{{ macros.format_absolute_time_sec(linkinfo.last_extracted) }}</b> (<b>{{ macros.format_time_interval(now() - linkinfo.last_extracted) }} ago</b>)</li>
 	{% if linkinfo.last_checked is not none %}
@@ -90,7 +96,7 @@
 	{% elif linkinfo.ipv4_success %}
 		<b class="link-ok">OK ({{ linkinfo.ipv4_status_code }})</b>
 	{% else %}
-		<b class="link-error">{{ format_status_code(linkinfo.ipv4_status_code) }}</b>
+		{{ format_status_code(linkinfo.url, linkinfo.ipv4_status_code) }}
 	{% endif %}
 	</li>
 </ul>
@@ -122,7 +128,7 @@
 	{% elif linkinfo.ipv6_success %}
 		<b class="link-ok">OK ({{ linkinfo.ipv6_status_code }})</b>
 	{% else %}
-		<b class="link-error">{{ format_status_code(linkinfo.ipv6_status_code) }}</b>
+		{{ format_status_code(linkinfo.url, linkinfo.ipv6_status_code) }}
 	{% endif %}
 	</li>
 </ul>
