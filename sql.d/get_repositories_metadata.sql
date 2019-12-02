@@ -26,6 +26,7 @@ SELECT
 	sortname,
 	"type",
 	"desc",
+	statsgroup,
 	singular,
 	family,
 	color,

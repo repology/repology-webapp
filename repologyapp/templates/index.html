@@ -166,62 +166,82 @@
 		<h2>Top repositories</h2>
 
 		<div class="row">
-			<div class="col-md-3">
+			<div class="col-md-4">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						By <b>total</b> number of packages
+						By <b>total</b> number of packaged projects
 					</div>
 					<div class="panel-body">
+						{% macro toplist(topitems, format='{}') -%}
 						<ol>
-						{% for repostat in top_repos.by_total %}
-							<li><a href="{{ url_for('repository', repo=repostat.name) }}">{{ repometadata[repostat.name].desc }}</a> ({{ repostat.value }})</li>
+						{% for topitem in topitems %}
+							{% if topitem.group == repometadata[topitem.name].desc %}
+							<li><a href="{{ url_for('repository', repo=topitem.name) }}">{{ repometadata[topitem.name].desc }}</a> - {{ format.format(topitem.value) }}</li>
+							{% else %}
+							<li>{{ topitem.group }} (<a href="{{ url_for('repository', repo=topitem.name) }}">{{ repometadata[topitem.name].desc }}</a> - {{ format.format(topitem.value) }})</li>
+							{% endif %}
 						{% endfor %}
 						</ol>
+						{%- endmacro %}
+						{{ toplist(top_by_total) }}
 					</div>
 				</div>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-4">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						By number of <b>non-unique</b> packages
+						By number of <b>non-unique</b> packaged projects
 					</div>
 					<div class="panel-body">
-						<ol>
-						{% for repostat in top_repos.by_nonunique %}
-							<li><a href="{{ url_for('repository', repo=repostat.name) }}">{{ repometadata[repostat.name].desc }}</a> ({{ repostat.value }})</li>
-						{% endfor %}
-						</ol>
+						{{ toplist(top_by_nonunique) }}
 					</div>
 				</div>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-4">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						By number of <b>fresh</b> packages
+						By number of <b>maintainers</b>
 					</div>
 					<div class="panel-body">
-						<ol>
-						{% for repostat in top_repos.by_newest %}
-							<li><a href="{{ url_for('repository', repo=repostat.name) }}">{{ repometadata[repostat.name].desc }}</a> ({{ repostat.value }})</li>
-						{% endfor %}
-						</ol>
+						{{ toplist(top_by_maintainers) }}
 					</div>
 				</div>
 			</div>
-			<div class="col-md-3">
+		</div>
+		<div class="row">
+			<div class="col-md-4">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						By <b>percentage</b> of fresh packages
+						By number of projects <b>per maintainer</b>
 					</div>
 					<div class="panel-body">
-						<ol>
-						{% for repostat in top_repos.by_pnewest %}
-							<li><a href="{{ url_for('repository', repo=repostat.name) }}">{{ repometadata[repostat.name].desc }}</a> ({{ repostat.value }})</li>
-						{% endfor %}
-						</ol>
+						{{ toplist(top_by_ppm, '{:.1f}') }}
 					</div>
 					<div class="panel-footer">
-						<sup>*</sup>only repos with > 1000 packages
+						(only repos with > 1000 packages)
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="panel panel-success">
+					<div class="panel-heading">
+						By number of projects with <b>up to date</b> packages
+					</div>
+					<div class="panel-body">
+						{{ toplist(top_by_newest) }}
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="panel panel-success">
+					<div class="panel-heading">
+						By percentage of <b>up to date</b> projects
+					</div>
+					<div class="panel-body">
+						{{ toplist(top_by_pnewest, '{:.2f}%') }}
+					</div>
+					<div class="panel-footer">
+						(only repos with > 1000 packages)
 					</div>
 				</div>
 			</div>

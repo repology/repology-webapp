@@ -15,7 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Any
+from dataclasses import dataclass
+from typing import Any, Dict, List
 
 import flask
 
@@ -27,46 +28,64 @@ from repologyapp.package import PackageDataSummarizable
 from repologyapp.view_registry import ViewRegistrar
 
 
+class Top:
+    @dataclass
+    class Item:
+        group: str
+        name: str
+        value: float
+
+    @dataclass
+    class _Group:
+        name: str
+        value: float
+
+    _top: Dict[str, 'Top._Group']
+    _reverse: bool
+
+    def __init__(self, reverse: bool = False) -> None:
+        self._top = {}
+        self._reverse = reverse
+
+    def add(self, group: str, name: str, value: float) -> None:
+        if group not in self._top or value > self._top[group].value:
+            self._top[group] = Top._Group(name, value)
+
+    def get(self, count: int) -> List['Top.Item']:
+        return [
+            Top.Item(groupname, groupdata.name, groupdata.value)
+            for groupname, groupdata in sorted(
+                self._top.items(),
+                key=lambda group: group[1].value,
+                reverse=not self._reverse
+            )[:count]
+        ]
+
+
 @ViewRegistrar('/')
 def index() -> Any:
-    repostats = [
-        repo for repo in get_db().get_active_repositories()
-        if repometadata[repo['name']]['type'] == 'repository'
-    ]
+    top_by_total = Top()
+    top_by_nonunique = Top()
+    top_by_newest = Top()
+    top_by_pnewest = Top()
+    top_by_maintainers = Top()
+    top_by_problematic = Top()  # not used right now
+    top_by_ppm = Top(reverse=True)
 
-    top_size = 10
+    for repo in get_db().get_active_repositories():
+        metadata = repometadata[repo['name']]
+        if metadata['type'] != 'repository':
+            continue
+        top_by_total.add(metadata['statsgroup'], repo['name'], repo['num_metapackages'])
+        top_by_nonunique.add(metadata['statsgroup'], repo['name'], repo['num_metapackages'] - repo['num_metapackages_unique'])
+        top_by_newest.add(metadata['statsgroup'], repo['name'], repo['num_metapackages_newest'])
+        top_by_maintainers.add(metadata['statsgroup'], repo['name'], repo['num_maintainers'])
+        top_by_problematic.add(metadata['statsgroup'], repo['name'], safe_percent(repo['num_metapackages_problematic'], repo['num_metapackages']))
 
-    top_repos = {
-        'by_total': [
-            {
-                'name': repo['name'],
-                'value': repo['num_metapackages'],
-            }
-            for repo in sorted(repostats, key=lambda repo: repo['num_metapackages'], reverse=True)
-        ][:top_size],
-        'by_nonunique': [
-            {
-                'name': repo['name'],
-                'value': repo['num_metapackages'] - repo['num_metapackages_unique'],
-            }
-            for repo in sorted(repostats, key=lambda repo: repo['num_metapackages'] - repo['num_metapackages_unique'], reverse=True)
-        ][:top_size],
-        'by_newest': [
-            {
-                'name': repo['name'],
-                'value': repo['num_metapackages_newest'],
-            }
-            for repo in sorted(repostats, key=lambda repo: repo['num_metapackages_newest'], reverse=True)
-        ][:top_size],
-        'by_pnewest': [
-            {
-                'name': repo['name'],
-                'value': '{:.2f}%'.format(safe_percent(repo['num_metapackages_newest'], repo['num_metapackages_comparable'])),
-            }
-            for repo in sorted(repostats, key=lambda repo: safe_percent(repo['num_metapackages_newest'], repo['num_metapackages_comparable']), reverse=True)
-            if repo['num_metapackages'] > 1000
-        ][:top_size - 2]
-    }
+        if repo['num_metapackages'] > 1000:
+            top_by_pnewest.add(metadata['statsgroup'], repo['name'], safe_percent(repo['num_metapackages_newest'], repo['num_metapackages_comparable']))
+            if repo['num_maintainers'] > 0:
+                top_by_ppm.add(metadata['statsgroup'], repo['name'], repo['num_metapackages'] / repo['num_maintainers'])
 
     important_packages = [
         'apache24',
@@ -190,9 +209,16 @@ def index() -> Any:
         for item in get_db().get_metapackages_packages(important_packages, summarizable=True)
     )
 
+    top_size = 10
+
     return flask.render_template(
         'index.html',
-        top_repos=top_repos,
+        top_by_total=top_by_total.get(top_size),
+        top_by_nonunique=top_by_nonunique.get(top_size),
+        top_by_newest=top_by_newest.get(top_size),
+        top_by_pnewest=top_by_pnewest.get(top_size - 2),
+        top_by_maintainers=top_by_maintainers.get(top_size),
+        top_by_ppm=top_by_ppm.get(top_size - 2),
         metapackages=metapackages,
         metapackagedata=metapackagedata
     )
