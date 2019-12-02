@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 11.5
--- Dumped by pg_dump version 11.5
+-- Dumped from database version 11.6
+-- Dumped by pg_dump version 11.6
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -945,6 +945,7 @@ CREATE TABLE public.repositories (
     sortname text NOT NULL,
     type text NOT NULL,
     "desc" text NOT NULL,
+    statsgroup text NOT NULL,
     singular text NOT NULL,
     family text NOT NULL,
     color text,
@@ -1097,34 +1098,34 @@ games-action	chromium-bsu	t
 --
 
 COPY public.links (url, first_extracted, last_extracted, next_check, last_checked, ipv4_last_success, ipv4_last_failure, ipv4_success, ipv4_status_code, ipv4_permanent_redirect_target, ipv6_last_success, ipv6_last_failure, ipv6_success, ipv6_status_code, ipv6_permanent_redirect_target) FROM stdin;
-https://asciinema.org/	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-mirror://gnu-alpha/aspell/aspell-0.60.7-rc1.tar.gz	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://download.virtualbox.org/virtualbox/5.0.30/VirtualBox-5.0.30.tar.bz2	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://www.baudline.com/	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://unbeatenpath.net/software/away/away-0.9.5.tar.bz2	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://wiki.freebsd.org/DmitryMarakasov/kiconvtool	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://www.vorbis.com/	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-ftp://ccreweb.org/software/kforth/linux/kforth-x86-linux-1.5.2.tar.gz	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-ftp://ftp.kernel.org/pub/linux/daemons/autofs/	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://www.oracle.com/technetwork/database/database-technologies/express-edition/overview/index.html	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://download.virtualbox.org/virtualbox/5.0.30/UserManual.pdf	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://chromium-bsu.sourceforge.net/	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://ccreweb.org/software/kforth/kforth.html	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://www.virtualbox.org/	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://aspell.net/	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://www.zlib.net/	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://www.baudline.com/baudline_1.08_linux_x86_64.tar.gz	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-https://www.teamviewer.com/	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://unbeatenpath.net/software/away/	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://www.baudline.com/baudline_1.08_linux_i686.tar.gz	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-mirror://sourceforge/chromium-bsu/chromium-bsu-0.9.15.1.tar.gz	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://liba52.sourceforge.net/	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://download.oracle.com/otn/linux/oracle11g/xe/oracle-xe-11.2.0-1.0.x86_64.rpm.zip	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://download.virtualbox.org/virtualbox/5.0.30/SDKRef.pdf	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://download.virtualbox.org/virtualbox/5.0.30/VBoxGuestAdditions_5.0.30.iso	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://www.kernel.org/pub/linux/daemons/autofs/v5/autofs-5.0.5.tar.bz2	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-https://download.teamviewer.com/download/teamviewer_i386.deb	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-https://github.com/asciinema/asciinema/archive/v1.3.0.tar.gz	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+https://asciinema.org/	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+mirror://gnu-alpha/aspell/aspell-0.60.7-rc1.tar.gz	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://download.virtualbox.org/virtualbox/5.0.30/VirtualBox-5.0.30.tar.bz2	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://www.baudline.com/	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://unbeatenpath.net/software/away/away-0.9.5.tar.bz2	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://wiki.freebsd.org/DmitryMarakasov/kiconvtool	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://www.vorbis.com/	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+ftp://ccreweb.org/software/kforth/linux/kforth-x86-linux-1.5.2.tar.gz	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+ftp://ftp.kernel.org/pub/linux/daemons/autofs/	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://www.oracle.com/technetwork/database/database-technologies/express-edition/overview/index.html	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://download.virtualbox.org/virtualbox/5.0.30/UserManual.pdf	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://chromium-bsu.sourceforge.net/	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://ccreweb.org/software/kforth/kforth.html	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://www.virtualbox.org/	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://aspell.net/	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://www.zlib.net/	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://www.baudline.com/baudline_1.08_linux_x86_64.tar.gz	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+https://www.teamviewer.com/	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://unbeatenpath.net/software/away/	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://www.baudline.com/baudline_1.08_linux_i686.tar.gz	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+mirror://sourceforge/chromium-bsu/chromium-bsu-0.9.15.1.tar.gz	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://liba52.sourceforge.net/	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://download.oracle.com/otn/linux/oracle11g/xe/oracle-xe-11.2.0-1.0.x86_64.rpm.zip	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://download.virtualbox.org/virtualbox/5.0.30/SDKRef.pdf	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://download.virtualbox.org/virtualbox/5.0.30/VBoxGuestAdditions_5.0.30.iso	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://www.kernel.org/pub/linux/daemons/autofs/v5/autofs-5.0.5.tar.bz2	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+https://download.teamviewer.com/download/teamviewer_i386.deb	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+https://github.com/asciinema/asciinema/archive/v1.3.0.tar.gz	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
 \.
 
 
@@ -1133,44 +1134,44 @@ https://github.com/asciinema/asciinema/archive/v1.3.0.tar.gz	2019-11-12 17:54:10
 --
 
 COPY public.log_lines (run_id, lineno, "timestamp", severity, message) FROM stdin;
-1	1	2019-11-12 17:54:10.6681+03	notice	parsing started
-1	2	2019-11-12 17:54:10.669744+03	notice	parsing source core started
-1	3	2019-11-12 17:54:10.687341+03	notice	parsing source core complete
-1	4	2019-11-12 17:54:10.688922+03	notice	parsing source extra started
-1	5	2019-11-12 17:54:10.692255+03	notice	parsing source extra complete
-1	6	2019-11-12 17:54:10.693334+03	notice	parsing source community started
-1	7	2019-11-12 17:54:10.696638+03	notice	parsing source community complete
-1	8	2019-11-12 17:54:10.697768+03	notice	parsing source multilib started
-1	9	2019-11-12 17:54:10.701073+03	notice	parsing source multilib complete
-1	10	2019-11-12 17:54:10.703914+03	notice	parsing complete, 1 packages
-2	1	2019-11-12 17:54:10.712996+03	notice	parsing started
-2	2	2019-11-12 17:54:10.714286+03	notice	parsing source CPAN started
-2	3	2019-11-12 17:54:10.720779+03	notice	parsing source CPAN complete
-2	4	2019-11-12 17:54:10.72404+03	notice	parsing complete, 1 packages
-3	1	2019-11-12 17:54:10.731004+03	notice	parsing started
-3	2	2019-11-12 17:54:10.732282+03	notice	parsing source main started
-3	3	2019-11-12 17:54:10.740774+03	notice	parsing source main complete
-3	4	2019-11-12 17:54:10.741948+03	notice	parsing source contrib started
-3	5	2019-11-12 17:54:10.746108+03	notice	parsing source contrib complete
-3	6	2019-11-12 17:54:10.747273+03	notice	parsing source non-free started
-3	7	2019-11-12 17:54:10.751309+03	notice	parsing source non-free complete
-3	8	2019-11-12 17:54:10.753855+03	notice	parsing complete, 1 packages
-4	1	2019-11-12 17:54:10.760619+03	notice	parsing started
-4	2	2019-11-12 17:54:10.761945+03	notice	parsing source INDEX-11 started
-4	3	2019-11-12 17:54:10.773538+03	notice	parsing source INDEX-11 complete
-4	4	2019-11-12 17:54:10.776756+03	notice	parsing complete, 2 packages
-5	1	2019-11-12 17:54:10.783493+03	notice	parsing started
-5	2	2019-11-12 17:54:10.784732+03	notice	parsing source gentoo started
-5	3	2019-11-12 17:54:10.804927+03	notice	parsing source gentoo complete
-5	4	2019-11-12 17:54:10.808034+03	notice	parsing complete, 4 packages
-6	1	2019-11-12 17:54:10.81459+03	notice	parsing started
-6	2	2019-11-12 17:54:10.815814+03	notice	parsing source recipes started
-6	3	2019-11-12 17:54:10.822242+03	notice	parsing source recipes complete
-6	4	2019-11-12 17:54:10.824819+03	notice	parsing complete, 1 packages
-7	1	2019-11-12 17:54:10.831639+03	notice	parsing started
-7	2	2019-11-12 17:54:10.832837+03	notice	parsing source slackbuilds started
-7	3	2019-11-12 17:54:10.852352+03	notice	parsing source slackbuilds complete
-7	4	2019-11-12 17:54:10.855286+03	notice	parsing complete, 5 packages
+1	1	2019-12-02 23:56:33.121839+03	notice	parsing started
+1	2	2019-12-02 23:56:33.123388+03	notice	parsing source core started
+1	3	2019-12-02 23:56:33.137141+03	notice	parsing source core complete
+1	4	2019-12-02 23:56:33.138237+03	notice	parsing source extra started
+1	5	2019-12-02 23:56:33.140889+03	notice	parsing source extra complete
+1	6	2019-12-02 23:56:33.141874+03	notice	parsing source community started
+1	7	2019-12-02 23:56:33.144491+03	notice	parsing source community complete
+1	8	2019-12-02 23:56:33.145505+03	notice	parsing source multilib started
+1	9	2019-12-02 23:56:33.148145+03	notice	parsing source multilib complete
+1	10	2019-12-02 23:56:33.155907+03	notice	parsing complete, 1 packages
+2	1	2019-12-02 23:56:33.164139+03	notice	parsing started
+2	2	2019-12-02 23:56:33.16531+03	notice	parsing source CPAN started
+2	3	2019-12-02 23:56:33.171118+03	notice	parsing source CPAN complete
+2	4	2019-12-02 23:56:33.173544+03	notice	parsing complete, 1 packages
+3	1	2019-12-02 23:56:33.179924+03	notice	parsing started
+3	2	2019-12-02 23:56:33.181099+03	notice	parsing source main started
+3	3	2019-12-02 23:56:33.187243+03	notice	parsing source main complete
+3	4	2019-12-02 23:56:33.18836+03	notice	parsing source contrib started
+3	5	2019-12-02 23:56:33.191416+03	notice	parsing source contrib complete
+3	6	2019-12-02 23:56:33.192435+03	notice	parsing source non-free started
+3	7	2019-12-02 23:56:33.195443+03	notice	parsing source non-free complete
+3	8	2019-12-02 23:56:33.197937+03	notice	parsing complete, 1 packages
+4	1	2019-12-02 23:56:33.204061+03	notice	parsing started
+4	2	2019-12-02 23:56:33.205174+03	notice	parsing source INDEX-11 started
+4	3	2019-12-02 23:56:33.213759+03	notice	parsing source INDEX-11 complete
+4	4	2019-12-02 23:56:33.216265+03	notice	parsing complete, 2 packages
+5	1	2019-12-02 23:56:33.222837+03	notice	parsing started
+5	2	2019-12-02 23:56:33.224091+03	notice	parsing source gentoo started
+5	3	2019-12-02 23:56:33.243014+03	notice	parsing source gentoo complete
+5	4	2019-12-02 23:56:33.247017+03	notice	parsing complete, 4 packages
+6	1	2019-12-02 23:56:33.254375+03	notice	parsing started
+6	2	2019-12-02 23:56:33.255778+03	notice	parsing source recipes started
+6	3	2019-12-02 23:56:33.263606+03	notice	parsing source recipes complete
+6	4	2019-12-02 23:56:33.272029+03	notice	parsing complete, 1 packages
+7	1	2019-12-02 23:56:33.278164+03	notice	parsing started
+7	2	2019-12-02 23:56:33.279328+03	notice	parsing source slackbuilds started
+7	3	2019-12-02 23:56:33.295573+03	notice	parsing source slackbuilds complete
+7	4	2019-12-02 23:56:33.298174+03	notice	parsing complete, 5 packages
 \.
 
 
@@ -1241,21 +1242,21 @@ COPY public.maintainer_repo_metapackages_events (id, maintainer_id, repository_i
 --
 
 COPY public.maintainers (id, maintainer, num_packages, num_packages_newest, num_packages_outdated, num_packages_ignored, num_packages_unique, num_packages_devel, num_packages_legacy, num_packages_incorrect, num_packages_untrusted, num_packages_noscheme, num_packages_rolling, num_projects, num_projects_newest, num_projects_outdated, num_projects_problematic, num_packages_per_repo, num_projects_per_repo, num_projects_newest_per_repo, num_projects_outdated_per_repo, num_projects_problematic_per_repo, bestrepo, bestrepo_num_projects, bestrepo_num_projects_newest, bestrepo_num_projects_outdated, bestrepo_num_projects_problematic, num_projects_per_category, num_repos, first_seen, last_seen) FROM stdin;
-5	jaldhar@cpan	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"cpan": 1}	{"cpan": 1}	{"cpan": 1}	{"cpan": 0}	{"cpan": 0}	cpan	1	1	0	0	{}	1	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03
-1	amdmi3@freebsd.org	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"freebsd": 1}	{"freebsd": 1}	{"freebsd": 1}	{"freebsd": 0}	{"freebsd": 0}	freebsd	1	1	0	0	{"sysutils": 1}	1	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03
-2	dmitrij.ledkov@ubuntu.com	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"debian_unstable": 1}	{"debian_unstable": 1}	{"debian_unstable": 1}	{"debian_unstable": 0}	{"debian_unstable": 0}	debian_unstable	1	1	0	0	{"devel": 1}	1	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03
-3	games@gentoo.org	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"gentoo": 1}	{"gentoo": 1}	{"gentoo": 1}	{"gentoo": 0}	{"gentoo": 0}	gentoo	1	1	0	0	{"games-action": 1}	1	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03
-4	gschoen@iinet.net.au	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"slackbuilds": 1}	{"slackbuilds": 1}	{"slackbuilds": 1}	{"slackbuilds": 0}	{"slackbuilds": 0}	slackbuilds	1	1	0	0	{"development": 1}	1	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03
-6	joshuakwood@gmail.com	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"slackbuilds": 1}	{"slackbuilds": 1}	{"slackbuilds": 1}	{"slackbuilds": 0}	{"slackbuilds": 0}	slackbuilds	1	1	0	0	{"ham": 1}	1	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03
-7	kensington@gentoo.org	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"gentoo": 1}	{"gentoo": 1}	{"gentoo": 1}	{"gentoo": 0}	{"gentoo": 0}	gentoo	1	1	0	0	{"app-misc": 1}	1	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03
-8	maintainer-needed@gentoo.org	2	0	0	0	2	0	0	0	0	0	0	2	2	0	0	{"gentoo": 2}	{"gentoo": 2}	{"gentoo": 2}	{"gentoo": 0}	{"gentoo": 0}	gentoo	2	2	0	0	{"app-misc": 1, "app-test": 1}	1	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03
-9	naddy@freebsd.org	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"freebsd": 1}	{"freebsd": 1}	{"freebsd": 1}	{"freebsd": 0}	{"freebsd": 0}	freebsd	1	1	0	0	{"audio": 1}	1	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03
-10	pkg-multimedia-maintainers@lists.alioth.debian.org	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"debian_unstable": 1}	{"debian_unstable": 1}	{"debian_unstable": 1}	{"debian_unstable": 0}	{"debian_unstable": 0}	debian_unstable	1	1	0	0	{"devel": 1}	1	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03
-11	pprkut@liwjatan.at	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"slackbuilds": 1}	{"slackbuilds": 1}	{"slackbuilds": 1}	{"slackbuilds": 0}	{"slackbuilds": 0}	slackbuilds	1	1	0	0	{"system": 1}	1	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03
-12	sam+deb@zoy.org	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"debian_unstable": 1}	{"debian_unstable": 1}	{"debian_unstable": 1}	{"debian_unstable": 0}	{"debian_unstable": 0}	debian_unstable	1	1	0	0	{"devel": 1}	1	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03
-13	siretart@tauware.de	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"debian_unstable": 1}	{"debian_unstable": 1}	{"debian_unstable": 1}	{"debian_unstable": 0}	{"debian_unstable": 0}	debian_unstable	1	1	0	0	{"devel": 1}	1	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03
-14	slack.dhabyx@gmail.com	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"slackbuilds": 1}	{"slackbuilds": 1}	{"slackbuilds": 1}	{"slackbuilds": 0}	{"slackbuilds": 0}	slackbuilds	1	1	0	0	{"system": 1}	1	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03
-15	willysr@slackbuilds.org	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"slackbuilds": 1}	{"slackbuilds": 1}	{"slackbuilds": 1}	{"slackbuilds": 0}	{"slackbuilds": 0}	slackbuilds	1	1	0	0	{"network": 1}	1	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03
+5	jaldhar@cpan	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"cpan": 1}	{"cpan": 1}	{"cpan": 1}	{"cpan": 0}	{"cpan": 0}	cpan	1	1	0	0	{}	1	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03
+1	amdmi3@freebsd.org	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"freebsd": 1}	{"freebsd": 1}	{"freebsd": 1}	{"freebsd": 0}	{"freebsd": 0}	freebsd	1	1	0	0	{"sysutils": 1}	1	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03
+2	dmitrij.ledkov@ubuntu.com	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"debian_unstable": 1}	{"debian_unstable": 1}	{"debian_unstable": 1}	{"debian_unstable": 0}	{"debian_unstable": 0}	debian_unstable	1	1	0	0	{"devel": 1}	1	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03
+3	games@gentoo.org	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"gentoo": 1}	{"gentoo": 1}	{"gentoo": 1}	{"gentoo": 0}	{"gentoo": 0}	gentoo	1	1	0	0	{"games-action": 1}	1	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03
+4	gschoen@iinet.net.au	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"slackbuilds": 1}	{"slackbuilds": 1}	{"slackbuilds": 1}	{"slackbuilds": 0}	{"slackbuilds": 0}	slackbuilds	1	1	0	0	{"development": 1}	1	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03
+6	joshuakwood@gmail.com	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"slackbuilds": 1}	{"slackbuilds": 1}	{"slackbuilds": 1}	{"slackbuilds": 0}	{"slackbuilds": 0}	slackbuilds	1	1	0	0	{"ham": 1}	1	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03
+7	kensington@gentoo.org	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"gentoo": 1}	{"gentoo": 1}	{"gentoo": 1}	{"gentoo": 0}	{"gentoo": 0}	gentoo	1	1	0	0	{"app-misc": 1}	1	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03
+8	maintainer-needed@gentoo.org	2	0	0	0	2	0	0	0	0	0	0	2	2	0	0	{"gentoo": 2}	{"gentoo": 2}	{"gentoo": 2}	{"gentoo": 0}	{"gentoo": 0}	gentoo	2	2	0	0	{"app-misc": 1, "app-test": 1}	1	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03
+9	naddy@freebsd.org	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"freebsd": 1}	{"freebsd": 1}	{"freebsd": 1}	{"freebsd": 0}	{"freebsd": 0}	freebsd	1	1	0	0	{"audio": 1}	1	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03
+10	pkg-multimedia-maintainers@lists.alioth.debian.org	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"debian_unstable": 1}	{"debian_unstable": 1}	{"debian_unstable": 1}	{"debian_unstable": 0}	{"debian_unstable": 0}	debian_unstable	1	1	0	0	{"devel": 1}	1	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03
+11	pprkut@liwjatan.at	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"slackbuilds": 1}	{"slackbuilds": 1}	{"slackbuilds": 1}	{"slackbuilds": 0}	{"slackbuilds": 0}	slackbuilds	1	1	0	0	{"system": 1}	1	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03
+12	sam+deb@zoy.org	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"debian_unstable": 1}	{"debian_unstable": 1}	{"debian_unstable": 1}	{"debian_unstable": 0}	{"debian_unstable": 0}	debian_unstable	1	1	0	0	{"devel": 1}	1	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03
+13	siretart@tauware.de	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"debian_unstable": 1}	{"debian_unstable": 1}	{"debian_unstable": 1}	{"debian_unstable": 0}	{"debian_unstable": 0}	debian_unstable	1	1	0	0	{"devel": 1}	1	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03
+14	slack.dhabyx@gmail.com	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"slackbuilds": 1}	{"slackbuilds": 1}	{"slackbuilds": 1}	{"slackbuilds": 0}	{"slackbuilds": 0}	slackbuilds	1	1	0	0	{"system": 1}	1	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03
+15	willysr@slackbuilds.org	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	{"slackbuilds": 1}	{"slackbuilds": 1}	{"slackbuilds": 1}	{"slackbuilds": 0}	{"slackbuilds": 0}	slackbuilds	1	1	0	0	{"network": 1}	1	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03
 \.
 
 
@@ -1264,21 +1265,21 @@ COPY public.maintainers (id, maintainer, num_packages, num_packages_newest, num_
 --
 
 COPY public.metapackages (id, effname, num_repos, num_repos_nonshadow, num_families, num_repos_newest, num_families_newest, max_repos, max_families, has_related, first_seen, last_seen, devel_versions, devel_repos, devel_version_update, newest_versions, newest_repos, newest_version_update, all_repos) FROM stdin;
-1	a52dec	1	1	1	0	0	1	1	f	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	{0.7.4}	{debian_unstable}	\N	{debian_unstable}
-2	asciinema	1	1	1	0	0	1	1	f	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	{1.3.0}	{gentoo}	\N	{gentoo}
-3	aspell	1	1	1	0	0	1	1	f	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	{0.60.7_rc1}	{gentoo}	\N	\N	\N	\N	{gentoo}
-4	autofs	1	1	1	0	0	1	1	f	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	{5.0.5}	{gobolinux}	\N	{gobolinux}
-5	away	1	1	1	0	0	1	1	f	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	{0.9.5}	{gentoo}	\N	{gentoo}
-6	baudline	1	1	1	0	0	1	1	f	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	{1.08}	{slackbuilds}	\N	{slackbuilds}
-7	chromium-bsu	1	1	1	0	0	1	1	f	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	{0.9.15.1}	{gentoo}	\N	{gentoo}
-8	kforth	1	1	1	0	0	1	1	f	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	{1.5.2p1}	{slackbuilds}	\N	{slackbuilds}
-9	kiconvtool	1	1	1	0	0	1	1	f	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	{0.97}	{freebsd}	\N	{freebsd}
-10	oracle-xe	1	1	1	0	0	1	1	f	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	{11.2.0}	{slackbuilds}	\N	{slackbuilds}
-11	perl:acme-brainfuck	1	0	1	0	0	1	1	f	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	{1.1.1}	{cpan}	\N	{cpan}
-12	teamviewer	1	1	1	0	0	1	1	f	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	{12.0.76279}	{slackbuilds}	\N	{slackbuilds}
-13	virtualbox	1	1	1	0	0	1	1	f	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	{5.0.30}	{slackbuilds}	\N	{slackbuilds}
-14	vorbis-tools	1	1	1	0	0	1	1	f	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	{1.4.0}	{freebsd}	\N	{freebsd}
-15	zlib	1	1	1	0	0	1	1	f	2019-11-12 17:54:10.859209+03	2019-11-12 17:54:10.859209+03	\N	\N	\N	{1.2.8}	{arch}	\N	{arch}
+1	a52dec	1	1	1	0	0	1	1	f	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	{0.7.4}	{debian_unstable}	\N	{debian_unstable}
+2	asciinema	1	1	1	0	0	1	1	f	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	{1.3.0}	{gentoo}	\N	{gentoo}
+3	aspell	1	1	1	0	0	1	1	f	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	{0.60.7_rc1}	{gentoo}	\N	\N	\N	\N	{gentoo}
+4	autofs	1	1	1	0	0	1	1	f	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	{5.0.5}	{gobolinux}	\N	{gobolinux}
+5	away	1	1	1	0	0	1	1	f	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	{0.9.5}	{gentoo}	\N	{gentoo}
+6	baudline	1	1	1	0	0	1	1	f	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	{1.08}	{slackbuilds}	\N	{slackbuilds}
+7	chromium-bsu	1	1	1	0	0	1	1	f	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	{0.9.15.1}	{gentoo}	\N	{gentoo}
+8	kforth	1	1	1	0	0	1	1	f	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	{1.5.2p1}	{slackbuilds}	\N	{slackbuilds}
+9	kiconvtool	1	1	1	0	0	1	1	f	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	{0.97}	{freebsd}	\N	{freebsd}
+10	oracle-xe	1	1	1	0	0	1	1	f	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	{11.2.0}	{slackbuilds}	\N	{slackbuilds}
+11	perl:acme-brainfuck	1	0	1	0	0	1	1	f	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	{1.1.1}	{cpan}	\N	{cpan}
+12	teamviewer	1	1	1	0	0	1	1	f	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	{12.0.76279}	{slackbuilds}	\N	{slackbuilds}
+13	virtualbox	1	1	1	0	0	1	1	f	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	{5.0.30}	{slackbuilds}	\N	{slackbuilds}
+14	vorbis-tools	1	1	1	0	0	1	1	f	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	{1.4.0}	{freebsd}	\N	{freebsd}
+15	zlib	1	1	1	0	0	1	1	f	2019-12-02 23:56:33.301739+03	2019-12-02 23:56:33.301739+03	\N	\N	\N	{1.2.8}	{arch}	\N	{arch}
 \.
 
 
@@ -1287,21 +1288,21 @@ COPY public.metapackages (id, effname, num_repos, num_repos_nonshadow, num_famil
 --
 
 COPY public.metapackages_events (effname, ts, type, data) FROM stdin;
-a52dec	2019-11-12 17:54:10.859209+03	history_start	{"all_repos": ["debian_unstable"], "newest_repos": ["debian_unstable"], "newest_versions": ["0.7.4"]}
-asciinema	2019-11-12 17:54:10.859209+03	history_start	{"all_repos": ["gentoo"], "newest_repos": ["gentoo"], "newest_versions": ["1.3.0"]}
-aspell	2019-11-12 17:54:10.859209+03	history_start	{"all_repos": ["gentoo"], "devel_repos": ["gentoo"], "devel_versions": ["0.60.7_rc1"]}
-autofs	2019-11-12 17:54:10.859209+03	history_start	{"all_repos": ["gobolinux"], "newest_repos": ["gobolinux"], "newest_versions": ["5.0.5"]}
-away	2019-11-12 17:54:10.859209+03	history_start	{"all_repos": ["gentoo"], "newest_repos": ["gentoo"], "newest_versions": ["0.9.5"]}
-baudline	2019-11-12 17:54:10.859209+03	history_start	{"all_repos": ["slackbuilds"], "newest_repos": ["slackbuilds"], "newest_versions": ["1.08"]}
-chromium-bsu	2019-11-12 17:54:10.859209+03	history_start	{"all_repos": ["gentoo"], "newest_repos": ["gentoo"], "newest_versions": ["0.9.15.1"]}
-kforth	2019-11-12 17:54:10.859209+03	history_start	{"all_repos": ["slackbuilds"], "newest_repos": ["slackbuilds"], "newest_versions": ["1.5.2p1"]}
-kiconvtool	2019-11-12 17:54:10.859209+03	history_start	{"all_repos": ["freebsd"], "newest_repos": ["freebsd"], "newest_versions": ["0.97"]}
-oracle-xe	2019-11-12 17:54:10.859209+03	history_start	{"all_repos": ["slackbuilds"], "newest_repos": ["slackbuilds"], "newest_versions": ["11.2.0"]}
-perl:acme-brainfuck	2019-11-12 17:54:10.859209+03	history_start	{"all_repos": ["cpan"], "newest_repos": ["cpan"], "newest_versions": ["1.1.1"]}
-teamviewer	2019-11-12 17:54:10.859209+03	history_start	{"all_repos": ["slackbuilds"], "newest_repos": ["slackbuilds"], "newest_versions": ["12.0.76279"]}
-virtualbox	2019-11-12 17:54:10.859209+03	history_start	{"all_repos": ["slackbuilds"], "newest_repos": ["slackbuilds"], "newest_versions": ["5.0.30"]}
-vorbis-tools	2019-11-12 17:54:10.859209+03	history_start	{"all_repos": ["freebsd"], "newest_repos": ["freebsd"], "newest_versions": ["1.4.0"]}
-zlib	2019-11-12 17:54:10.859209+03	history_start	{"all_repos": ["arch"], "newest_repos": ["arch"], "newest_versions": ["1.2.8"]}
+a52dec	2019-12-02 23:56:33.301739+03	history_start	{"all_repos": ["debian_unstable"], "newest_repos": ["debian_unstable"], "newest_versions": ["0.7.4"]}
+asciinema	2019-12-02 23:56:33.301739+03	history_start	{"all_repos": ["gentoo"], "newest_repos": ["gentoo"], "newest_versions": ["1.3.0"]}
+aspell	2019-12-02 23:56:33.301739+03	history_start	{"all_repos": ["gentoo"], "devel_repos": ["gentoo"], "devel_versions": ["0.60.7_rc1"]}
+autofs	2019-12-02 23:56:33.301739+03	history_start	{"all_repos": ["gobolinux"], "newest_repos": ["gobolinux"], "newest_versions": ["5.0.5"]}
+away	2019-12-02 23:56:33.301739+03	history_start	{"all_repos": ["gentoo"], "newest_repos": ["gentoo"], "newest_versions": ["0.9.5"]}
+baudline	2019-12-02 23:56:33.301739+03	history_start	{"all_repos": ["slackbuilds"], "newest_repos": ["slackbuilds"], "newest_versions": ["1.08"]}
+chromium-bsu	2019-12-02 23:56:33.301739+03	history_start	{"all_repos": ["gentoo"], "newest_repos": ["gentoo"], "newest_versions": ["0.9.15.1"]}
+kforth	2019-12-02 23:56:33.301739+03	history_start	{"all_repos": ["slackbuilds"], "newest_repos": ["slackbuilds"], "newest_versions": ["1.5.2p1"]}
+kiconvtool	2019-12-02 23:56:33.301739+03	history_start	{"all_repos": ["freebsd"], "newest_repos": ["freebsd"], "newest_versions": ["0.97"]}
+oracle-xe	2019-12-02 23:56:33.301739+03	history_start	{"all_repos": ["slackbuilds"], "newest_repos": ["slackbuilds"], "newest_versions": ["11.2.0"]}
+perl:acme-brainfuck	2019-12-02 23:56:33.301739+03	history_start	{"all_repos": ["cpan"], "newest_repos": ["cpan"], "newest_versions": ["1.1.1"]}
+teamviewer	2019-12-02 23:56:33.301739+03	history_start	{"all_repos": ["slackbuilds"], "newest_repos": ["slackbuilds"], "newest_versions": ["12.0.76279"]}
+virtualbox	2019-12-02 23:56:33.301739+03	history_start	{"all_repos": ["slackbuilds"], "newest_repos": ["slackbuilds"], "newest_versions": ["5.0.30"]}
+vorbis-tools	2019-12-02 23:56:33.301739+03	history_start	{"all_repos": ["freebsd"], "newest_repos": ["freebsd"], "newest_versions": ["1.4.0"]}
+zlib	2019-12-02 23:56:33.301739+03	history_start	{"all_repos": ["arch"], "newest_repos": ["arch"], "newest_versions": ["1.2.8"]}
 \.
 
 
@@ -1311,20 +1312,20 @@ zlib	2019-11-12 17:54:10.859209+03	history_start	{"all_repos": ["arch"], "newest
 
 COPY public.packages (id, repo, family, subrepo, name, srcname, binname, basename, keyname, visiblename, projectname_seed, trackname, origversion, rawversion, arch, maintainers, category, comment, homepage, licenses, downloads, extrafields, effname, version, versionclass, flags, shadow, flavors, branch) FROM stdin;
 1	debian_unstable	debuntu	main	a52dec	\N	\N	\N	\N	a52dec	a52dec	\N	0.7.4	0.7.4-18	\N	{pkg-multimedia-maintainers@lists.alioth.debian.org,dmitrij.ledkov@ubuntu.com,sam+deb@zoy.org,siretart@tauware.de}	devel	\N	http://liba52.sourceforge.net/	{}	{}	{}	a52dec	0.7.4	4	0	f	{}	\N
-2	gentoo	gentoo	\N	asciinema	\N	\N	\N	app-misc/asciinema	app-misc/asciinema	asciinema	\N	1.3.0	1.3.0	\N	{kensington@gentoo.org}	app-misc	Command line recorder for asciinema.org service	https://asciinema.org/	{GPL-3+}	{https://github.com/asciinema/asciinema/archive/v1.3.0.tar.gz}	{}	asciinema	1.3.0	4	1024	f	{}	\N
-3	gentoo	gentoo	\N	aspell	\N	\N	\N	app-test/aspell	app-test/aspell	aspell	\N	0.60.7_rc1	0.60.7_rc1	\N	{maintainer-needed@gentoo.org}	app-test	A spell checker replacement for ispell	http://aspell.net/	{LGPL-2}	{mirror://gnu-alpha/aspell/aspell-0.60.7-rc1.tar.gz}	{}	aspell	0.60.7_rc1	4	1026	f	{}	\N
-4	gobolinux	gobolinux	\N	AutoFS	\N	\N	\N	\N	AutoFS	AutoFS	\N	5.0.5	5.0.5	\N	{}	\N	Automounting daemon	ftp://ftp.kernel.org/pub/linux/daemons/autofs/	{"GNU General Public License (GPL)"}	{http://www.kernel.org/pub/linux/daemons/autofs/v5/autofs-5.0.5.tar.bz2}	{}	autofs	5.0.5	4	0	f	{}	\N
-5	gentoo	gentoo	\N	away	\N	\N	\N	app-misc/away	app-misc/away	away	\N	0.9.5	0.9.5-r1	\N	{maintainer-needed@gentoo.org}	app-misc	Terminal locking program with few additional features	http://unbeatenpath.net/software/away/	{GPL-2}	{http://unbeatenpath.net/software/away/away-0.9.5.tar.bz2}	{}	away	0.9.5	4	1024	f	{}	\N
+2	gentoo	gentoo	\N	\N	app-misc/asciinema	\N	\N	\N	app-misc/asciinema	asciinema	app-misc/asciinema	1.3.0	1.3.0	\N	{kensington@gentoo.org}	app-misc	Command line recorder for asciinema.org service	https://asciinema.org/	{GPL-3+}	{https://github.com/asciinema/asciinema/archive/v1.3.0.tar.gz}	{}	asciinema	1.3.0	4	1024	f	{}	\N
+3	gentoo	gentoo	\N	\N	app-test/aspell	\N	\N	\N	app-test/aspell	aspell	app-test/aspell	0.60.7_rc1	0.60.7_rc1	\N	{maintainer-needed@gentoo.org}	app-test	A spell checker replacement for ispell	http://aspell.net/	{LGPL-2}	{mirror://gnu-alpha/aspell/aspell-0.60.7-rc1.tar.gz}	{}	aspell	0.60.7_rc1	4	1026	f	{}	\N
+4	gobolinux	gobolinux	\N	AutoFS	\N	\N	\N	\N	AutoFS	AutoFS	AutoFS	5.0.5	5.0.5	\N	{}	\N	Automounting daemon	ftp://ftp.kernel.org/pub/linux/daemons/autofs/	{"GNU General Public License (GPL)"}	{http://www.kernel.org/pub/linux/daemons/autofs/v5/autofs-5.0.5.tar.bz2}	{}	autofs	5.0.5	4	0	f	{}	\N
+5	gentoo	gentoo	\N	\N	app-misc/away	\N	\N	\N	app-misc/away	away	app-misc/away	0.9.5	0.9.5-r1	\N	{maintainer-needed@gentoo.org}	app-misc	Terminal locking program with few additional features	http://unbeatenpath.net/software/away/	{GPL-2}	{http://unbeatenpath.net/software/away/away-0.9.5.tar.bz2}	{}	away	0.9.5	4	1024	f	{}	\N
 6	slackbuilds	slackbuilds	\N	baudline	\N	\N	\N	\N	baudline	baudline	\N	1.08	1.08	\N	{joshuakwood@gmail.com}	ham	\N	http://www.baudline.com/	{}	{http://www.baudline.com/baudline_1.08_linux_i686.tar.gz,http://www.baudline.com/baudline_1.08_linux_x86_64.tar.gz}	{}	baudline	1.08	4	0	f	{}	\N
-7	gentoo	gentoo	\N	chromium-bsu	\N	\N	\N	games-action/chromium-bsu	games-action/chromium-bsu	chromium-bsu	\N	0.9.15.1	0.9.15.1	\N	{games@gentoo.org}	games-action	Chromium B.S.U. - an arcade game	http://chromium-bsu.sourceforge.net/	{Clarified-Artistic}	{mirror://sourceforge/chromium-bsu/chromium-bsu-0.9.15.1.tar.gz}	{}	chromium-bsu	0.9.15.1	4	1024	f	{}	\N
+7	gentoo	gentoo	\N	\N	games-action/chromium-bsu	\N	\N	\N	games-action/chromium-bsu	chromium-bsu	games-action/chromium-bsu	0.9.15.1	0.9.15.1	\N	{games@gentoo.org}	games-action	Chromium B.S.U. - an arcade game	http://chromium-bsu.sourceforge.net/	{Clarified-Artistic}	{mirror://sourceforge/chromium-bsu/chromium-bsu-0.9.15.1.tar.gz}	{}	chromium-bsu	0.9.15.1	4	1024	f	{}	\N
 8	slackbuilds	slackbuilds	\N	kforth	\N	\N	\N	\N	kforth	kforth	\N	1.5.2p1	1.5.2p1	\N	{gschoen@iinet.net.au}	development	\N	http://ccreweb.org/software/kforth/kforth.html	{}	{ftp://ccreweb.org/software/kforth/linux/kforth-x86-linux-1.5.2.tar.gz}	{}	kforth	1.5.2p1	4	0	f	{}	\N
-9	freebsd	freebsd	\N	kiconvtool	\N	\N	\N	sysutils/kiconvtool	sysutils/kiconvtool	kiconvtool	\N	0.97	0.97_1	\N	{amdmi3@freebsd.org}	sysutils	Tool to preload kernel iconv charset tables	http://wiki.freebsd.org/DmitryMarakasov/kiconvtool	{}	{}	{}	kiconvtool	0.97	4	0	f	{}	\N
+9	freebsd	freebsd	\N	\N	sysutils/kiconvtool	kiconvtool	\N	\N	sysutils/kiconvtool	kiconvtool	sysutils/kiconvtool	0.97	0.97_1	\N	{amdmi3@freebsd.org}	sysutils	Tool to preload kernel iconv charset tables	http://wiki.freebsd.org/DmitryMarakasov/kiconvtool	{}	{}	{}	kiconvtool	0.97	4	0	f	{}	\N
 10	slackbuilds	slackbuilds	\N	oracle-xe	\N	\N	\N	\N	oracle-xe	oracle-xe	\N	11.2.0	11.2.0	\N	{slack.dhabyx@gmail.com}	system	\N	http://www.oracle.com/technetwork/database/database-technologies/express-edition/overview/index.html	{}	{http://download.oracle.com/otn/linux/oracle11g/xe/oracle-xe-11.2.0-1.0.x86_64.rpm.zip}	{}	oracle-xe	11.2.0	4	0	f	{}	\N
-11	cpan	cpan	\N	Acme-Brainfuck	\N	\N	\N	\N	Acme-Brainfuck	Acme-Brainfuck	\N	1.1.1	1.1.1	\N	{jaldhar@cpan}	\N	\N	http://search.cpan.org/dist/Acme-Brainfuck/	{}	{}	{}	perl:acme-brainfuck	1.1.1	4	0	t	{}	\N
+11	cpan	cpan	\N	Acme-Brainfuck	\N	\N	\N	\N	Acme-Brainfuck	Acme-Brainfuck	Acme-Brainfuck	1.1.1	1.1.1	\N	{jaldhar@cpan}	\N	\N	http://search.cpan.org/dist/Acme-Brainfuck/	{}	{}	{}	perl:acme-brainfuck	1.1.1	4	0	t	{}	\N
 12	slackbuilds	slackbuilds	\N	teamviewer	\N	\N	\N	\N	teamviewer	teamviewer	\N	12.0.76279	12.0.76279	\N	{willysr@slackbuilds.org}	network	\N	https://www.teamviewer.com/	{}	{https://download.teamviewer.com/download/teamviewer_i386.deb}	{}	teamviewer	12.0.76279	4	0	f	{}	\N
 13	slackbuilds	slackbuilds	\N	virtualbox	\N	\N	\N	\N	virtualbox	virtualbox	\N	5.0.30	5.0.30	\N	{pprkut@liwjatan.at}	system	\N	http://www.virtualbox.org/	{}	{http://download.virtualbox.org/virtualbox/5.0.30/VirtualBox-5.0.30.tar.bz2,http://download.virtualbox.org/virtualbox/5.0.30/VBoxGuestAdditions_5.0.30.iso,http://download.virtualbox.org/virtualbox/5.0.30/UserManual.pdf,http://download.virtualbox.org/virtualbox/5.0.30/SDKRef.pdf}	{}	virtualbox	5.0.30	4	0	f	{}	5.0
-14	freebsd	freebsd	\N	vorbis-tools	\N	\N	\N	audio/vorbis-tools	audio/vorbis-tools	vorbis-tools	\N	1.4.0	1.4.0_10,3	\N	{naddy@freebsd.org}	audio	Play, encode, and manage Ogg Vorbis files	http://www.vorbis.com/	{}	{}	{}	vorbis-tools	1.4.0	4	0	f	{}	\N
-15	arch	arch	core	zlib	\N	\N	zlib	\N	zlib	zlib	\N	1.2.8	1:1.2.8-7	\N	{}	\N	Compression library implementing the deflate compression method found in gzip and PKZIP	http://www.zlib.net/	{custom}	{}	{"base": "zlib"}	zlib	1.2.8	4	0	f	{}	\N
+14	freebsd	freebsd	\N	\N	audio/vorbis-tools	vorbis-tools	\N	\N	audio/vorbis-tools	vorbis-tools	audio/vorbis-tools	1.4.0	1.4.0_10,3	\N	{naddy@freebsd.org}	audio	Play, encode, and manage Ogg Vorbis files	http://www.vorbis.com/	{}	{}	{}	vorbis-tools	1.4.0	4	0	f	{}	\N
+15	arch	arch	core	\N	zlib	zlib	\N	\N	zlib	zlib	zlib	1.2.8	1:1.2.8-7	\N	{}	\N	Compression library implementing the deflate compression method found in gzip and PKZIP	http://www.zlib.net/	{custom}	{}	{}	zlib	1.2.8	4	0	f	{}	\N
 \.
 
 
@@ -1379,14 +1380,14 @@ COPY public.reports (id, created, updated, client, effname, need_verignore, need
 -- Data for Name: repositories; Type: TABLE DATA; Schema: public; Owner: repology_test
 --
 
-COPY public.repositories (id, name, state, num_packages, num_packages_newest, num_packages_outdated, num_packages_ignored, num_packages_unique, num_packages_devel, num_packages_legacy, num_packages_incorrect, num_packages_untrusted, num_packages_noscheme, num_packages_rolling, num_metapackages, num_metapackages_unique, num_metapackages_newest, num_metapackages_outdated, num_metapackages_comparable, num_metapackages_problematic, num_problems, num_maintainers, first_seen, last_seen, used_package_fields, sortname, type, "desc", singular, family, color, shadow, repolinks, packagelinks) FROM stdin;
-4	cpan	new	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	1	0	2019-11-12 17:53:58.093469+03	2019-11-12 17:53:58.093469+03	{rawversion,family,shadow,maintainers,versionclass,repo,name,effname,homepage,visiblename,version,projectname_seed,origversion}	cpan	modules	CPAN	CPAN package	cpan	\N	t	[{"url": "http://cpan.org/", "desc": "CPAN"}]	{}
-6	debian_unstable	new	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	0	0	0	4	2019-11-12 17:53:58.093469+03	2019-11-12 17:54:10.859209+03	{rawversion,family,subrepo,effname,maintainers,versionclass,repo,name,category,homepage,visiblename,version,projectname_seed,origversion}	debian_unstable	repository	Debian Unstable	Debian Unstable package	debuntu	c70036	f	[{"url": "https://www.debian.org/distrib/packages", "desc": "Debian packages"}, {"url": "https://packages.debian.org/unstable/", "desc": "Debian packages in unstable"}, {"url": "https://buildd.debian.org/", "desc": "Debian package auto-building status"}]	[{"url": "https://packages.debian.org/unstable/source/{name}", "desc": "Package details on packages.debian.org"}, {"url": "https://bugs.debian.org/{name}", "desc": "Related bugs in Debian bugzilla"}, {"url": "https://buildd.debian.org/status/package.php?p={name}&suite=unstable", "desc": "Package auto-building status"}, {"url": "https://qa.debian.org/popcon-graph.php?packages={name}", "desc": "Popularity contest statistics"}]
-5	gentoo	new	4	0	0	0	4	0	0	0	0	0	0	4	4	0	0	0	0	0	3	2019-11-12 17:53:58.093469+03	2019-11-12 17:54:10.859209+03	{flags,rawversion,family,licenses,effname,maintainers,versionclass,repo,name,category,homepage,keyname,comment,downloads,visiblename,version,projectname_seed,origversion}	gentoo	repository	Gentoo	Gentoo package	gentoo	62548f	f	[{"url": "https://gentoo.org/", "desc": "Gentoo Linux home"}, {"url": "https://packages.gentoo.org/", "desc": "Gentoo Packages"}, {"url": "https://gitweb.gentoo.org/repo/gentoo.git/tree/", "desc": "Official Gentoo ebuild repository"}, {"url": "https://github.com/gentoo/gentoo", "desc": "Gentoo ebuild repository mirror on GitHub"}]	[{"url": "https://packages.gentoo.org/packages/{category}/{name}", "desc": "Package details"}, {"url": "https://gitweb.gentoo.org/repo/gentoo.git/tree/{category}/{name}/{name}-{rawversion}.ebuild", "desc": "View ebuild"}]
-1	gobolinux	new	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	0	0	0	0	2019-11-12 17:53:58.093469+03	2019-11-12 17:54:10.859209+03	{rawversion,family,licenses,effname,versionclass,name,repo,downloads,homepage,comment,visiblename,version,projectname_seed,origversion}	gobolinux	repository	GoboLinux	GoboLinux package	gobolinux	\N	f	[{"url": "http://gobolinux.org/", "desc": "GoboLinux home"}, {"url": "https://github.com/gobolinux/Recipes", "desc": "GoboLinux recipes repository"}]	[{"url": "https://github.com/gobolinux/Recipes/tree/master/trunk/{name}/{origversion}", "desc": "Git"}]
-2	slackbuilds	new	5	0	0	0	5	0	0	0	0	0	0	5	5	0	0	0	0	0	5	2019-11-12 17:53:58.093469+03	2019-11-12 17:54:10.859209+03	{rawversion,family,effname,maintainers,versionclass,repo,name,category,homepage,downloads,visiblename,branch,version,projectname_seed,origversion}	slackbuilds	repository	SlackBuilds	SlackBuilds package	slackbuilds	000000	f	[{"url": "https://slackbuilds.org/", "desc": "SlackBuilds.org"}]	[{"url": "https://slackbuilds.org/repository/14.2/{category}/{name}/", "desc": "SlackBuilds.org page"}]
-3	freebsd	new	2	0	0	0	2	0	0	0	0	0	0	2	2	0	0	0	0	0	2	2019-11-12 17:53:58.093469+03	2019-11-12 17:54:10.859209+03	{rawversion,family,effname,maintainers,versionclass,repo,name,category,homepage,keyname,comment,visiblename,version,projectname_seed,origversion}	freebsd	repository	FreeBSD Ports	FreeBSD port	freebsd	990000	f	[{"url": "https://www.freebsd.org/", "desc": "FreeBSD home"}, {"url": "https://www.freebsd.org/ports/", "desc": "About FreeBSD ports"}, {"url": "https://www.freshports.org/", "desc": "FreshPorts - The Place For Ports"}, {"url": "https://svnweb.freebsd.org/ports/head/", "desc": "FreeBSD ports SVN repository"}, {"url": "https://pkg-status.freebsd.org/", "desc": "Package builds status"}]	[{"url": "https://www.freshports.org/{keyname}", "desc": "FreshPorts page"}, {"url": "https://svnweb.freebsd.org/ports/head/{keyname}/", "desc": "SVNWeb"}, {"url": "https://svnweb.freebsd.org/ports/head/{keyname}/Makefile?view=co", "desc": "Port's Makefile"}, {"url": "http://portsmon.freebsd.org/portoverview.py?category={keyname|dirname}&portname={keyname|basename}", "desc": "PortsMon"}, {"url": "https://bugs.freebsd.org/bugzilla/buglist.cgi?quicksearch={keyname}", "desc": "Related bugs in FreeBSD bugzilla"}]
-7	arch	new	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	0	0	0	0	2019-11-12 17:53:58.093469+03	2019-11-12 17:54:10.859209+03	{rawversion,family,subrepo,licenses,versionclass,name,repo,extrafields,effname,homepage,comment,visiblename,basename,version,projectname_seed,origversion}	arch	repository	Arch	Arch package	arch	0088cc	f	[{"url": "https://www.archlinux.org/", "desc": "Arch Linux home"}, {"url": "https://www.archlinux.org/packages/", "desc": "Arch Linux Packages"}]	[{"url": "https://www.archlinux.org/packages/?q={name}", "desc": "Package details on www.archlinux.org"}, {"url": "https://git.archlinux.org/svntogit/{archrepo}.git/tree/trunk?h=packages/{archbase}", "desc": "Git repository"}, {"url": "https://git.archlinux.org/svntogit/{archrepo}.git/tree/trunk/PKGBUILD?h=packages/{archbase}", "desc": "PKGBUILD"}, {"url": "https://www.archlinux.org/packages/{subrepo}/x86_64/{name}/", "desc": "Package information (x86_64)"}]
+COPY public.repositories (id, name, state, num_packages, num_packages_newest, num_packages_outdated, num_packages_ignored, num_packages_unique, num_packages_devel, num_packages_legacy, num_packages_incorrect, num_packages_untrusted, num_packages_noscheme, num_packages_rolling, num_metapackages, num_metapackages_unique, num_metapackages_newest, num_metapackages_outdated, num_metapackages_comparable, num_metapackages_problematic, num_problems, num_maintainers, first_seen, last_seen, used_package_fields, sortname, type, "desc", statsgroup, singular, family, color, shadow, repolinks, packagelinks) FROM stdin;
+6	debian_unstable	new	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	0	0	0	4	2019-12-02 23:56:22.832526+03	2019-12-02 23:56:33.301739+03	{versionclass,effname,homepage,name,projectname_seed,repo,origversion,rawversion,subrepo,category,maintainers,visiblename,family,version}	debian_unstable	repository	Debian Unstable	Debian+derivs	Debian Unstable package	debuntu	c70036	f	[{"url": "https://www.debian.org/distrib/packages", "desc": "Debian packages"}, {"url": "https://packages.debian.org/unstable/", "desc": "Debian packages in unstable"}, {"url": "https://buildd.debian.org/", "desc": "Debian package auto-building status"}]	[{"url": "https://packages.debian.org/unstable/source/{name}", "desc": "Package details on packages.debian.org"}, {"url": "https://bugs.debian.org/{name}", "desc": "Related bugs in Debian bugzilla"}, {"url": "https://buildd.debian.org/status/package.php?p={name}&suite=unstable", "desc": "Package auto-building status"}, {"url": "https://qa.debian.org/popcon-graph.php?packages={name}", "desc": "Popularity contest statistics"}]
+5	gentoo	new	4	0	0	0	4	0	0	0	0	0	0	4	4	0	0	0	0	0	3	2019-12-02 23:56:22.832526+03	2019-12-02 23:56:33.301739+03	{versionclass,effname,homepage,flags,projectname_seed,comment,downloads,repo,rawversion,origversion,srcname,category,trackname,maintainers,visiblename,family,version,licenses}	gentoo	repository	Gentoo	Gentoo	Gentoo package	gentoo	62548f	f	[{"url": "https://gentoo.org/", "desc": "Gentoo Linux home"}, {"url": "https://packages.gentoo.org/", "desc": "Gentoo Packages"}, {"url": "https://gitweb.gentoo.org/repo/gentoo.git/tree/", "desc": "Official Gentoo ebuild repository"}, {"url": "https://github.com/gentoo/gentoo", "desc": "Gentoo ebuild repository mirror on GitHub"}]	[{"url": "https://packages.gentoo.org/packages/{srcname}", "desc": "Package details"}, {"url": "https://gitweb.gentoo.org/repo/gentoo.git/tree/{srcname}/{srcname|basename}-{rawversion}.ebuild", "desc": "View ebuild"}]
+1	gobolinux	new	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	0	0	0	0	2019-12-02 23:56:22.832526+03	2019-12-02 23:56:33.301739+03	{versionclass,effname,homepage,name,projectname_seed,comment,downloads,origversion,rawversion,trackname,repo,visiblename,family,version,licenses}	gobolinux	repository	GoboLinux	GoboLinux	GoboLinux package	gobolinux	\N	f	[{"url": "http://gobolinux.org/", "desc": "GoboLinux home"}, {"url": "https://github.com/gobolinux/Recipes", "desc": "GoboLinux recipes repository"}]	[{"url": "https://github.com/gobolinux/Recipes/tree/master/trunk/{name}/{origversion}", "desc": "Git"}]
+2	slackbuilds	new	5	0	0	0	5	0	0	0	0	0	0	5	5	0	0	0	0	0	5	2019-12-02 23:56:22.832526+03	2019-12-02 23:56:33.301739+03	{versionclass,effname,homepage,name,projectname_seed,downloads,repo,origversion,rawversion,category,maintainers,visiblename,family,version,branch}	slackbuilds	repository	SlackBuilds	SlackBuilds	SlackBuilds package	slackbuilds	000000	f	[{"url": "https://slackbuilds.org/", "desc": "SlackBuilds.org"}]	[{"url": "https://slackbuilds.org/repository/14.2/{category}/{name}/", "desc": "SlackBuilds.org page"}]
+3	freebsd	new	2	0	0	0	2	0	0	0	0	0	0	2	2	0	0	0	0	0	2	2019-12-02 23:56:22.832526+03	2019-12-02 23:56:33.301739+03	{binname,versionclass,effname,homepage,projectname_seed,comment,repo,origversion,rawversion,srcname,category,trackname,maintainers,visiblename,family,version}	freebsd	repository	FreeBSD Ports	FreeBSD Ports	FreeBSD port	freebsd	990000	f	[{"url": "https://www.freebsd.org/", "desc": "FreeBSD home"}, {"url": "https://www.freebsd.org/ports/", "desc": "About FreeBSD ports"}, {"url": "https://www.freshports.org/", "desc": "FreshPorts - The Place For Ports"}, {"url": "https://svnweb.freebsd.org/ports/head/", "desc": "FreeBSD ports SVN repository"}, {"url": "https://pkg-status.freebsd.org/", "desc": "Package builds status"}]	[{"url": "https://www.freshports.org/{srcname}", "desc": "FreshPorts page"}, {"url": "https://svnweb.freebsd.org/ports/head/{srcname}/", "desc": "SVNWeb"}, {"url": "https://svnweb.freebsd.org/ports/head/{srcname}/Makefile?view=co", "desc": "Port's Makefile"}, {"url": "http://portsmon.freebsd.org/portoverview.py?category={srcname|dirname}&portname={srcname|basename}", "desc": "PortsMon"}, {"url": "https://bugs.freebsd.org/bugzilla/buglist.cgi?quicksearch={srcname}", "desc": "Related bugs in FreeBSD bugzilla"}]
+7	arch	new	1	0	0	0	1	0	0	0	0	0	0	1	1	0	0	0	0	0	0	2019-12-02 23:56:22.832526+03	2019-12-02 23:56:33.301739+03	{binname,versionclass,effname,homepage,projectname_seed,comment,origversion,rawversion,subrepo,srcname,trackname,repo,visiblename,family,version,licenses}	arch	repository	Arch	Arch+derivs	Arch package	arch	0088cc	f	[{"url": "https://www.archlinux.org/", "desc": "Arch Linux home"}, {"url": "https://www.archlinux.org/packages/", "desc": "Arch Linux Packages"}]	[{"url": "https://www.archlinux.org/packages/?q={binname}", "desc": "Package details on www.archlinux.org"}, {"url": "https://git.archlinux.org/svntogit/{archrepo}.git/tree/trunk?h=packages/{srcname}", "desc": "Git repository"}, {"url": "https://git.archlinux.org/svntogit/{archrepo}.git/tree/trunk/PKGBUILD?h=packages/{srcname}", "desc": "PKGBUILD"}, {"url": "https://www.archlinux.org/packages/{subrepo}/x86_64/{binname}/", "desc": "Package information (x86_64)"}]
+4	cpan	new	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	1	0	2019-12-02 23:56:22.832526+03	2019-12-02 23:56:22.832526+03	{versionclass,effname,homepage,name,projectname_seed,repo,origversion,rawversion,shadow,trackname,maintainers,visiblename,family,version}	cpan	modules	CPAN	CPAN	CPAN package	cpan	\N	t	[{"url": "http://cpan.org/", "desc": "CPAN"}]	{}
 \.
 
 
@@ -1395,7 +1396,7 @@ COPY public.repositories (id, name, state, num_packages, num_packages_newest, nu
 --
 
 COPY public.repositories_history (ts, snapshot) FROM stdin;
-2019-11-12 17:54:10.859209+03	{"arch": {"num_problems": 0, "num_maintainers": 0, "num_metapackages": 1, "num_metapackages_newest": 0, "num_metapackages_unique": 1, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_problematic": 0}, "cpan": {"num_problems": 1, "num_maintainers": 0, "num_metapackages": 0, "num_metapackages_newest": 0, "num_metapackages_unique": 0, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_problematic": 0}, "gentoo": {"num_problems": 0, "num_maintainers": 3, "num_metapackages": 4, "num_metapackages_newest": 0, "num_metapackages_unique": 4, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_problematic": 0}, "freebsd": {"num_problems": 0, "num_maintainers": 2, "num_metapackages": 2, "num_metapackages_newest": 0, "num_metapackages_unique": 2, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_problematic": 0}, "gobolinux": {"num_problems": 0, "num_maintainers": 0, "num_metapackages": 1, "num_metapackages_newest": 0, "num_metapackages_unique": 1, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_problematic": 0}, "slackbuilds": {"num_problems": 0, "num_maintainers": 5, "num_metapackages": 5, "num_metapackages_newest": 0, "num_metapackages_unique": 5, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_problematic": 0}, "debian_unstable": {"num_problems": 0, "num_maintainers": 4, "num_metapackages": 1, "num_metapackages_newest": 0, "num_metapackages_unique": 1, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_problematic": 0}}
+2019-12-02 23:56:33.301739+03	{"arch": {"num_problems": 0, "num_maintainers": 0, "num_metapackages": 1, "num_metapackages_newest": 0, "num_metapackages_unique": 1, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_problematic": 0}, "cpan": {"num_problems": 1, "num_maintainers": 0, "num_metapackages": 0, "num_metapackages_newest": 0, "num_metapackages_unique": 0, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_problematic": 0}, "gentoo": {"num_problems": 0, "num_maintainers": 3, "num_metapackages": 4, "num_metapackages_newest": 0, "num_metapackages_unique": 4, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_problematic": 0}, "freebsd": {"num_problems": 0, "num_maintainers": 2, "num_metapackages": 2, "num_metapackages_newest": 0, "num_metapackages_unique": 2, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_problematic": 0}, "gobolinux": {"num_problems": 0, "num_maintainers": 0, "num_metapackages": 1, "num_metapackages_newest": 0, "num_metapackages_unique": 1, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_problematic": 0}, "slackbuilds": {"num_problems": 0, "num_maintainers": 5, "num_metapackages": 5, "num_metapackages_newest": 0, "num_metapackages_unique": 5, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_problematic": 0}, "debian_unstable": {"num_problems": 0, "num_maintainers": 4, "num_metapackages": 1, "num_metapackages_newest": 0, "num_metapackages_unique": 1, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_problematic": 0}}
 \.
 
 
@@ -1404,13 +1405,13 @@ COPY public.repositories_history (ts, snapshot) FROM stdin;
 --
 
 COPY public.repository_ruleset_hashes (repository, ruleset_hash) FROM stdin;
-arch	096024ac45d72b976a25e8e4043a6197aa0b818cf181e9e091586a480db19d7d
-cpan	096024ac45d72b976a25e8e4043a6197aa0b818cf181e9e091586a480db19d7d
-debian_unstable	096024ac45d72b976a25e8e4043a6197aa0b818cf181e9e091586a480db19d7d
-freebsd	096024ac45d72b976a25e8e4043a6197aa0b818cf181e9e091586a480db19d7d
-gentoo	096024ac45d72b976a25e8e4043a6197aa0b818cf181e9e091586a480db19d7d
-gobolinux	096024ac45d72b976a25e8e4043a6197aa0b818cf181e9e091586a480db19d7d
-slackbuilds	096024ac45d72b976a25e8e4043a6197aa0b818cf181e9e091586a480db19d7d
+arch	7a29b9b219b7c83154223e1f4f6e7b845d6650d921d56ad9316eaffabe96c1d3
+cpan	7a29b9b219b7c83154223e1f4f6e7b845d6650d921d56ad9316eaffabe96c1d3
+debian_unstable	7a29b9b219b7c83154223e1f4f6e7b845d6650d921d56ad9316eaffabe96c1d3
+freebsd	7a29b9b219b7c83154223e1f4f6e7b845d6650d921d56ad9316eaffabe96c1d3
+gentoo	7a29b9b219b7c83154223e1f4f6e7b845d6650d921d56ad9316eaffabe96c1d3
+gobolinux	7a29b9b219b7c83154223e1f4f6e7b845d6650d921d56ad9316eaffabe96c1d3
+slackbuilds	7a29b9b219b7c83154223e1f4f6e7b845d6650d921d56ad9316eaffabe96c1d3
 \.
 
 
@@ -1419,13 +1420,13 @@ slackbuilds	096024ac45d72b976a25e8e4043a6197aa0b818cf181e9e091586a480db19d7d
 --
 
 COPY public.runs (id, type, repository_id, status, no_changes, start_ts, finish_ts, num_lines, num_warnings, num_errors, utime, stime, maxrss, maxrss_delta, traceback) FROM stdin;
-1	parse	7	successful	f	2019-11-12 17:54:10.664678+03	2019-11-12 17:54:10.70508+03	10	0	0	00:00:00.026126	00:00:00.00009	90520	416	\N
-2	parse	4	successful	f	2019-11-12 17:54:10.711381+03	2019-11-12 17:54:10.725191+03	4	0	0	00:00:00.007547	00:00:00	91452	932	\N
-3	parse	6	successful	f	2019-11-12 17:54:10.729387+03	2019-11-12 17:54:10.755049+03	8	0	0	00:00:00.015903	00:00:00	91788	336	\N
-4	parse	3	successful	f	2019-11-12 17:54:10.759106+03	2019-11-12 17:54:10.777942+03	4	0	0	00:00:00.012407	00:00:00	92528	740	\N
-5	parse	5	successful	f	2019-11-12 17:54:10.781965+03	2019-11-12 17:54:10.809148+03	4	0	0	00:00:00.020775	00:00:00	92548	20	\N
-6	parse	1	successful	f	2019-11-12 17:54:10.813083+03	2019-11-12 17:54:10.825972+03	4	0	0	00:00:00.006964	00:00:00.000029	92548	0	\N
-7	parse	2	successful	f	2019-11-12 17:54:10.830105+03	2019-11-12 17:54:10.856386+03	4	0	0	00:00:00.020208	00:00:00.000038	92580	32	\N
+1	parse	7	successful	f	2019-12-02 23:56:33.118998+03	2019-12-02 23:56:33.157132+03	10	0	0	00:00:00.020159	00:00:00.000041	97032	824	\N
+2	parse	4	successful	f	2019-12-02 23:56:33.16277+03	2019-12-02 23:56:33.174675+03	4	0	0	00:00:00	00:00:00.007858	97680	648	\N
+3	parse	6	successful	f	2019-12-02 23:56:33.178564+03	2019-12-02 23:56:33.199053+03	8	0	0	00:00:00.010016	00:00:00.000031	97680	0	\N
+4	parse	3	successful	f	2019-12-02 23:56:33.202725+03	2019-12-02 23:56:33.217385+03	4	0	0	00:00:00.009051	00:00:00.000012	98680	1000	\N
+5	parse	5	successful	f	2019-12-02 23:56:33.221308+03	2019-12-02 23:56:33.248424+03	4	0	0	00:00:00.018719	00:00:00	98708	28	\N
+6	parse	1	successful	f	2019-12-02 23:56:33.252719+03	2019-12-02 23:56:33.273156+03	4	0	0	00:00:00.008194	00:00:00	98828	120	\N
+7	parse	2	successful	f	2019-12-02 23:56:33.276799+03	2019-12-02 23:56:33.299259+03	4	0	0	00:00:00.016732	00:00:00	98828	0	\N
 \.
 
 
@@ -1443,7 +1444,7 @@ COPY public.statistics (num_packages, num_metapackages, num_problems, num_mainta
 --
 
 COPY public.statistics_history (ts, snapshot) FROM stdin;
-2019-11-12 17:54:10.859209+03	{"num_packages": 15, "num_problems": 1, "num_maintainers": 15, "num_metapackages": 14, "num_urls_checked": 0}
+2019-12-02 23:56:33.301739+03	{"num_packages": 15, "num_problems": 1, "num_maintainers": 15, "num_metapackages": 14, "num_urls_checked": 0}
 \.
 
 
