@@ -213,12 +213,10 @@
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						By number of projects <b>per maintainer</b>
+						(only repos with > 1000 packages; less is better)
 					</div>
 					<div class="panel-body">
 						{{ toplist(top_by_ppm, '{:.1f}') }}
-					</div>
-					<div class="panel-footer">
-						(only repos with > 1000 packages)
 					</div>
 				</div>
 			</div>
@@ -236,12 +234,10 @@
 				<div class="panel panel-success">
 					<div class="panel-heading">
 						By percentage of <b>up to date</b> projects
+						(only repos with > 1000 packages)
 					</div>
 					<div class="panel-body">
 						{{ toplist(top_by_pnewest, '{:.2f}%') }}
-					</div>
-					<div class="panel-footer">
-						(only repos with > 1000 packages)
 					</div>
 				</div>
 			</div>
