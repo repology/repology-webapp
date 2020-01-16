@@ -32,7 +32,6 @@
 			<th class="text-center" title="binname">bN</th>
 			<th class="text-center" title="trackname">TN</th>
 			<th class="text-center deprecated-field" title="basename">BN</th>
-			<th class="text-center deprecated-field" title="keyname">KN</th>
 			{% endif %}
 		</tr>
 	</thead>
@@ -65,7 +64,6 @@
 			<td class="text-center">{% if 'binname' in used %}✔{% elif not anyname %}<span class="text-danger" title="Either of name, srcname, binname eventually required">✘</span>{% endif %}</td>
 			<td class="text-center">{% if 'trackname' in used %}✔{% else %}<span class="text-danger" title="Eventually required">✘</span>{% endif %}</td>
 			<td class="text-center">{% if 'basename' in used %}<span class="text-danger" title="Deprecated">✔</span>{% endif %}</td>
-			<td class="text-center">{% if 'keyname' in used %}<span class="text-danger" title="Deprecated">✔</span>{% endif %}</td>
 			{% endif %}
 		</tr>
 	{% endfor %}

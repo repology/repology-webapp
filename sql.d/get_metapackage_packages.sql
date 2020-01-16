@@ -47,7 +47,6 @@ SELECT
 	name,
 	srcname,
 	binname,
-	keyname,
 	basename,
 	trackname,
 

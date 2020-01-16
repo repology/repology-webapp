@@ -28,11 +28,11 @@ from .package import spawn_package
 
 class TestPackageFormatter(unittest.TestCase):
     def test_simple(self) -> None:
-        pkg = spawn_package(name='foo', keyname='foo/bar', version='1.0', origversion='1.0_1', category='devel', subrepo='main', extrafields={'foo': 'bar'})
+        pkg = spawn_package(name='foo', srcname='foo/bar', binname='FOO', version='1.0', origversion='1.0_1', category='devel', subrepo='main', extrafields={'foo': 'bar'})
         fmt = PackageFormatter()
 
         self.assertEqual(fmt.format('Just A String', pkg), 'Just A String')
-        self.assertEqual(fmt.format('{name} {keyname} {version} {origversion} {category} {subrepo} {foo}', pkg), 'foo foo/bar 1.0 1.0_1 devel main bar')
+        self.assertEqual(fmt.format('{name} {srcname} {binname} {version} {origversion} {category} {subrepo} {foo}', pkg), 'foo foo/bar FOO 1.0 1.0_1 devel main bar')
 
     def test_filter_lowercase(self) -> None:
         fmt = PackageFormatter()
@@ -60,14 +60,8 @@ class TestPackageFormatter(unittest.TestCase):
     def test_filter_basename(self) -> None:
         fmt = PackageFormatter()
 
-        self.assertEqual(fmt.format('{keyname|basename}', spawn_package(keyname='foo/bar')), 'bar')
-        self.assertEqual(fmt.format('{keyname|dirname}', spawn_package(keyname='foo/bar')), 'foo')
-
-    def test_basename(self) -> None:
-        fmt = PackageFormatter()
-
-        self.assertEqual(fmt.format('{basename}', spawn_package(name='foo', basename='bar')), 'bar')
-        self.assertEqual(fmt.format('{basename}', spawn_package(name='foo')), 'foo')
+        self.assertEqual(fmt.format('{srcname|basename}', spawn_package(srcname='foo/bar')), 'bar')
+        self.assertEqual(fmt.format('{srcname|dirname}', spawn_package(srcname='foo/bar')), 'foo')
 
     def test_incdec(self) -> None:
         fmt = PackageFormatter()

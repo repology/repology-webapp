@@ -1,4 +1,4 @@
-# Copyright (C) 2016-2017 Dmitry Marakasov <amdmi3@amdmi3.ru>
+# Copyright (C) 2016-2020 Dmitry Marakasov <amdmi3@amdmi3.ru>
 #
 # This file is part of repology
 #
@@ -59,10 +59,6 @@ class PackageFormatter(string.Formatter):
 
         if key == 'name':
             value = pkgdata['name']
-        elif key == 'basename':
-            value = pkgdata['basename'] if pkgdata['basename'] is not None else pkgdata['name']
-        elif key == 'keyname':
-            value = pkgdata['keyname']
         elif key == 'srcname':
             value = pkgdata['srcname']
         elif key == 'binname':

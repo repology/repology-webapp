@@ -36,7 +36,6 @@ def api_v1_package_to_json(package: PackageDataDetailed) -> Dict[str, Any]:
             'name',
             'srcname',
             'binname',
-            'keyname',
             'visiblename',
 
             'version',
