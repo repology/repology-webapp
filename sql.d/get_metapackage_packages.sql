@@ -47,7 +47,6 @@ SELECT
 	name,
 	srcname,
 	binname,
-	basename,
 	trackname,
 
 	origversion,

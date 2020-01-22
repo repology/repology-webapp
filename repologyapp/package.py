@@ -161,7 +161,6 @@ class PackageDataDetailed(PackageDataSummarizable):
     name: Optional[str]
     srcname: Optional[str]
     binname: Optional[str]
-    basename: Optional[str]
     trackname: Optional[str]
 
     origversion: str

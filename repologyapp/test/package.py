@@ -31,12 +31,11 @@ def spawn_package(**custom_args: Any) -> PackageDataDetailed:
         'subrepo': None,
 
         'name': 'dummyname',
-        'basename': None,
-        'visiblename': 'dummyname',
-        'effname': 'dummyname',
-        'trackname': None,
         'srcname': None,
         'binname': None,
+        'visiblename': 'dummyname',
+        'trackname': None,
+        'effname': 'dummyname',
 
         'version': '0',
         'origversion': '0',
