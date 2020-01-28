@@ -48,11 +48,6 @@ def badge_vertical_allrepos(name: str) -> Any:
     header = args.get('header')
     minversion = args.get('minversion')
 
-    try:
-        columns = max(1, int(args.get('columns', '1')))
-    except:
-        columns = 1
-
     cells = []
 
     for reponame in repometadata.active_names():
@@ -67,6 +62,14 @@ def badge_vertical_allrepos(name: str) -> Any:
                 BadgeCell(repometadata[reponame]['desc'], align='r'),
                 BadgeCell(version, color=color, truncate=13, minwidth=60)
             ])
+
+    try:
+        columns = min(
+            int(args.get('columns', '1')),
+            len(cells)
+        )
+    except:
+        columns = 1
 
     if columns > 1:
         chunks = []
