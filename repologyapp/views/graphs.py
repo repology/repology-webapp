@@ -1,4 +1,4 @@
-# Copyright (C) 2016-2019 Dmitry Marakasov <amdmi3@amdmi3.ru>
+# Copyright (C) 2016-2020 Dmitry Marakasov <amdmi3@amdmi3.ru>
 #
 # This file is part of repology
 #
@@ -16,8 +16,7 @@
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
-import math
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable
 
 import flask
 
@@ -173,96 +172,3 @@ def graph_total_maintainers() -> Any:
 @ViewRegistrar('/graph/total/problems.svg')
 def graph_total_problems() -> Any:
     return graph_total_generic(lambda s: s['num_problems'], '#c00000')  # type: ignore
-
-
-def clever_ceil(value: int) -> int:
-    if value == 0:
-        return 1
-
-    tick = math.pow(10, math.ceil(math.log(value, 10) - 2))
-    return int(math.ceil(value / tick) * tick)
-
-
-def map_repo_generic(repo2coords: Callable[[Dict[str, Any]], Dict[str, float]], namex: str = 'X', namey: str = 'Y', unitx: str = '', unity: str = '') -> Any:
-    snapshots: List[Dict[str, Any]] = [
-        #get_db().get_repositories_from_past(60 * 60 * 24 * 30)
-    ]
-
-    points = []
-    for repo in get_db().get_active_repositories():
-        point = {
-            'text': repometadata[repo['name']]['desc'],
-            'coords': list(map(repo2coords, [repo] + [snapshot[repo['name']] for snapshot in snapshots if repo['name'] in snapshot]))
-        }
-
-        if 'color' in repometadata[repo['name']]:
-            point['color'] = repometadata[repo['name']]['color']
-
-        points.append(point)
-
-    width = 1140
-    height = 800
-
-    return (
-        flask.render_template(
-            'map.svg',
-            width=width,
-            height=height,
-            minx=0,
-            miny=0,
-            maxx=clever_ceil(max(map(lambda p: p['coords'][0]['x'], points))) if points else 1,  # type: ignore
-            maxy=clever_ceil(max(map(lambda p: p['coords'][0]['y'], points))) if points else 1,  # type: ignore
-            namex=namex,
-            namey=namey,
-            unitx=unitx,
-            unity=unity,
-            points=points,
-        ),
-        {'Content-type': 'image/svg+xml'}
-    )
-
-
-@ViewRegistrar('/graph/map_repo_size_fresh.svg')
-def graph_map_repo_size_fresh() -> Any:
-    def repo2coords(repo: Dict[str, Any]) -> Dict[str, float]:
-        return {
-            'x': repo['num_metapackages'],
-            'y': repo['num_metapackages_newest']
-        }
-
-    return map_repo_generic(
-        repo2coords,
-        namex='Number of packages in repository',
-        namey='Number of fresh packages in repository'
-    )
-
-
-@ViewRegistrar('/graph/map_repo_size_fresh_nonunique.svg')
-def graph_map_repo_size_fresh_nonunique() -> Any:
-    def repo2coords(repo: Dict[str, Any]) -> Dict[str, float]:
-        return {
-            'x': repo['num_metapackages_newest'] + repo['num_metapackages_outdated'],
-            'y': repo['num_metapackages_newest']
-        }
-
-    return map_repo_generic(
-        repo2coords,
-        namex='Number of non-unique packages in repository',
-        namey='Number of fresh packages in repository'
-    )
-
-
-@ViewRegistrar('/graph/map_repo_size_freshness.svg')
-def graph_map_repo_size_freshness() -> Any:
-    def repo2coords(repo: Dict[str, Any]) -> Dict[str, float]:
-        return {
-            'x': repo['num_metapackages'],
-            'y': 100.0 * repo['num_metapackages_newest'] / repo['num_metapackages'] if repo['num_metapackages'] else 0
-        }
-
-    return map_repo_generic(
-        repo2coords,
-        namex='Number of packages in repository',
-        namey='Percentage of fresh packages',
-        unity='%'
-    )
