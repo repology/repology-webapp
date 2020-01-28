@@ -55,6 +55,9 @@ class BadgeCell:
         self.collapsible = collapsible
         self.align = align
 
+    def __repr__(self) -> str:
+        return f'BadgeCell({repr(self.text)})'
+
 
 def render_generic_badge(rows: List[List[BadgeCell]], header: Optional[str] = None, min_width: int = 0) -> Tuple[str, Dict[str, str]]:
     num_rows = len(rows)

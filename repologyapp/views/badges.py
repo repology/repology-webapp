@@ -18,6 +18,7 @@
 import re
 from collections import defaultdict
 from functools import cmp_to_key
+from itertools import zip_longest
 from typing import Any, Dict, List, Optional, Tuple
 
 import flask
@@ -47,6 +48,11 @@ def badge_vertical_allrepos(name: str) -> Any:
     header = args.get('header')
     minversion = args.get('minversion')
 
+    try:
+        columns = max(1, int(args.get('columns', '1')))
+    except:
+        columns = 1
+
     cells = []
 
     for reponame in repometadata.active_names():
@@ -61,6 +67,16 @@ def badge_vertical_allrepos(name: str) -> Any:
                 BadgeCell(repometadata[reponame]['desc'], align='r'),
                 BadgeCell(version, color=color, truncate=13, minwidth=60)
             ])
+
+    if columns > 1:
+        chunks = []
+        columnsize = (len(cells) + columns - 1) // columns
+        for column in range(columns):
+            chunks.append(cells[column * columnsize:column * columnsize + columnsize])
+
+        empty_filler = [BadgeCell(''), BadgeCell('')]
+
+        cells = [sum(cells, []) for cells in zip_longest(*chunks, fillvalue=empty_filler)]
 
     if header is None:
         header = 'Packaging status' if cells else 'No known packages'

@@ -103,6 +103,7 @@ class TestFlask(unittest.TestCase):
         self.checkurl_svg('/badge/vertical-allrepos/kiconvtool.svg', has=['<svg', 'FreeBSD'])
         self.checkurl_svg('/badge/vertical-allrepos/kiconvtool.svg?header=FooBar', has=['<svg', 'FreeBSD', 'FooBar'])
         self.checkurl_svg('/badge/vertical-allrepos/kiconvtool.svg?minversion=99999999', has=['<svg', 'FreeBSD', 'e00000'])
+        self.checkurl_svg('/badge/vertical-allrepos/kiconvtool.svg?columns=5', has=['<svg', 'FreeBSD', 'e00000'])
         self.checkurl_svg('/badge/vertical-allrepos/nonexistent.svg', has=['<svg', 'No known packages'])
 
         self.checkurl_svg('/badge/tiny-repos/kiconvtool.svg', has=['<svg', '>1<'])
