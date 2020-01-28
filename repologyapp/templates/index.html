@@ -212,8 +212,7 @@
 			<div class="col-md-4">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						By number of projects <b>per maintainer</b>
-						(only repos with > 1000 packages; less is better)
+						By number of projects <b>per maintainer</b><sup><a href="#top-footnote-1">1</a>,<a href="#top-footnote-1">2</a></sup>
 					</div>
 					<div class="panel-body">
 						{{ toplist(top_by_ppm, '{:.1f}') }}
@@ -233,8 +232,7 @@
 			<div class="col-md-4">
 				<div class="panel panel-success">
 					<div class="panel-heading">
-						By percentage of <b>up to date</b> projects
-						(only repos with > 1000 packages)
+						By percentage of <b>up to date</b> projects<sup><a href="#top-footnote-1">1</a></sup>
 					</div>
 					<div class="panel-body">
 						{{ toplist(top_by_pnewest, '{:.2f}%') }}
@@ -242,6 +240,13 @@
 				</div>
 			</div>
 		</div>
+
+		<ol>
+			<li id="top-footnote-1">Only repositories with more than 1000 projects are counted</li>
+			<li id="top-footnote-2">Less is better</li>
+		</ol>
+
+		<p>For repositories which belong to a group (e.g. CentOS versions), best repository is always considered.</p>
 	</section>
 
 	<section>

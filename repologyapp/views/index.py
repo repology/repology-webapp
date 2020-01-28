@@ -216,9 +216,9 @@ def index() -> Any:
         top_by_total=top_by_total.get(top_size),
         top_by_nonunique=top_by_nonunique.get(top_size),
         top_by_newest=top_by_newest.get(top_size),
-        top_by_pnewest=top_by_pnewest.get(top_size - 1),
+        top_by_pnewest=top_by_pnewest.get(top_size),
         top_by_maintainers=top_by_maintainers.get(top_size),
-        top_by_ppm=top_by_ppm.get(top_size - 1),
+        top_by_ppm=top_by_ppm.get(top_size),
         metapackages=metapackages,
         metapackagedata=metapackagedata
     )
