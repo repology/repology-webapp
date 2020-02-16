@@ -20,7 +20,7 @@ which updates the repository information.
 - Python module [pillow](https://pypi.python.org/pypi/Pillow)
 - Python module [psycopg2](http://initd.org/psycopg/)
 - Python module [pytz](https://pypi.python.org/pypi/pytz)
-- [PostgreSQL](https://www.postgresql.org/) 10.0+
+- [PostgreSQL](https://www.postgresql.org/) 12.0+
 - PostgreSQL extension [libversion](https://github.com/repology/postgresql-libversion)
 
 ### For development
