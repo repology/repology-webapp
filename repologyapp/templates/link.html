@@ -57,7 +57,6 @@
 <ul class="list-unstyled">
 	<li>URL: <b><a href="{{ linkinfo.url }}">{{ linkinfo.url }}</a></b> (<a href="{{ 'https://web.archive.org/web/*/' + linkinfo.url }}">see on archive.org</a>)</li>
 	<li>First seen: <b>{{ macros.format_absolute_time_sec(linkinfo.first_extracted) }}</b> (<b>{{ macros.format_time_interval(now() - linkinfo.first_extracted) }} ago</b>)</li>
-	<li>Last seen: <b>{{ macros.format_absolute_time_sec(linkinfo.last_extracted) }}</b> (<b>{{ macros.format_time_interval(now() - linkinfo.last_extracted) }} ago</b>)</li>
 	{% if linkinfo.last_checked is not none %}
 	<li>Last checked:
 		<b>{{ macros.format_absolute_time_sec(linkinfo.last_checked) }}</b>
