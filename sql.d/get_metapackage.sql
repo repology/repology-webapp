@@ -1,4 +1,4 @@
--- Copyright (C) 2019 Dmitry Marakasov <amdmi3@amdmi3.ru>
+-- Copyright (C) 2019-2020 Dmitry Marakasov <amdmi3@amdmi3.ru>
 --
 -- This file is part of repology
 --
@@ -25,6 +25,6 @@
 SELECT
 	*,
     now() - first_seen AS first_seen_ago,
-    now() - last_seen AS last_seen_ago
+    now() - orphaned_at AS orphaned_ago
 FROM metapackages
 WHERE effname = %(effname)s;

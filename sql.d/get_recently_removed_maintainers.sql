@@ -23,9 +23,9 @@
 --
 --------------------------------------------------------------------------------
 SELECT
-	now() - last_seen AS ago,
+	now() - orphaned_at AS ago,
 	maintainer
 FROM maintainers
-WHERE num_packages = 0
-ORDER BY last_seen DESC, maintainer
+WHERE orphaned_at IS NOT NULL
+ORDER BY orphaned_at DESC, maintainer
 LIMIT %(limit)s;

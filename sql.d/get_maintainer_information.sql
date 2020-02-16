@@ -50,8 +50,8 @@ SELECT
 	num_projects_per_category,
 
 	first_seen,
-	last_seen,
+	orphaned_at,
 	now() - first_seen AS first_seen_ago,
-	now() - last_seen AS last_seen_ago
+	now() - orphaned_at AS orphaned_ago
 FROM maintainers
 WHERE maintainer = %(maintainer)s;

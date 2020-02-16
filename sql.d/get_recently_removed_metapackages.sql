@@ -23,9 +23,9 @@
 --
 --------------------------------------------------------------------------------
 SELECT
-	now() - last_seen AS ago,
+	now() - orphaned_at AS ago,
 	effname
 FROM metapackages
-WHERE num_repos = 0
-ORDER BY last_seen DESC, effname
+WHERE orphaned_at IS NOT NULL
+ORDER BY orphaned_at DESC, effname
 LIMIT %(limit)s;
