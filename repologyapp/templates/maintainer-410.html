@@ -12,7 +12,7 @@
 <div class="container">
 
 <div class="alert alert-warning" role="alert">
-	<p>Sorry, but Repology no longer knows maintainer <strong>{{ maintainer }}</strong>{% if maintainer_info.orphaned_at is not null %} since {{ macros.format_absolute_time(maintainer_info.orphaned_at) }}{{ macros.timezone_abbr() }} ({{ macros.format_time_interval(maintainer_info.orphaned_ago) }} ago){%- endif -%}.</p>
+	<p>Sorry, but Repology no longer knows maintainer <strong>{{ maintainer }}</strong>{% if maintainer_info.orphaned_at %} since {{ macros.format_absolute_time(maintainer_info.orphaned_at) }}{{ macros.timezone_abbr() }} ({{ macros.format_time_interval(maintainer_info.orphaned_ago) }} ago){%- endif -%}.</p>
 	<p>Some of the reasons which may have caused this:</p>
 	<ul>
 		<li>The maintainer no longer maintains any packages.</li>
