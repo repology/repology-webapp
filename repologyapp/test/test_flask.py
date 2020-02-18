@@ -214,6 +214,9 @@ class TestFlask(unittest.TestCase):
         self.checkurl_html('/projects/..0/', has=['kiconvtool'])
         self.checkurl_html('/projects/zzzzzz/', has=['kiconvtool'])
 
+    def test_experimental(self) -> None:
+        self.checkurl_html('/experimental/trending')
+
     def test_api_v1_project(self) -> None:
         self.assertEqual(
             self.checkurl_json('/api/v1/project/kiconvtool', mimetype='application/json'),
