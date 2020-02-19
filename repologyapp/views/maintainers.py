@@ -23,7 +23,7 @@ import flask
 
 from repologyapp.config import config
 from repologyapp.db import get_db
-from repologyapp.feed_helpers import smear_timestamps
+from repologyapp.feed_helpers import unicalize_feed_timestamps
 from repologyapp.view_registry import ViewRegistrar
 
 
@@ -140,7 +140,7 @@ def maintainer_repo_feed(maintainer: str, repo: str) -> Any:
         'maintainer-repo-feed.html',
         maintainer=maintainer,
         repo=repo,
-        history=smear_timestamps(
+        history=unicalize_feed_timestamps(
             get_db().get_maintainer_feed(
                 maintainer=maintainer,
                 repo=repo,
@@ -158,7 +158,7 @@ def maintainer_repo_feed_atom(maintainer: str, repo: str) -> Any:
             'maintainer-repo-feed-atom.xml',
             maintainer=maintainer,
             repo=repo,
-            history=smear_timestamps(
+            history=unicalize_feed_timestamps(
                 get_db().get_maintainer_feed(
                     maintainer=maintainer,
                     repo=repo,

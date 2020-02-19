@@ -1,4 +1,4 @@
-# Copyright (C) 2018-2019 Dmitry Marakasov <amdmi3@amdmi3.ru>
+# Copyright (C) 2018-2020 Dmitry Marakasov <amdmi3@amdmi3.ru>
 #
 # This file is part of repology
 #
@@ -16,12 +16,22 @@
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
-from typing import Any, Collection, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 
-def smear_timestamps(entries: Collection[Dict[str, Any]]) -> Collection[Dict[str, Any]]:
+def unicalize_feed_timestamps(entries: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     prev_ts: Optional[datetime.datetime] = None
 
+    # it is likely for multiple events to share the same timestamp,
+    # however at least W3C feed validator (https://validator.w3.org/feed)
+    # recommends to use unique values:
+    # "Two entries with the same value for atom:updated:"
+    #
+    # We thus modify event timestamps here to make them unique.
+    # - 1 second is used as minimal interval between events as it's assumed
+    #   that some readers may not have sub-second precision
+    # - We move events into the past and not the future, to make
+    #   timestamps stable if deed length changes
     for entry in entries:
         if 'ts' in entry and prev_ts and entry['ts'] >= prev_ts:
             entry['ts'] = prev_ts - datetime.timedelta(seconds=1)

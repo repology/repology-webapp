@@ -22,7 +22,7 @@ import flask
 
 from repologyapp.config import config
 from repologyapp.db import get_db
-from repologyapp.feed_helpers import smear_timestamps
+from repologyapp.feed_helpers import unicalize_feed_timestamps
 from repologyapp.globals import repometadata
 from repologyapp.view_registry import ViewRegistrar
 
@@ -61,7 +61,7 @@ def repository_feed(repo: str) -> Any:
     return flask.render_template(
         'repository-feed.html',
         repo=repo,
-        history=smear_timestamps(
+        history=unicalize_feed_timestamps(
             get_db().get_repository_feed(
                 repo=repo,
                 limit=config['HISTORY_PER_PAGE']
@@ -77,7 +77,7 @@ def repository_feed_atom(repo: str) -> Any:
         flask.render_template(
             'repository-feed-atom.xml',
             repo=repo,
-            history=smear_timestamps(
+            history=unicalize_feed_timestamps(
                 get_db().get_repository_feed(
                     repo=repo,
                     timespan=datetime.timedelta(weeks=4),
