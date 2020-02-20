@@ -34,5 +34,5 @@ WHERE
 {% if timespan %}
 	AND ts >= now() - %(timespan)s
 {% endif %}
-ORDER BY ts DESC, effname, type
+ORDER BY ts DESC, effname, type DESC
 LIMIT %(limit)s;

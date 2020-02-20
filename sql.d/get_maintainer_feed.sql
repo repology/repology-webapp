@@ -1,4 +1,4 @@
--- Copyright (C) 2018 Dmitry Marakasov <amdmi3@amdmi3.ru>
+-- Copyright (C) 2018,2020 Dmitry Marakasov <amdmi3@amdmi3.ru>
 --
 -- This file is part of repology
 --
@@ -38,5 +38,5 @@ WHERE
 {% if timespan %}
 	AND ts >= now() - %(timespan)s
 {% endif %}
-ORDER BY ts DESC, effname, type
+ORDER BY ts DESC, effname, type DESC
 LIMIT %(limit)s;
