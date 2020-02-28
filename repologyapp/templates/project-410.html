@@ -32,5 +32,10 @@
 {{ projects_table.projects_table(metapackages, metapackagedata, target_project_endpoint=request.endpoint) }}
 {% endif %}
 
+{% if metapackages2 and session.admin %}
+<p>Results from new WIP redicects facility:</p>
+{{ projects_table.projects_table(metapackages2, metapackagedata2, target_project_endpoint=request.endpoint) }}
+{% endif %}
+
 </div>
 {% endblock %}
