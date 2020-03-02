@@ -21,7 +21,7 @@
 --
 -- @returns array of values
 --------------------------------------------------------------------------------
-SELECT
+SELECT DISTINCT
 	(SELECT effname FROM metapackages WHERE id = new.project_id)
 FROM project_redirects2 AS old INNER JOIN project_redirects2 AS new USING(repository_id, trackname)
 WHERE
