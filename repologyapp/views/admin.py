@@ -33,6 +33,9 @@ def unauthorized() -> Any:
 
 @ViewRegistrar('/admin', methods=['GET', 'POST'])
 def admin() -> Any:
+    if flask.request.method == 'GET' and flask.session['admin']:
+        return flask.redirect(flask.url_for('admin_reports_unprocessed'), 302)
+
     if flask.request.method == 'POST':
         if config['ADMIN_PASSWORD'] is None:
             flask.flash('Admin login disabled', 'danger')
@@ -45,7 +48,7 @@ def admin() -> Any:
         else:
             flask.flash('Incorrect admin password', 'danger')
 
-        return flask.redirect(flask.url_for('admin'), 301)
+        return flask.redirect(flask.url_for('admin'), 302)
 
     return flask.render_template('admin.html')
 
