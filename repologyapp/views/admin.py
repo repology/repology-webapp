@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
+from collections import defaultdict
 from typing import Any, Callable, Dict, List
 
 import flask
@@ -136,4 +137,20 @@ def admin_redirects() -> Any:
         oldname=oldname,
         metapackages=metapackages,
         metapackagedata=metapackagedata,
+    )
+
+
+@ViewRegistrar('/admin/name_samples')
+def admin_name_samples() -> Any:
+    if not flask.session.get('admin'):
+        return unauthorized()
+
+    samples_by_repo: Dict[str, List[Dict[Any, Any]]] = defaultdict(list)
+
+    for sample in get_db().get_name_samples(10):
+        samples_by_repo[sample['repo']].append(sample)
+
+    return flask.render_template(
+        'admin-name-samples.html',
+        samples_by_repo=samples_by_repo
     )

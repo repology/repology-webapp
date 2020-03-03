@@ -1,0 +1,40 @@
+{% extends "admin.html" %}
+{% import "macros/projects_table.html" as projects_table %}
+
+{% block title %}Name samples - Repology{% endblock %}
+{% block header %}Name samples{% endblock %}
+
+{% block content %}
+<div class="container">
+
+{% for reponame in repometadata.active_names() %}
+<h3><a href="{{ url_for('repository', repo=reponame) }}">{{ repometadata[reponame].desc }}</a></h3>
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th class="text-center">Project</th>
+			<th class="text-center">projectname_seed</th>
+			<th class="text-center">trackname</th>
+			<th class="text-center">name</th>
+			<th class="text-center">srcname</th>
+			<th class="text-center">binname</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for sample in samples_by_repo[reponame] %}
+		<tr>
+			<td class="text-center break-word"><a href="{{ url_for('project', name=sample.effname) }}">{{ sample.effname }}</td>
+			<td class="text-center break-word">{{ sample.projectname_seed }}</td>
+			<td class="text-center break-word info">{{ sample.trackname }}</td>
+			<td class="text-center break-word">{% if sample.name %}{{ sample.name }}{% else %}-{% endif %}</td>
+			<td class="text-center break-word">{% if sample.srcname %}{{ sample.srcname }}{% else %}-{% endif %}</td>
+			<td class="text-center break-word">{% if sample.binname %}{{ sample.binname }}{% else %}-{% endif %}</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+{% endfor %}
+
+</div>
+{% endblock %}
