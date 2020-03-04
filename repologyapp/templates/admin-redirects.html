@@ -34,9 +34,13 @@ work of project is not found.</p>
 
 {% if oldname %}
 
-<h2>Exising redirects from <a href="{{ url_for('project_versions', name=oldname) }}">{{ oldname }}</a></h2>
+<h2>Existing redirects from <a href="{{ url_for('project_versions', name=oldname) }}">{{ oldname }}</a></h2>
 
 {{ projects_table.projects_table(metapackages, metapackagedata) }}
+
+<h3>Redirects using new mechanism</h3>
+
+{{ projects_table.projects_table(metapackages2, metapackagedata2) }}
 
 {% endif %}
 

@@ -110,6 +110,8 @@ def admin_redirects() -> Any:
     oldname = ''
     metapackages: List[Any] = []
     metapackagedata: Dict[str, Any] = {}
+    metapackages2: List[Any] = []
+    metapackagedata2: Dict[str, Any] = {}
 
     if flask.request.method == 'POST':
         oldname = flask.request.form.get('oldname', '')
@@ -132,11 +134,21 @@ def admin_redirects() -> Any:
                 for item in get_db().get_metapackages_packages(newnames, summarizable=True)
             )
 
+            newnames2 = get_db().get_project_redirects2(oldname)
+
+            metapackages2 = get_db().get_metapackages(newnames2)
+            metapackagedata2 = packages_to_summary_items(
+                PackageDataSummarizable(**item)
+                for item in get_db().get_metapackages_packages(newnames2, summarizable=True)
+            )
+
     return flask.render_template(
         'admin-redirects.html',
         oldname=oldname,
         metapackages=metapackages,
         metapackagedata=metapackagedata,
+        metapackages2=metapackages2,
+        metapackagedata2=metapackagedata2,
     )
 
 

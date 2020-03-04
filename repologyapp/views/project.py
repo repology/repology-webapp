@@ -40,9 +40,6 @@ def handle_nonexisting_project(name: str, metapackage: Dict[str, Any]) -> Any:
     # number of redirect targets is natually limited and we don't expect it to be reached
     redirects = get_db().get_project_redirects(name, limit=config['REDIRECTS_PER_PAGE'])
 
-    # new redirects mechanism in testing
-    redirects2 = get_db().get_project_redirects2(name, limit=config['REDIRECTS_PER_PAGE'])
-
     if len(redirects) == 1:
         # single redirect - follow it right away
         flask.flash('You were redirected from project {}, which is not known by Repology'.format(name), 'info')
@@ -60,27 +57,13 @@ def handle_nonexisting_project(name: str, metapackage: Dict[str, Any]) -> Any:
             for item in get_db().get_metapackages_packages(redirects, summarizable=True)
         )
 
-    metapackages2: List[Any] = []
-    metapackagedata2: Dict[str, Any] = {}
-
-    if redirects2:
-        # show redirects
-        metapackages2 = get_db().get_metapackages(redirects2)
-
-        metapackagedata2 = packages_to_summary_items(
-            PackageDataSummarizable(**item)
-            for item in get_db().get_metapackages_packages(redirects2, summarizable=True)
-        )
-
     if not metapackage:
         return (
             flask.render_template(
                 'project-404.html',
                 name=name,
                 metapackages=metapackages,
-                metapackagedata=metapackagedata,
-                metapackages2=metapackages2,
-                metapackagedata2=metapackagedata2
+                metapackagedata=metapackagedata
             ),
             404
         )
@@ -94,8 +77,6 @@ def handle_nonexisting_project(name: str, metapackage: Dict[str, Any]) -> Any:
                 metapackage=metapackage,
                 metapackages=metapackages,
                 metapackagedata=metapackagedata,
-                metapackages2=metapackages2,
-                metapackagedata2=metapackagedata2,
                 has_history=has_history,
                 has_reports=has_reports
             ),
