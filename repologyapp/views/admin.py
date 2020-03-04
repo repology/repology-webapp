@@ -34,7 +34,7 @@ def unauthorized() -> Any:
 
 @ViewRegistrar('/admin', methods=['GET', 'POST'])
 def admin() -> Any:
-    if flask.request.method == 'GET' and flask.session['admin']:
+    if flask.request.method == 'GET' and flask.session.get('admin'):
         return flask.redirect(flask.url_for('admin_reports_unprocessed'), 302)
 
     if flask.request.method == 'POST':
