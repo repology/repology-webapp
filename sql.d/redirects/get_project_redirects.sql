@@ -1,4 +1,4 @@
--- Copyright (C) 2019 Dmitry Marakasov <amdmi3@amdmi3.ru>
+-- Copyright (C) 2019-2020 Dmitry Marakasov <amdmi3@amdmi3.ru>
 --
 -- This file is part of repology
 --
@@ -16,22 +16,27 @@
 -- along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 --------------------------------------------------------------------------------
---
 -- @param oldname
 -- @param limit=None
 --
 -- @returns array of values
---
 --------------------------------------------------------------------------------
-SELECT
-	newname
-FROM project_redirects
-WHERE
-	oldname = %(oldname)s
-	AND EXISTS (
-		-- only return valid projects
-		SELECT *
-		FROM metapackages
-		WHERE metapackages.effname = project_redirects.newname AND num_repos > 0
-	)
+	SELECT DISTINCT
+		(SELECT effname FROM metapackages WHERE id = new.project_id)
+	FROM project_redirects AS old INNER JOIN project_redirects AS new USING(repository_id, trackname)
+	WHERE
+		old.project_id = (SELECT id FROM metapackages WHERE effname = %(oldname)s) AND
+		NOT old.is_actual AND new.is_actual
+UNION
+	SELECT
+		newname
+	FROM project_redirects_manual
+	WHERE
+		oldname = %(oldname)s
+		AND EXISTS (
+			-- only return valid and active projects
+			SELECT *
+			FROM metapackages
+			WHERE metapackages.effname = project_redirects.newname AND num_repos > 0
+		)
 LIMIT %(limit)s;
