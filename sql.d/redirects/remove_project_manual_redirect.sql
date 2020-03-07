@@ -1,4 +1,4 @@
--- Copyright (C) 2019 Dmitry Marakasov <amdmi3@amdmi3.ru>
+-- Copyright (C) 2019-2020 Dmitry Marakasov <amdmi3@amdmi3.ru>
 --
 -- This file is part of repology
 --
@@ -16,12 +16,10 @@
 -- along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 --------------------------------------------------------------------------------
---
 -- @param oldname
 -- @param newname
---
 --------------------------------------------------------------------------------
 DELETE
-FROM project_redirects
+FROM project_redirects_manual
 WHERE
 	oldname=%(oldname)s AND newname=%(newname)s;

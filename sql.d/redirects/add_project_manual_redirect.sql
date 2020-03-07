@@ -1,4 +1,4 @@
--- Copyright (C) 2019 Dmitry Marakasov <amdmi3@amdmi3.ru>
+-- Copyright (C) 2019-2020 Dmitry Marakasov <amdmi3@amdmi3.ru>
 --
 -- This file is part of repology
 --
@@ -16,19 +16,13 @@
 -- along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 --------------------------------------------------------------------------------
---
 -- @param oldname
 -- @param newname
--- @param manual
---
 --------------------------------------------------------------------------------
-INSERT INTO project_redirects (
+INSERT INTO project_redirects_manual (
 	oldname,
-	newname,
-	manual
+	newname
 ) VALUES (
 	%(oldname)s,
-	%(newname)s,
-	%(manual)s
-)
-ON CONFLICT(oldname, newname) DO NOTHING;
+	%(newname)s
+);

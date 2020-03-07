@@ -7,40 +7,76 @@
 {% block content %}
 <div class="container">
 
-<p>Allows you to manually create project redirect, or list existing
-redirects (by omitting target name). Note that redirect will only
-work of project is not found.</p>
-
-<form class="form-horizontal" action="{{ url_for_self() }}" method="POST">
+<form class="form-inline" action="{{ url_for_self() }}" method="GET">
 	<div class="form-group">
-		<label for="fromrepo" class="col-sm-2 control-label">Source (old) name</label>
-		<div class="col-sm-8">
-			<input class="form-control" id="oldname" name="oldname" value="{{ oldname }}">
-		</div>
+		<label class="control-label" for="project">Project</label>
+		<input class="form-control" type="text" id="project" name="project" value="{{ project|default('', true) }}" placeholder="firefox">
 	</div>
-	<div class="form-group">
-		<label for="fromrepo" class="col-sm-2 control-label">Target (new) name</label>
-		<div class="col-sm-8">
-			<input class="form-control" id="newname" name="newname">
-		</div>
-	</div>
-	<div class="form-group">
-		<div class="col-sm-offset-2 col-sm-10">
-			<button type="submit" class="btn btn-primary" name="action" value="addlist">Add/list</button>
-			<button type="submit" class="btn btn-primary" name="action" value="remove">Remove</button>
-		</div>
-	</div>
+	<button type="submit" class="btn btn-default">Show redirects</button>
 </form>
 
-{% if oldname %}
+{% if project %}
 
-<h2>Existing redirects from <a href="{{ url_for('project_versions', name=oldname) }}">{{ oldname }}</a></h2>
+<h3>Redirects for <a href="{{ url_for('project', name=project) }}">{{ project }}</a></h3>
 
-{{ projects_table.projects_table(metapackages, metapackagedata) }}
-
-<h3>Redirects using new mechanism</h3>
-
-{{ projects_table.projects_table(metapackages2, metapackagedata2) }}
+<table class="table table-striped">
+	{% if redirects %}
+	<thead>
+		<tr>
+			<th class="text-center">Redirect</th>
+			<th class="text-center">Type</th>
+			<th>Status</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	{% endif %}
+	<tbody>
+	{% for redirect in redirects %}
+		<tr>
+			<td class="text-{% if incoming %}right{% else %}left{% endif %} minimal-column">
+			{%- if project == redirect.newname -%}
+				<a href="{{ url_for_self(project=redirect.oldname) }}">{{ redirect.oldname }}</a> ➡ <b>{{ redirect.newname }}</b>
+			{%- else -%}
+				<b>{{ redirect.oldname }}</b> ➡ <a href="{{ url_for_self(project=redirect.newname) }}">{{ redirect.newname }}</a>
+			{%- endif -%}
+			</td>
+			<td class="text-center minimal-column">{% if redirect.is_manual %}manual{% else %}automatic{% endif %}</td>
+			<td class="minimal-column">
+			{%- if not redirect.is_valid -%}
+				<b class="text-danger">invalid (project does not exist)</b>
+			{%- elif redirect.is_alive -%}
+				<b class="text-success">alive</b>
+			{% else %}
+				<b class="text-waring">dead (project is orphan)</b>
+			{%- endif -%}
+			<td>
+				<a class="btn btn-default btn-xs" href={{ url_for('project', name=redirect.oldname if redirect.newname == project else redirect.oldname) }}>Go to</a>
+			{%- if redirect.is_manual %}
+				<form class="form-inlinest" action="{{ url_for_self(project=project) }}" method="POST">
+					<input type="hidden" name="oldname" value="{{ redirect.oldname }}">
+					<input type="hidden" name="newname" value="{{ redirect.newname }}">
+					<button type="submit" class="btn btn-danger btn-xs" name="action" value="remove">Remove</button>
+				</form>
+				<form class="form-inlinest" action="{{ url_for_self(project=project) }}" method="POST">
+					<input type="hidden" name="oldname" value="{{ redirect.oldname }}">
+					<input type="hidden" name="newname" value="{{ redirect.newname }}">
+					<button type="submit" class="btn btn-warning btn-xs" name="action" value="revert">Revert</button>
+				</form>
+			{% endif -%}
+			</td>
+		</tr>
+	{% endfor %}
+		<tr>
+			<td colspan="4">
+				<form class="form-inline" action="{{ url_for_self(project=project) }}" method="POST">
+					<input class="form-control" type="text" name="redirect" placeholder="project">
+					<button type="submit" class="btn btn-default" name="action" value="add_in">Add incoming</button>
+					<button type="submit" class="btn btn-default" name="action" value="add_out">Add outgoing</button>
+				</form>
+			</td>
+		</tr>
+	</tbody>
+</table>
 
 {% endif %}
 

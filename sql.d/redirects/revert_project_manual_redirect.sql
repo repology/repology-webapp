@@ -1,4 +1,4 @@
--- Copyright (C) 2019-2020 Dmitry Marakasov <amdmi3@amdmi3.ru>
+-- Copyright (C) 2020 Dmitry Marakasov <amdmi3@amdmi3.ru>
 --
 -- This file is part of repology
 --
@@ -17,14 +17,11 @@
 
 --------------------------------------------------------------------------------
 -- @param oldname
--- @param limit=None
---
--- @returns array of values
+-- @param newname
 --------------------------------------------------------------------------------
-SELECT DISTINCT
-	(SELECT effname FROM metapackages WHERE id = new.project_id)
-FROM project_redirects2 AS old INNER JOIN project_redirects2 AS new USING(repository_id, trackname)
+UPDATE project_redirects_manual
+SET
+	oldname = newname,
+	newname = oldname
 WHERE
-	old.project_id = (SELECT id FROM metapackages WHERE effname = %(oldname)s) AND
-	NOT old.is_actual AND new.is_actual
-LIMIT %(limit)s;
+	oldname=%(oldname)s AND newname=%(newname)s;

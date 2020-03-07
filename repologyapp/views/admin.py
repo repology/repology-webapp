@@ -1,4 +1,4 @@
-# Copyright (C) 2018 Dmitry Marakasov <amdmi3@amdmi3.ru>
+# Copyright (C) 2018-2020 Dmitry Marakasov <amdmi3@amdmi3.ru>
 #
 # This file is part of repology
 #
@@ -20,10 +20,10 @@ from typing import Any, Callable, Dict, List
 
 import flask
 
+import psycopg2
+
 from repologyapp.config import config
 from repologyapp.db import get_db
-from repologyapp.metapackages import packages_to_summary_items
-from repologyapp.package import PackageDataSummarizable
 from repologyapp.template_functions import url_for_self
 from repologyapp.view_registry import ViewRegistrar
 
@@ -107,48 +107,54 @@ def admin_redirects() -> Any:
     if not flask.session.get('admin'):
         return unauthorized()
 
-    oldname = ''
-    metapackages: List[Any] = []
-    metapackagedata: Dict[str, Any] = {}
-    metapackages2: List[Any] = []
-    metapackagedata2: Dict[str, Any] = {}
+    project = flask.request.args.get('project')
 
-    if flask.request.method == 'POST':
-        oldname = flask.request.form.get('oldname', '')
-        newname = flask.request.form.get('newname')
+    redirects: List[Dict[str, Any]] = []
 
-        if oldname and newname:
-            if flask.request.form.get('action') == 'remove':
-                get_db().remove_project_redirect(oldname, newname)
-                flask.flash('Redirect removed succesfully', 'success')
-            else:
-                get_db().add_project_redirect(oldname, newname, True)
-                flask.flash('Redirect added succesfully', 'success')
+    if project is not None:
+        if flask.request.method == 'POST':
+            action = flask.request.form.get('action')
 
-        if oldname:
-            newnames = get_db().get_project_redirects(oldname)
+            if action in ['add_in', 'add_out']:
+                redirect = flask.request.form.get('redirect')
 
-            metapackages = get_db().get_metapackages(newnames)
-            metapackagedata = packages_to_summary_items(
-                PackageDataSummarizable(**item)
-                for item in get_db().get_metapackages_packages(newnames, summarizable=True)
-            )
+                if not redirect:
+                    flask.flash('Redirect not specified', 'danger')
+                elif redirect == project:
+                    flask.flash('Refusing to add redirect from project to itself', 'danger')
+                else:
+                    try:
+                        if action == 'add_in':
+                            get_db().add_project_manual_redirect(redirect, project)
+                        else:
+                            get_db().add_project_manual_redirect(project, redirect)
+                        flask.flash('Incoming redirect added', 'success')
+                    except psycopg2.errors.UniqueViolation:
+                        flask.flash('Redirect already exists', 'danger')
+            elif flask.request.form.get('action') == 'remove':
+                get_db().remove_project_manual_redirect(
+                    flask.request.form.get('oldname'),
+                    flask.request.form.get('newname')
+                )
+                flask.flash('Redirect removed', 'success')
+            elif flask.request.form.get('action') == 'revert':
+                try:
+                    get_db().revert_project_manual_redirect(
+                        flask.request.form.get('oldname'),
+                        flask.request.form.get('newname')
+                    )
+                    flask.flash('Redirect reverted', 'success')
+                except psycopg2.errors.UniqueViolation:
+                    flask.flash('Reverted redirect already exists', 'danger')
 
-            newnames2 = get_db().get_project_redirects2(oldname)
+            return flask.redirect(flask.url_for('admin_redirects', project=project), 302)
 
-            metapackages2 = get_db().get_metapackages(newnames2)
-            metapackagedata2 = packages_to_summary_items(
-                PackageDataSummarizable(**item)
-                for item in get_db().get_metapackages_packages(newnames2, summarizable=True)
-            )
+        redirects = get_db().get_project_redirects_admin(project, True) + get_db().get_project_redirects_admin(project, False)
 
     return flask.render_template(
         'admin-redirects.html',
-        oldname=oldname,
-        metapackages=metapackages,
-        metapackagedata=metapackagedata,
-        metapackages2=metapackages2,
-        metapackagedata2=metapackagedata2,
+        project=project,
+        redirects=redirects
     )
 
 
