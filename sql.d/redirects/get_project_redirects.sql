@@ -37,6 +37,6 @@ UNION
 			-- only return valid and active projects
 			SELECT *
 			FROM metapackages
-			WHERE metapackages.effname = project_redirects.newname AND num_repos > 0
+			WHERE metapackages.effname = project_redirects_manual.newname AND num_repos > 0
 		)
 LIMIT %(limit)s;
