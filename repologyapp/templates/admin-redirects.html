@@ -32,9 +32,10 @@
 	{% endif %}
 	<tbody>
 	{% for redirect in redirects %}
+	{% set incoming = project == redirect.newname %}
 		<tr>
 			<td class="text-{% if incoming %}right{% else %}left{% endif %} minimal-column">
-			{%- if project == redirect.newname -%}
+			{%- if incoming -%}
 				<a href="{{ url_for_self(project=redirect.oldname) }}">{{ redirect.oldname }}</a> ➡ <b>{{ redirect.newname }}</b>
 			{%- else -%}
 				<b>{{ redirect.oldname }}</b> ➡ <a href="{{ url_for_self(project=redirect.newname) }}">{{ redirect.newname }}</a>
@@ -42,12 +43,16 @@
 			</td>
 			<td class="text-center minimal-column">{% if redirect.is_manual %}manual{% else %}automatic{% endif %}</td>
 			<td class="minimal-column">
-			{%- if not redirect.is_valid -%}
-				<b class="text-danger">invalid (project does not exist)</b>
-			{%- elif redirect.is_alive -%}
-				<b class="text-success">alive</b>
-			{% else %}
-				<b class="text-waring">dead (project is orphan)</b>
+			{%- if incoming and redirect.is_alive -%}
+				<b class="text-warning">source project is alive</b>
+			{%- elif incoming and not redirect.is_alive -%}
+				<b class="text-success">source project is dead</b>
+			{%- elif not incoming and redirect.is_alive -%}
+				<b class="text-success">target project is alive</b>
+			{%- elif not incoming and not redirect.is_alive -%}
+				<b class="text-danger">target project is dead</b>
+			{%- else -%}
+				<b class="text-danger">unknown</b>
 			{%- endif -%}
 			<td>
 				<a class="btn btn-default btn-xs" href={{ url_for('project', name=redirect.oldname if redirect.newname == project else redirect.oldname) }}>Go to</a>

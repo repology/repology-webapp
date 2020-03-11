@@ -33,8 +33,7 @@
 			SELECT *
 			FROM metapackages
 			WHERE metapackages.id = {{ other }}.project_id AND metapackages.num_repos > 0
-		) AS is_alive,
-		TRUE AS is_valid
+		) AS is_alive
 	FROM project_redirects AS old INNER JOIN project_redirects AS new USING(repository_id, trackname)
 	WHERE
 		{{ my }}.project_id = (SELECT id FROM metapackages WHERE effname = %(name)s)
@@ -48,12 +47,7 @@ UNION ALL
 			SELECT *
 			FROM metapackages
 			WHERE metapackages.effname = project_redirects_manual.{{ other }}name AND metapackages.num_repos > 0
-		) AS is_alive,
-		EXISTS (
-			SELECT *
-			FROM metapackages
-			WHERE metapackages.effname = project_redirects_manual.{{ other }}name
-		) AS is_valid
+		) AS is_alive
 	FROM project_redirects_manual
 	WHERE {{ my }}name = %(name)s
 ORDER BY oldname, newname;
