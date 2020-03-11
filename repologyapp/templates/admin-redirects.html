@@ -65,7 +65,7 @@
 				<form class="form-inlinest" action="{{ url_for_self(project=project) }}" method="POST">
 					<input type="hidden" name="oldname" value="{{ redirect.oldname }}">
 					<input type="hidden" name="newname" value="{{ redirect.newname }}">
-					<button type="submit" class="btn btn-warning btn-xs" name="action" value="revert">Revert</button>
+					<button type="submit" class="btn btn-warning btn-xs" name="action" value="invert">Invert</button>
 				</form>
 			{% endif -%}
 			</td>

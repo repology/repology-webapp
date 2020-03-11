@@ -137,15 +137,15 @@ def admin_redirects() -> Any:
                     flask.request.form.get('newname')
                 )
                 flask.flash('Redirect removed', 'success')
-            elif flask.request.form.get('action') == 'revert':
+            elif flask.request.form.get('action') == 'invert':
                 try:
-                    get_db().revert_project_manual_redirect(
+                    get_db().invert_project_manual_redirect(
                         flask.request.form.get('oldname'),
                         flask.request.form.get('newname')
                     )
-                    flask.flash('Redirect reverted', 'success')
+                    flask.flash('Redirect inverted', 'success')
                 except psycopg2.errors.UniqueViolation:
-                    flask.flash('Reverted redirect already exists', 'danger')
+                    flask.flash('Inverted redirect already exists', 'danger')
 
             return flask.redirect(flask.url_for('admin_redirects', project=project), 302)
 
