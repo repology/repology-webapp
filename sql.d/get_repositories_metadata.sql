@@ -1,4 +1,4 @@
--- Copyright (C) 2018 Dmitry Marakasov <amdmi3@amdmi3.ru>
+-- Copyright (C) 2018-2020 Dmitry Marakasov <amdmi3@amdmi3.ru>
 --
 -- This file is part of repology
 --
@@ -38,6 +38,7 @@ SELECT
 
 	state != 'legacy'::repository_state AS active,
 
-	num_metapackages
+	num_metapackages,
+	num_metapackages_newest
 FROM repositories
 ORDER BY sortname;

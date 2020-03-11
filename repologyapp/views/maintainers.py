@@ -24,6 +24,7 @@ import flask
 from repologyapp.config import config
 from repologyapp.db import get_db
 from repologyapp.feed_helpers import unicalize_feed_timestamps
+from repologyapp.globals import repometadata
 from repologyapp.view_registry import ViewRegistrar
 
 
@@ -43,6 +44,23 @@ def maintainers(bound: Optional[str] = None) -> Any:
     minmaintainer, maxmaintainer = get_db().get_maintainers_range()
 
     maintainers = get_db().query_maintainers(bound, reverse, search, config['MAINTAINERS_PER_PAGE'])
+
+    for maintainer in maintainers:
+        bestrepo = max(
+            (
+                maintainer['num_projects_newest_per_repo'][repo],
+                -maintainer['num_projects_outdated_per_repo'][repo],
+                repometadata[repo]['num_metapackages_newest'],
+                repo
+            )
+            for repo in maintainer['num_projects_newest_per_repo'].keys()
+        )[-1]
+
+        maintainer['bestrepo'] = bestrepo
+        maintainer['bestrepo_num_projects'] = maintainer['num_projects_per_repo'][bestrepo]
+        maintainer['bestrepo_num_projects_newest'] = maintainer['num_projects_newest_per_repo'][bestrepo]
+        maintainer['bestrepo_num_projects_outdated'] = maintainer['num_projects_outdated_per_repo'][bestrepo]
+        maintainer['bestrepo_num_projects_problematic'] = maintainer['num_projects_problematic_per_repo'][bestrepo]
 
     firstpage, lastpage = False, False
     for maintainer in maintainers:
