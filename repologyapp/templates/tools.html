@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block title %}Tools - Repology{% endblock %}
+{% block header %}Tools{% endblock %}
+
+{% block content %}
+<div class="container">
+
+<ul>
+	<li><a href="{{ url_for('tool_project_by') }}">Project by package name</a> - generate link to Repology project pages and badges by given package name in specific repository</li>
+</ul>
+
+</div> {#- container #}
+{% endblock %}

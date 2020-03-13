@@ -50,3 +50,8 @@ def bots() -> Any:
 @ViewRegistrar('/favicon.ico')
 def favicon() -> Any:
     return flask.current_app.send_static_file('repology.v1.ico')
+
+
+@ViewRegistrar('/tools')
+def tools() -> Any:
+    return flask.render_template('tools.html')
