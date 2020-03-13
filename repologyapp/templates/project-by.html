@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+
+{% block title %}Project by package name - Repology{% endblock %}
+{% block header %}Project by package name{% endblock %}
+
+{% block content %}
+<div class="container">
+
+<p>
+This tool generates redirect to Repology project page (or badge) by given
+package name in a specific repository. You may find it useful to generate
+links to Repology pages or badges for each package in specific repository.
+</p>
+
+<p>
+Note that there are different name types which have different meaning in
+each repository. See <a href="{{ url_for('repositories_fields') }}">the
+table</a> no know which name types are available for each repository.
+Generally, "real" repositories use either or both of source and binary
+package names, and module collections or news sites use some generic name.
+</p>
+
+<p>
+Also note that you may add additional parameters to an URL, such as
+<code>&amp;header=...</code> for a badge.
+</p>
+
+<form class="form-horizontal" action="{{ url_for_self() }}" method="GET">
+	<div class="form-group">
+		<label for="repo" class="col-sm-2 control-label">Repository</label>
+		<div class="col-sm-8">
+			<select class="form-control" id="repo" name="repo">
+			{% for reponame in repometadata.active_names() %}
+				<option value="{{ reponame }}"{% if reponame == request.args.repo %} selected{% endif %}>{{ repometadata[reponame].desc }}</option>
+			{% endfor %}
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="name_type" class="col-sm-2 control-label">Name type</label>
+		<div class="col-sm-8">
+			<select class="form-control" id="name_type" name="name_type">
+				<option value="name"{% if request.args.name_type == "name" %} selected{% endif %}>Generic package/software/item name</option>
+				<option value="srcname"{% if request.args.name_type == "srcname" %} selected{% endif %}>Source package name</option>
+				<option value="binname"{% if request.args.name_type == "binname" %} selected{% endif %}>Binary package name</option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="target_page" class="col-sm-2 control-label">Target page</label>
+		<div class="col-sm-8">
+			<select class="form-control" id="target_page" name="target_page">
+			{% for page in allowed_target_pages %}
+				<option value="{{ page.endpoint }}"i{% if page.endpoint == request.args.target_page %} selected{% endif %}>{{ page.desc }}</option>
+			{% endfor %}
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="noautoresolve"{% if request.args.noautoresolve %} checked{% endif %}> Disable automatic ambiguity resolution (e.g. show list of target projects if there are multiple, instead of redirecting to any of them)
+				</label>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+			<button type="submit" class="btn btn-primary">Generate</button>
+		</div>
+	</div>
+</form>
+
+{% if template_url %}
+<h3>Template url for redirect</h3>
+
+<p><code>{{ REPOLOGY_HOME }}{{ template_url }}&amp;name=&lt;NAME&gt;</code></p>
+{% endif %}
+
+</div> {#- container #}
+{% endblock %}
+
