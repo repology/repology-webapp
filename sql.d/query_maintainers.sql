@@ -1,4 +1,4 @@
--- Copyright (C) 2016-2018 Dmitry Marakasov <amdmi3@amdmi3.ru>
+-- Copyright (C) 2016-2020 Dmitry Marakasov <amdmi3@amdmi3.ru>
 --
 -- This file is part of repology
 --
@@ -30,10 +30,10 @@ SELECT
 FROM (
 	SELECT
 		maintainer,
-		num_projects_per_repo,
-		num_projects_newest_per_repo,
-		num_projects_outdated_per_repo,
-		num_projects_problematic_per_repo,
+		(SELECT jsonb_object_agg(key, (value->>1)::integer) FROM jsonb_each(counts_per_repo)) AS num_projects_per_repo,
+		(SELECT jsonb_object_agg(key, (value->>2)::integer) FROM jsonb_each(counts_per_repo)) AS num_projects_newest_per_repo,
+		(SELECT jsonb_object_agg(key, (value->>3)::integer) FROM jsonb_each(counts_per_repo)) AS num_projects_outdated_per_repo,
+		(SELECT jsonb_object_agg(key, (value->>4)::integer) FROM jsonb_each(counts_per_repo)) AS num_projects_problematic_per_repo,
 		num_projects,
 		num_repos,
 		now() - first_seen AS first_seen_ago
