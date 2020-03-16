@@ -42,7 +42,7 @@ def handle_nonexisting_project(name: str, metapackage: Dict[str, Any]) -> Any:
 
     if len(redirects) == 1:
         # single redirect - follow it right away
-        flask.flash('You were redirected from project {}, which is not known by Repology'.format(name), 'info')
+        flask.flash(f'You were redirected from {name}, which is no longer known to Repology', 'info')
         return flask.redirect(flask.url_for(flask.request.endpoint, name=redirects[0]), 301)
 
     metapackages: List[Any] = []
