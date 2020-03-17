@@ -23,16 +23,36 @@ SELECT
 	*
 FROM (
 	SELECT
-		repo,
-		effname,
-		projectname_seed,
-		trackname,
-		name,
-		srcname,
-		binname,
-		row_number() OVER (PARTITION BY repo) AS nsample
-	FROM packages
-) AS tmp
+		*,
+		row_number() OVER (PARTITION BY repo ORDER BY score DESC) AS nsample
+	FROM (
+		SELECT
+			repo,
+			effname,
+			projectname_seed,
+			trackname,
+			name,
+			srcname,
+			binname,
+			(
+				SELECT
+					count(DISTINCT n) FILTER (WHERE n != 'null'::jsonb)
+				FROM (
+					SELECT jsonb_array_elements(
+						jsonb_build_array(
+							effname,
+							projectname_seed,
+							trackname,
+							name,
+							srcname,
+							binname
+						)
+					) AS n
+				) AS tmp
+			) AS score
+		FROM packages
+	) AS tmp
+) AS tmp1
 WHERE
 	nsample <= %(nsamples)s
-ORDER BY repo, effname, nsample;
+ORDER BY repo, effname;
