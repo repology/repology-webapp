@@ -65,8 +65,6 @@ def distromap() -> Any:
 def trending() -> Any:
     return flask.render_template(
         'projects-trending.html',
-        trending_week=get_db().get_trending_projects(60 * 60 * 24 * 7, config['TRENDING_PER_PAGE']),
         trending_month=get_db().get_trending_projects(60 * 60 * 24 * 31, config['TRENDING_PER_PAGE']),
-        declining_week=get_db().get_trending_projects(60 * 60 * 24 * 7, config['TRENDING_PER_PAGE'], negative=True),
         declining_month=get_db().get_trending_projects(60 * 60 * 24 * 31, config['TRENDING_PER_PAGE'], negative=True),
     )
