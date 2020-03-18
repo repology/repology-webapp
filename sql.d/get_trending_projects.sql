@@ -34,7 +34,7 @@ FROM
 	FROM project_turnover
 	WHERE ts >= now() - interval '%(period)s second'
 	GROUP BY effname
-	HAVING sum(delta) {% if negative %}<{% else %}>{% endif %} 1
+	HAVING sum(delta) {% if negative %}< -1{% else %}> 1{% endif %}
 ) AS turnover
 INNER JOIN metapackages USING(effname)
 ORDER BY delta {% if negative %}ASC{% else %}DESC{% endif %}, effname
