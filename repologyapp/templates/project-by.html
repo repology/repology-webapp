@@ -25,13 +25,21 @@ Also note that you may add additional parameters to an URL, such as
 <code>&amp;header=...</code> for a badge.
 </p>
 
+<p>
+Note that this is experimental feature yet and not all repositories are
+supported. To add support for additional repository, please fill a request
+<a href="https://github.com/repology/repology-webapp/issues/66">here</a>.
+</p>
+
 <form class="form-horizontal" action="{{ url_for_self() }}" method="GET">
 	<div class="form-group">
 		<label for="repo" class="col-sm-2 control-label">Repository</label>
 		<div class="col-sm-8">
 			<select class="form-control" id="repo" name="repo">
 			{% for reponame in repometadata.active_names() %}
+			{% if repometadata[reponame].family in allowed_families %}
 				<option value="{{ reponame }}"{% if reponame == request.args.repo %} selected{% endif %}>{{ repometadata[reponame].desc }}</option>
+			{% endif %}
 			{% endfor %}
 			</select>
 		</div>

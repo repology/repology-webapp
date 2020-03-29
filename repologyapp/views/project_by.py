@@ -21,6 +21,7 @@ from typing import Any, List
 import flask
 
 from repologyapp.db import get_db
+from repologyapp.globals import repometadata
 from repologyapp.template_functions import url_for_self
 from repologyapp.view_registry import ViewRegistrar
 
@@ -63,6 +64,11 @@ _EXTRA_ALLOWED_ARGS = {
 }
 
 
+_ALLOWED_FAMILIES = {
+    'debuntu',
+}
+
+
 @ViewRegistrar('/tools/project-by')
 def tool_project_by() -> Any:
     repo = flask.request.args.get('repo')
@@ -80,7 +86,9 @@ def tool_project_by() -> Any:
     template_url = None
 
     if repo and name_type and target_page:
-        if name:
+        if not repometadata[repo]['family'] in _ALLOWED_FAMILIES:
+            flask.abort(403)
+        elif name:
             targets = []
 
             for project in get_db().get_projects_by_name(repo=repo, name_type=name_type, name=name):
@@ -106,4 +114,5 @@ def tool_project_by() -> Any:
         'project-by.html',
         allowed_target_pages=_ALLOWED_TARGET_PAGES,
         template_url=template_url,
+        allowed_families=_ALLOWED_FAMILIES,
     )
