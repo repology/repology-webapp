@@ -12,8 +12,8 @@
 		<tr>
 			<th>Project</th>
 			{% if repo or maintainer %}
-			<th class="text-nowrap" title="Versions for projects
-				{%- if repo %} present in {{ repometadata[repo].desc }}{% endif -%}
+			<th class="text-nowrap" title="Packages
+				{%- if repo %} in {{ repometadata[repo].desc }}{% endif -%}
 				{%- if repo and maintainer %} and{% endif -%}
 				{%- if maintainer %} maintained by {{ maintainer }}{% endif -%}
 			">Selected</th>
