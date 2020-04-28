@@ -147,6 +147,9 @@ class TestFlask(unittest.TestCase):
         self.checkurl_html('/project/kiconvtool/versions', has=['FreeBSD', '0.97', 'amdmi3'])
         self.checkurl_html('/project/nonexistent/versions', has=['Unknown project'], status_code=404)
 
+        self.checkurl_html('/project/kiconvtool/versions-compact', has=['FreeBSD', '0.97', 'amdmi3'])
+        self.checkurl_html('/project/nonexistent/versions-compact', has=['Unknown project'], status_code=404)
+
         self.checkurl_html('/project/kiconvtool/packages', has=['FreeBSD', '0.97', 'amdmi3'])
         self.checkurl_html('/project/nonexistent/packages', has=['Unknown project'], status_code=404)
 
@@ -163,7 +166,9 @@ class TestFlask(unittest.TestCase):
             '/badge/tiny-repos/kiconvtool.svg',
         ])
 
-        self.checkurl_html('/project/kiconvtool/report', has=[''])
+        self.checkurl_html('/project/kiconvtool/report')
+
+        self.checkurl_html('/project/kiconvtool/history')
 
     def test_maintaners(self) -> None:
         self.checkurl_html('/maintainers/a/', has=['amdmi3@freebsd.org'])
