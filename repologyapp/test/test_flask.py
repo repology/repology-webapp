@@ -214,8 +214,16 @@ class TestFlask(unittest.TestCase):
         self.checkurl_html('/projects/..0/', has=['kiconvtool'])
         self.checkurl_html('/projects/zzzzzz/', has=['kiconvtool'])
 
+    def test_tools(self) -> None:
+        self.checkurl_html('/tools/project-by')
+        self.checkurl_html('/tools/project-by?repo=debian_unstable&name_type=srcname&target_page=project_versions')
+
+        self.checkurl_html('/tools/trending')
+
     def test_experimental(self) -> None:
-        self.checkurl_html('/experimental/trending')
+        self.checkurl_html('/experimental/')
+        self.checkurl_html('/experimental/turnover/maintainers')
+        self.checkurl_html('/experimental/distromap')
 
     def test_api_v1_project(self) -> None:
         self.assertEqual(
