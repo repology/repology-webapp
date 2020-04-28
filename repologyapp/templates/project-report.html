@@ -83,16 +83,33 @@
 {% else %}
 <form action="{{ url_for_self() }}" method="POST">
 	<div class="form-group">
-		<label><input type="checkbox" name="need_verignore"{% if need_verignore %} checked{% endif %}> Needs version ignore</label><br>
-		<span class="help-block">Check if the latest version detected for this project is incorrect (e.g. a non-existing version, version with incorrect format, version with date or a git commit hash) and should be ignored. You may list bad versions in the comment field.</span>
+		<label><input type="checkbox" name="need_verignore"{% if need_verignore %} checked{% endif %}> Needs version ignore</label>
+		<div class="help-block">
+			<p>Check if the latest version detected for this project is incorrect (e.g. a non-existing version, version with incorrect format, version with date or a git commit hash) and should be ignored.
+			Please provide a prooflink for unapparent cases (e.g. a list of VCS tags or official site mentioning actual latest version).</p>
+		</div>
 	</div>
 	<div class="form-group">
 		<label><input type="checkbox" name="need_split"{% if need_split %} checked{% endif %}> Needs split</label><br>
-		<span class="help-block">Check if this project refers to multiple unrelated projects and thus needs to be split into multiple projects. Naming suggestions for new projects are welcome.</span>
+		<div class="help-block">
+			<p>Check if this entry refers to multiple unrelated projects and thus needs to be split into multiple entries.
+			Naming suggestions for new projects are welcome.</p>
+			<p>Will <b>not</b> split:</p>
+			<ul>
+				<li>Legacy or ESR branches of the same project.</li>
+			</ul>
+		</div>
 	</div>
 	<div class="form-group">
-		<label><input type="checkbox" name="need_merge"{% if need_merge %} checked{% endif %}> Needs merge</label><br>
-		<span class="help-block">Check if there are other projects which refer to the same project and thus need to be merged with this project. Please list them in the comment field.</span>
+		<label><input type="checkbox" name="need_merge"{% if need_merge %} checked{% endif %}> Needs merge</label>
+		<div class="help-block">
+			<p>Check if there are other Repology entries for the same project under different names which should be merged into one.
+			Please list them in the comment field, as well as suggested target name.</p>
+			<p>Will <b>not</b> merge:</p>
+			<ul>
+				<li>Modules (e.g. python) without consistent prefix (e.g. <code>python-</code> or <code>python3-</code>) (common problem for Slackbuilds and Debian source packages).</li>
+			</ul>
+		</div>
 	</div>
 	<div class="form-group">
 		<label for="comment">Additional comments</label>
