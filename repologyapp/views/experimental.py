@@ -29,30 +29,12 @@ def experimental() -> Any:
     return flask.render_template('experimental.html')
 
 
-@ViewRegistrar('/experimental/turnover/projects')
-def projects_turnover() -> Any:
-    return flask.render_template(
-        'projects-turnover.html',
-        added=get_db().get_recently_added_metapackages(config['TURNOVER_PER_PAGE']),
-        removed=get_db().get_recently_removed_metapackages(config['TURNOVER_PER_PAGE'])
-    )
-
-
 @ViewRegistrar('/experimental/turnover/maintainers')
 def maintainers_turnover() -> Any:
     return flask.render_template(
         'maintainers-turnover.html',
         added=get_db().get_recently_added_maintainers(config['TURNOVER_PER_PAGE']),
         removed=get_db().get_recently_removed_maintainers(config['TURNOVER_PER_PAGE'])
-    )
-
-
-@ViewRegistrar('/experimental/raising')
-def raising() -> Any:
-    return flask.render_template(
-        'raising.html',
-        packages1=get_db().get_raising_metapackages1(config['METAPACKAGES_PER_PAGE']),
-        packages2=get_db().get_raising_metapackages2(config['METAPACKAGES_PER_PAGE']),
     )
 
 
