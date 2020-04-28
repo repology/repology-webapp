@@ -59,7 +59,7 @@ supported. To add support for additional repository, please fill a request
 		<div class="col-sm-8">
 			<select class="form-control" id="target_page" name="target_page">
 			{% for page in allowed_target_pages %}
-				<option value="{{ page.endpoint }}"i{% if page.endpoint == request.args.target_page %} selected{% endif %}>{{ page.desc }}</option>
+				<option value="{{ page.endpoint }}"{% if page.endpoint == request.args.target_page %} selected{% endif %}>{{ page.desc }}</option>
 			{% endfor %}
 			</select>
 		</div>
