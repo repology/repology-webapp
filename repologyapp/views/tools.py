@@ -20,6 +20,7 @@ from typing import Any, List
 
 import flask
 
+from repologyapp.config import config
 from repologyapp.db import get_db
 from repologyapp.globals import repometadata
 from repologyapp.template_functions import url_for_self
@@ -115,4 +116,13 @@ def tool_project_by() -> Any:
         allowed_target_pages=_ALLOWED_TARGET_PAGES,
         template_url=template_url,
         allowed_families=_ALLOWED_FAMILIES,
+    )
+
+
+@ViewRegistrar('/tools/trending')
+def trending() -> Any:
+    return flask.render_template(
+        'projects-trending.html',
+        trending_month=get_db().get_trending_projects(60 * 60 * 24 * 31, config['TRENDING_PER_PAGE']),
+        declining_month=get_db().get_trending_projects(60 * 60 * 24 * 31, config['TRENDING_PER_PAGE'], negative=True),
     )

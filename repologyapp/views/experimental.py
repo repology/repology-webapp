@@ -59,12 +59,3 @@ def raising() -> Any:
 @ViewRegistrar('/experimental/distromap')
 def distromap() -> Any:
     return flask.render_template('distromap.html')
-
-
-@ViewRegistrar('/experimental/trending')
-def trending() -> Any:
-    return flask.render_template(
-        'projects-trending.html',
-        trending_month=get_db().get_trending_projects(60 * 60 * 24 * 31, config['TRENDING_PER_PAGE']),
-        declining_month=get_db().get_trending_projects(60 * 60 * 24 * 31, config['TRENDING_PER_PAGE'], negative=True),
-    )

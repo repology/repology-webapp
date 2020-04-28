@@ -37,7 +37,7 @@
 				<li{% if endpoint_like('projects', 'project_*') %} class="active"{% endif %}><a href="{{ url_for('projects') }}">Projects</a></li>
 				<li{% if endpoint_like('maintainers', 'maintainer') %} class="active"{% endif %}><a href="{{ url_for('maintainers') }}">Maintainers</a></li>
 				<li{% if endpoint_like('repositories_*', 'repository') %} class="active"{% endif %}><a href="{{ url_for('repositories_statistics') }}">Repositories</a></li>
-				<li{% if endpoint_like('tools', 'tool_*') %} class="active"{% endif %}><a href="{{ url_for('tools') }}">Tools</a></li>
+				<li{% if endpoint_like('tools', 'tool_*', 'trending') %} class="active"{% endif %}><a href="{{ url_for('tools') }}">Tools</a></li>
 				{% if session.admin %}<li{% if endpoint_like('admin', 'admin_*') %} class="active"{% endif %}><a href="{{ url_for('admin') }}">Admin</a></li>{% endif %}
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
