@@ -27,7 +27,7 @@ from repologyapp.config import config
 from repologyapp.globals import repometadata
 from repologyapp.template_filters import css_for_versionclass, extract_netloc, maintainer_to_links, maintainers_to_group_mailto, pkg_format
 from repologyapp.template_functions import endpoint_like, url_for_self
-from repologyapp.template_tests import for_page, is_fallback_maintainer
+from repologyapp.template_tests import for_page, has_flag, has_flag_at, is_fallback_maintainer
 from repologyapp.views import registry as view_registry
 
 # create application and handle configuration
@@ -54,6 +54,8 @@ app.jinja_env.filters['extract_netloc'] = extract_netloc
 # templates: custom tests
 app.jinja_env.tests['for_page'] = for_page
 app.jinja_env.tests['fallback_maintainer'] = is_fallback_maintainer
+app.jinja_env.tests['has_flag'] = has_flag
+app.jinja_env.tests['has_flag_at'] = has_flag_at
 
 # templates: custom global functions
 app.jinja_env.globals['url_for_self'] = url_for_self

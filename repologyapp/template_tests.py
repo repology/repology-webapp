@@ -1,4 +1,4 @@
-# Copyright (C) 2016-2019 Dmitry Marakasov <amdmi3@amdmi3.ru>
+# Copyright (C) 2016-2020 Dmitry Marakasov <amdmi3@amdmi3.ru>
 #
 # This file is part of repology
 #
@@ -18,7 +18,7 @@
 from typing import Optional
 
 
-__all__ = ['is_fallback_maintainer', 'for_page']
+__all__ = ['is_fallback_maintainer', 'for_page', 'has_flag', 'has_flag_at']
 
 
 def is_fallback_maintainer(maintainer: str) -> bool:
@@ -32,3 +32,11 @@ def for_page(value: str, letter: Optional[str] = None) -> bool:
         return bool(value and value >= 'z')
     else:
         return bool(value and value >= letter and value < chr(ord(letter) + 1))
+
+
+def has_flag(value: int, flag: int) -> bool:
+    return bool(value & flag)
+
+
+def has_flag_at(value: int, bitpos: int) -> bool:
+    return bool(value & (1 << bitpos))
