@@ -89,7 +89,7 @@ REPOLOGY_UPDATER_REPO_URL = 'https://github.com/repology/repology-updater'
 REPOLOGY_RULES_REPO_URL = 'https://github.com/repology/repology-rules'
 
 #
-# Address of Repology rules repository
+# Address of Repology link checker repository
 #
 REPOLOGY_LINKCHECKER_REPO_URL = 'https://github.com/repology/repology-linkchecker'
 
