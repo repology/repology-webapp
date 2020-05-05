@@ -94,6 +94,11 @@ REPOLOGY_RULES_REPO_URL = 'https://github.com/repology/repology-rules'
 REPOLOGY_LINKCHECKER_REPO_URL = 'https://github.com/repology/repology-linkchecker'
 
 #
+# Address of Repology vuln updater repository
+#
+REPOLOGY_VULNUPDATER_REPO_URL = 'https://github.com/repology/repology-vulnupdater'
+
+#
 # Path to DejaVuSans.ttf
 #
 # This is used to calculate SVG badge sizes

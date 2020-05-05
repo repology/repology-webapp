@@ -66,6 +66,19 @@ consecutive requests to a single hostname, to ensure no excess site load is gene
 <p>You may see the link checker source code
 <a href="{{ config['REPOLOGY_LINKCHECKER_REPO_URL'] }}">here</a>.</p>
 
+<h4>repology-vulnupdater</h4>
+
+<p>Identifies itself as <code>repology-vulnupdater/1 (+{{ REPOLOGY_HOME }}/bots)</code></p>
+
+<p>This process maintains up to date information on software security vulnerabilities
+in Repology by periodically fetching <a href="https://nvd.nist.gov/vuln/data-feeds#JSON_FEED">NVD JSON feeds</a>.
+It isses a <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods">GET</a>
+request to each feed every 10 minutes, <code>Etag</code> and <code>If-None-Match</code> HTTP headers
+are used to avoid refetching the files if they have not changed since the last request.</p>
+
+<p>You may see the vuln updater source code
+<a href="{{ config['REPOLOGY_VULNUPDATER_REPO_URL'] }}">here</a>.</p>
+
 <h3>robots.txt policy</h3>
 
 <p>Please note that none of our robots is a crawler. Unlike most search engines which would
