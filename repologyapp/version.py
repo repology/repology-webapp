@@ -27,11 +27,13 @@ from repologyapp.package import AnyPackageDataMinimal, PackageFlags
 
 @total_ordering
 class UserVisibleVersionInfo:
-    __slots__ = ['version', 'versionclass', 'metaorder', 'versionflags', 'spread']
+    __slots__ = ['version', 'versionclass', 'metaorder', 'versionflags', 'vulnerable', 'spread']
 
     version: str
     versionclass: int
     metaorder: int
+    versionflags: int
+    vulnerable: bool
     spread: int
 
     def __init__(self, package: AnyPackageDataMinimal, spread: int = 1) -> None:
@@ -42,6 +44,7 @@ class UserVisibleVersionInfo:
         self.versionflags = (((package.flags & PackageFlags.P_IS_PATCH) and P_IS_PATCH) |
                              ((package.flags & PackageFlags.ANY_IS_PATCH) and ANY_IS_PATCH))
 
+        self.vulnerable = bool(package.flags & PackageFlags.VULNERABLE)
         self.spread = spread
 
     def as_with_spread(self, spread: int) -> 'UserVisibleVersionInfo':
@@ -54,6 +57,7 @@ class UserVisibleVersionInfo:
                 self.versionclass == other.versionclass and
                 self.version == other.version and
                 version_compare(self.version, other.version, self.versionflags, other.versionflags) == 0 and
+                self.vulnerable == other.vulnerable and
                 self.spread == other.spread)
 
     def __lt__(self, other: 'UserVisibleVersionInfo') -> bool:
@@ -77,6 +81,11 @@ class UserVisibleVersionInfo:
         if self.versionclass < other.versionclass:
             return True
         if self.versionclass > other.versionclass:
+            return False
+
+        if self.vulnerable > other.vulnerable:
+            return True
+        if self.vulnerable < other.vulnerable:
             return False
 
         if self.spread < other.spread:
