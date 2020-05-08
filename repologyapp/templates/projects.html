@@ -129,6 +129,13 @@
 							<input type="checkbox" name="problematic"{% if search.problematic %} checked="checked"{% endif %}> Problematic
 						</label>
 					</div>
+					{% if session.experimental %}
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" name="vulnerable"{% if search.vulnerable %} checked="checked"{% endif %}> Vulnerable
+						</label>
+					</div>
+					{% endif %}
 					<div class="checkbox">
 						<label>
 							<input type="checkbox" name="has_related"{% if search.has_related %} checked="checked"{% endif %}> Has related

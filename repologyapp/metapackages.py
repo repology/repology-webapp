@@ -94,6 +94,11 @@ class MetapackagesFilterInfo:
             True,
             lambda request, value: request.require_problematic(),
         ),
+        'vulnerable': _FieldDescriptor(
+            bool,
+            True,
+            lambda request, value: request.require_vulnerable(),
+        ),
         'has_related': _FieldDescriptor(
             bool,
             True,

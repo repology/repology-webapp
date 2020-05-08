@@ -36,6 +36,7 @@
 -- @param outdated=False
 -- @param problematic=False
 -- @param has_related=False
+-- @param vulnerable=False
 -- @param limit=None
 --
 -- @returns dict of dicts
@@ -124,6 +125,10 @@ WHERE
 				) AND (
 					problematic
 				{% endif %}
+				{% if vulnerable %}
+				) AND (
+					vulnerable
+				{% endif %}
 				)
 		)
 	{% endif %}
@@ -162,6 +167,10 @@ WHERE
 				) AND (
 					problematic
 				{% endif %}
+				{% if vulnerable %}
+				) AND (
+					vulnerable
+				{% endif %}
 				)
 		)
 	{% endif %}
@@ -188,6 +197,10 @@ WHERE
 				{% if problematic %}
 				) AND (
 					problematic
+				{% endif %}
+				{% if vulnerable %}
+				) AND (
+					vulnerable
 				{% endif %}
 				)
 		)
@@ -218,6 +231,11 @@ WHERE
 	) AND (
 		-- problematic not handled for either maintainer or repo
 		EXISTS (SELECT * FROM repo_metapackages WHERE effname = metapackages.effname AND problematic)
+	{% endif %}
+	{% if not maintainer and not repo and vulnerable %}
+	) AND (
+		-- vulnerable not handled for either maintainer or repo
+		EXISTS (SELECT * FROM repo_metapackages WHERE effname = metapackages.effname AND vulnerable)
 	{% endif %}
 	)
 ORDER BY

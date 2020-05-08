@@ -50,6 +50,7 @@ class MetapackageRequest:
     newest: bool
     outdated: bool
     problematic: bool
+    vulnerable: bool
     has_related: bool
 
     def __init__(self) -> None:
@@ -83,6 +84,7 @@ class MetapackageRequest:
         self.newest = False
         self.outdated = False
         self.problematic = False
+        self.vulnerable = False
         self.has_related = False
 
     def set_bound(self, bound: Optional[str]) -> None:
@@ -152,6 +154,9 @@ class MetapackageRequest:
 
     def require_problematic(self) -> None:
         self.problematic = True
+
+    def require_vulnerable(self) -> None:
+        self.vulnerable = True
 
     def require_has_related(self) -> None:
         self.has_related = True
