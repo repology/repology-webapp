@@ -46,6 +46,8 @@ def repositories_statistics(sorting: Optional[str] = None) -> Any:
         repostats = sorted(repostats, key=lambda s: s['num_metapackages'], reverse=True)
     elif sorting == 'nonunique':
         repostats = sorted(repostats, key=lambda s: s['num_metapackages'] - s['num_metapackages_unique'], reverse=True)
+    elif sorting == 'vulnerable':
+        repostats = sorted(repostats, key=lambda s: s['num_metapackages_vulnerable'], reverse=True)
     else:
         sorting = 'name'
         showmedals = False

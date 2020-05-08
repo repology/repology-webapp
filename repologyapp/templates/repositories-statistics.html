@@ -26,6 +26,9 @@
 			<li><a href="{{ url_for_self(sorting="poutdated", autorefresh=autorefresh) }}" class="{% if sorting == "poutdated" %} active{% endif %}">Percent projects outdated</a></li>
 			<li><a href="{{ url_for_self(sorting="total", autorefresh=autorefresh) }}" class="{% if sorting == "total" %} active{% endif %}">Total projects</a></li>
 			<li><a href="{{ url_for_self(sorting="nonunique", autorefresh=autorefresh) }}" class="{% if sorting == "nonunique" %} active{% endif %}">Non-unique projects</a></li>
+			{% if session.experimental %}
+			<li><a href="{{ url_for_self(sorting="vulnerable", autorefresh=autorefresh) }}" class="{% if sorting == "vulnerable" %} active{% endif %}">Potentiall vulnerable projects</a></li>
+			{% endif %}
 		</ul>
 	</div>
 
@@ -41,7 +44,7 @@
 	<thead>
 		<tr>
 			<th class="text-right" rowspan="2">Repository</th>
-			<th class="text-center" colspan="10">Projects</th>
+			<th class="text-center" colspan="{% if session.experimental %}11{% else %}10{% endif %}">Projects</th>
 			<th class="text-center" rowspan="2">Maintainers</th>
 			<th class="text-center" rowspan="2">Problems</th>
 		</tr>
@@ -52,6 +55,9 @@
 			<th class="text-center" colspan="2">Outdated</th>
 			<th class="text-center" colspan="2">Unique</th>
 			<th class="text-center" colspan="2">Problematic</th>
+			{% if session.experimental %}
+			<th class="text-center" colspan="1">Vulnerable</th>
+			{% endif %}
 		</tr>
 	</thead>
 	<tbody>
@@ -125,6 +131,14 @@
 			<td class="text-center version-cell version-big version-ignored">
 				{{- macros.safe_percent(repostat.num_metapackages_problematic, repostat.num_metapackages) -}}
 			</td>
+
+			{% if session.experimental %}
+			<td class="text-center{% if repostat.num_metapackages_vulnerable %} vulnerable-cell{% endif %}">
+				<a href="{{ url_for('projects', inrepo=repostat.name, vulnerable=1) }}">
+					{{- repostat.num_metapackages_vulnerable -}}
+				</a>
+			</td>
+			{% endif %}
 
 			<td class="text-center">
 			{%- if repostat.num_maintainers -%}

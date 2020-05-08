@@ -33,12 +33,14 @@ SELECT
 	num_packages_untrusted,
 	num_packages_noscheme,
 	num_packages_rolling,
+	num_packages_vulnerable,
 	num_metapackages,
 	num_metapackages_unique,
 	num_metapackages_newest,
 	num_metapackages_outdated,
 	num_metapackages_comparable,
 	num_metapackages_problematic,
+	num_metapackages_vulnerable,
 	num_problems,
 	num_maintainers
 FROM repositories
