@@ -16,9 +16,10 @@
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 from collections import defaultdict
+from dataclasses import dataclass
 from datetime import timedelta
 from functools import cmp_to_key
-from typing import Any, Callable, Collection, Dict, Iterable, List
+from typing import Any, Callable, Collection, Dict, Iterable, List, Optional
 
 import flask
 
@@ -440,4 +441,64 @@ def project_report(name: str) -> Any:
         need_merge=need_merge,
         comment=comment,
         messages=[('danger', error) for error in errors]
+    )
+
+
+@dataclass
+class _VersionRange:
+    start: Optional[str]
+    end: str
+    start_excluded: bool
+    end_excluded: bool
+    highlighted: bool = False
+
+    def set_highlight(self, version: Optional[str]) -> '_VersionRange':
+        if version is None:
+            return self
+        if self.start is not None and version_compare(version, self.start) < (1 if self.start_excluded else 0):
+            return self
+        if version_compare(version, self.end) > (-1 if self.end_excluded else 0):
+            return self
+
+        self.highlighted = True
+
+        return self
+
+
+@dataclass(unsafe_hash=True)
+class _CVEAggregation:
+    cve_id: str
+    published: str
+    last_modified: str
+    cpe_vendor: str
+    cpe_product: str
+
+
+@ViewRegistrar('/project/<name>/vulnerabilities')
+def project_vulnerabilities(name: str) -> Any:
+    metapackage = get_db().get_metapackage(name)
+
+    if not metapackage or metapackage['num_repos'] == 0:
+        return handle_nonexisting_project(name, metapackage)
+
+    highlight_version = flask.request.args.to_dict().get('version')
+
+    cves: Dict[_CVEAggregation, List[_VersionRange]] = defaultdict(list)
+    for item in get_db().get_project_vulnerabilities(name):
+        cves[
+            _CVEAggregation(
+                *item[0:5]
+            )
+        ].append(
+            _VersionRange(
+                *item[5:9]
+            ).set_highlight(highlight_version)
+        )
+
+    return flask.render_template(
+        'project-vulnerabilities.html',
+        name=name,
+        metapackage=metapackage,
+        highlight_version=highlight_version,
+        cves=list(cves.items())
     )

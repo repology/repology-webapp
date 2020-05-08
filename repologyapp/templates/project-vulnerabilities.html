@@ -1,0 +1,64 @@
+{% extends "project.html" %}
+
+{% block title %}{{ name }} vulnerabilities - Repology{% endblock %}
+{% block header %}Vulnerabilities for <strong>{{ name }}</strong>{% endblock %}
+{% block description %}Known vulnerabilities for project {{ name }}{% endblock %}
+{% block keywords %}{{ super() }}, vulnerability{% endblock %}
+
+{% block content %}
+<div class="container">
+
+{% if not cves %}
+<div class="alert alert-success" role="alert">No CVEs known for this project. This is not reliable though and may be caused by lacking CPE information or our simplified CVE configurations parsing. Feel free to submit a <a href="{{ url_for("project_report", name=name) }}">report</a>.</div>
+{% else %}
+
+{% if highlight_version %}
+<p>Highlighting matches for version <span class="version version-outdated">{{ highlight_version }}</span>.</p>
+{% endif %}
+
+<table class="table table-striped table-hover">
+	<thead>
+		<tr>
+			<th class="text-left minimal-column">CVE ID</th>
+			<th class="text-center minimal-column">CPE vendor:project</th>
+			<th class="text-left">Affected version(s)</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for cveagg, version_ranges in cves %}
+		<tr>
+			<td class="text-left minimal-column">
+				<a href="https://nvd.nist.gov/vuln/detail/{{ cveagg.cve_id }}">{{ cveagg.cve_id }}</a>
+				<span class="cell-subitem" title="Published date">{{ cveagg.published }}</span>
+				<span class="cell-subitem" title="Modified date">{{ cveagg.last_modified }}</span>
+			</td>
+			<td class="text-center minimal-column">
+				{{- cveagg.cpe_vendor }}:{{ cveagg.cpe_product -}}
+			</td>
+			<td class="text-left">
+			{%- for range in version_ranges -%}
+				{%- if not loop.first %} {% endif -%}
+				<span class="version version-{{ 'outdated' if range.highlighted else 'rolling' }}">
+				{%- if range.start == range.end -%}
+					{{- range.start -}}
+				{%- else -%}
+					{%- if range.start is none -%}
+						(-∞
+					{%- elif range.start_excluded -%}
+						({{ range.start }}
+					{%- else -%}
+						[{{ range.start }}
+					{%- endif %}, {{ range.end }}{% if range.end_excluded %}){% else %}]{% endif -%}
+				{%- endif -%}
+				</span>
+			{%- endfor -%}
+			</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+
+{% endif %}
+
+</div> {#- container #}
+{% endblock %}
