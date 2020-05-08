@@ -20,7 +20,7 @@ from dataclasses import dataclass
 from functools import cmp_to_key
 from typing import Dict, Iterable, List, Optional, Tuple
 
-from repologyapp.package import AnyPackageDataMinimal, PackageStatus, package_version_compare
+from repologyapp.package import AnyPackageDataMinimal, PackageFlags, PackageStatus, package_version_compare
 
 
 def packageset_sort_by_version(packages: Iterable[AnyPackageDataMinimal]) -> List[AnyPackageDataMinimal]:
@@ -79,6 +79,7 @@ class VersionAggregation:
     version: str
     versionclass: int
     numfamilies: int
+    vulnerable: bool
 
 
 def packageset_aggregate_by_version(packages: Iterable[AnyPackageDataMinimal], classmap: Dict[int, int] = {}) -> List[VersionAggregation]:
@@ -91,7 +92,12 @@ def packageset_aggregate_by_version(packages: Iterable[AnyPackageDataMinimal], c
             ].append(package)
 
         for (version, versionclass), packages in sorted(aggregated.items()):
-            yield VersionAggregation(version=version, versionclass=versionclass, numfamilies=len(set([package.family for package in packages])))
+            yield VersionAggregation(
+                version=version,
+                versionclass=versionclass,
+                numfamilies=len(set(package.family for package in packages)),
+                vulnerable=any(package.flags & PackageFlags.VULNERABLE for package in packages),
+            )
 
     def post_sort_same_version(versions: Iterable[VersionAggregation]) -> List[VersionAggregation]:
         return sorted(versions, key=lambda v: (v.numfamilies, v.version, v.versionclass), reverse=True)

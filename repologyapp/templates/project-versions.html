@@ -29,15 +29,15 @@
 		</td>
 		<td class="text-center">{{ macros.package_link(package, package.visiblename) }}</td>
 		<td class="text-center">
-		{% if package.origversion != package.version %}
+			{%- set vuln = package.flags is has_flag_at(16) -%}
+			{%- if package.origversion != package.version -%}
 			<span class="version version-big version-{{ package.versionclass|css_for_versionclass }} version-property-fixed" title="Normalized from &quot;{{ package.origversion }}&quot;">
-				{{- macros.package_link(package, package.version) -}}
-			</span>
-		{% else %}
+			{%- else -%}
 			<span class="version version-big version-{{ package.versionclass|css_for_versionclass }}">
+			{%- endif -%}
 				{{- macros.package_link(package, package.version) -}}
-			</span>
-		{% endif %}
+				{%- if vuln and session.experimental %} <a href="{{ url_for('project_vulnerabilities', name=name, version=package.version) }}"><img src="{{ url_for("static", filename="vulnerable.v1.svg") }}" alt="Potentially vulnerable"></a>{% endif -%}
+			</span>{#-#}
 		</td>
 		<td class="text-center">
 			{{- package.category|default('-', boolean=True) -}}

@@ -14,7 +14,13 @@
 			<h2>Versions</h2>
 			<ul class="list-sparse">
 			{% for versioninfo in versions %}
-				<li><span class="version version-big version-{{ versioninfo.versionclass|css_for_versionclass }}">{{ versioninfo.version }}</span>{% if versioninfo.numfamilies > 1 %} <b>({{ versioninfo.numfamilies }})</b>{% endif %}</li>
+				<li>{#-#}
+					<span class="version version-big version-{{ versioninfo.versionclass|css_for_versionclass }}">
+						{{- versioninfo.version -}}
+						{%- if versioninfo.vulnerable and session.experimental %} <a href="{{ url_for('project_vulnerabilities', name=name, version=versioninfo.version) }}"><img src="{{ url_for("static", filename="vulnerable.v1.svg") }}" alt="Potentially vulnerable"></a>{% endif -%}
+					</span>
+					{%- if versioninfo.numfamilies > 1 %} <b>({{ versioninfo.numfamilies }})</b>{% endif -%}
+				</li>
 			{% endfor %}
 			</ul>
 		</section>
