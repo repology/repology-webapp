@@ -21,11 +21,18 @@ import flask
 
 from repologyapp.config import config
 from repologyapp.db import get_db
+from repologyapp.template_functions import url_for_self
 from repologyapp.view_registry import ViewRegistrar
 
 
-@ViewRegistrar('/experimental/')
+@ViewRegistrar('/experimental/', methods=['GET', 'POST'])
 def experimental() -> Any:
+    if flask.request.method == 'POST':
+        enabled = flask.request.form.get('experimental') == 'enable'
+        flask.session['experimental'] = enabled
+        flask.flash(f'Experimental mode {"enabled" if enabled else "disabled"}', 'success')
+        return flask.redirect(url_for_self(), 302)
+
     return flask.render_template('experimental.html')
 
 
