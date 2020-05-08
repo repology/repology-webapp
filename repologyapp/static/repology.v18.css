@@ -122,6 +122,27 @@
     color: black;
 }
 
+.vulnerable {
+	color: yellow;
+	margin-right: -3px;
+}
+
+.vulnerable-cell {
+    font-weight: bold;
+	color: red;
+}
+
+.vulnerable-cell :link, .vulnerable-cell :visited {
+	color: red;
+}
+
+.cell-subitem {
+	display: block;
+	font-size: 75%;
+	color: #606060;
+	line-height: 120%;
+}
+
 .list-sparse {
     line-height: 2;
 }
