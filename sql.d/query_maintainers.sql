@@ -34,6 +34,7 @@ FROM (
 		(SELECT jsonb_object_agg(key, (value->>2)::integer) FROM jsonb_each(counts_per_repo)) AS num_projects_newest_per_repo,
 		(SELECT jsonb_object_agg(key, (value->>3)::integer) FROM jsonb_each(counts_per_repo)) AS num_projects_outdated_per_repo,
 		(SELECT jsonb_object_agg(key, (value->>4)::integer) FROM jsonb_each(counts_per_repo)) AS num_projects_problematic_per_repo,
+		(SELECT jsonb_object_agg(key, (value->>5)::integer) FROM jsonb_each(counts_per_repo)) AS num_projects_vulnerable_per_repo,
 		num_projects,
 		num_repos,
 		now() - first_seen AS first_seen_ago

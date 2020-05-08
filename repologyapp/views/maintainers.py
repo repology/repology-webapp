@@ -61,6 +61,7 @@ def maintainers(bound: Optional[str] = None) -> Any:
         maintainer['bestrepo_num_projects_newest'] = maintainer['num_projects_newest_per_repo'][bestrepo]
         maintainer['bestrepo_num_projects_outdated'] = maintainer['num_projects_outdated_per_repo'][bestrepo]
         maintainer['bestrepo_num_projects_problematic'] = maintainer['num_projects_problematic_per_repo'][bestrepo]
+        maintainer['bestrepo_num_projects_vulnerable'] = maintainer['num_projects_vulnerable_per_repo'][bestrepo]
 
     firstpage, lastpage = False, False
     for maintainer in maintainers:
@@ -104,6 +105,7 @@ def maintainer(maintainer: str) -> Any:
         num_projects_newest: int
         num_projects_outdated: int
         num_projects_problematic: int
+        num_projects_vulnerable: int
 
     per_repo_info = [
         RepositoryInfo(
@@ -113,6 +115,7 @@ def maintainer(maintainer: str) -> Any:
             num_projects_newest=maintainer_info['num_projects_newest_per_repo'][repo],
             num_projects_outdated=maintainer_info['num_projects_outdated_per_repo'][repo],
             num_projects_problematic=maintainer_info['num_projects_problematic_per_repo'][repo],
+            num_projects_vulnerable=maintainer_info['num_projects_vulnerable_per_repo'][repo],
         )
         for repo in maintainer_info['num_projects_per_repo'].keys()
     ]
