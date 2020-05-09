@@ -30,7 +30,7 @@
 			<td class="text-left minimal-column">
 				<a href="https://nvd.nist.gov/vuln/detail/{{ cveagg.cve_id }}">{{ cveagg.cve_id }}</a>
 				<span class="cell-subitem" title="Published date">{{ cveagg.published }}</span>
-				<span class="cell-subitem" title="Modified date">{{ cveagg.last_modified }}</span>
+				<span class="cell-subitem" title="Last modified date">{{ cveagg.last_modified }}</span>
 			</td>
 			<td class="text-center minimal-column">
 				{{- cveagg.cpe_vendor }}:{{ cveagg.cpe_product -}}
