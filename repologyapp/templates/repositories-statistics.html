@@ -27,7 +27,7 @@
 			<li><a href="{{ url_for_self(sorting="total", autorefresh=autorefresh) }}" class="{% if sorting == "total" %} active{% endif %}">Total projects</a></li>
 			<li><a href="{{ url_for_self(sorting="nonunique", autorefresh=autorefresh) }}" class="{% if sorting == "nonunique" %} active{% endif %}">Non-unique projects</a></li>
 			{% if session.experimental %}
-			<li><a href="{{ url_for_self(sorting="vulnerable", autorefresh=autorefresh) }}" class="{% if sorting == "vulnerable" %} active{% endif %}">Potentiall vulnerable projects</a></li>
+			<li><a href="{{ url_for_self(sorting="vulnerable", autorefresh=autorefresh) }}" class="{% if sorting == "vulnerable" %} active{% endif %}">Potentially vulnerable projects</a></li>
 			{% endif %}
 		</ul>
 	</div>
@@ -56,7 +56,7 @@
 			<th class="text-center" colspan="2">Unique</th>
 			<th class="text-center" colspan="2">Problematic</th>
 			{% if session.experimental %}
-			<th class="text-center" colspan="1">Vulnerable</th>
+			<th class="text-center" colspan="1">Potentially vulnerable</th>
 			{% endif %}
 		</tr>
 	</thead>
