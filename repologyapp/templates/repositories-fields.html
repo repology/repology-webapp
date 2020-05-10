@@ -27,6 +27,7 @@
 			<th class="text-center">License</th>
 			<th class="text-center">Downloads</th>
 			<th class="text-center">Names</th>
+			<th class="text-center">CPE</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -56,6 +57,7 @@
 				{%- if 'srcname' in used %}<abbr title="source (package) name">S</abbr>{% endif -%}
 				{%- if 'binname' in used %}<abbr title="binary (package) name">B</abbr>{% endif -%}
 			</td>
+			<td class="text-center">{% if 'cpe_vendor' in used %}✔{% endif %}</td>
 		</tr>
 	{% endfor %}
 	</tbody>
