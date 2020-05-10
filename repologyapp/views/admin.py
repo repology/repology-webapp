@@ -172,3 +172,39 @@ def admin_name_samples() -> Any:
         'admin-name-samples.html',
         samples_by_repo=samples_by_repo
     )
+
+
+@ViewRegistrar('/admin/cpes', methods=['GET', 'POST'])
+def admin_cpes() -> Any:
+    if not flask.session.get('admin'):
+        return unauthorized()
+
+    if flask.request.method == 'POST':
+        if flask.request.form.get('action') == 'add':
+            if not flask.request.form.get('effname'):
+                flask.flash('Project name not specified', 'danger')
+            elif not flask.request.form.get('cpe_vendor'):
+                flask.flash('CPE vendor not specified', 'danger')
+            elif not flask.request.form.get('cpe_product'):
+                flask.flash('CPE product not specified', 'danger')
+            else:
+                get_db().add_manual_cpe(
+                    flask.request.form.get('effname'),
+                    flask.request.form.get('cpe_vendor'),
+                    flask.request.form.get('cpe_product')
+                )
+                flask.flash('Manual CPE added', 'success')
+        elif flask.request.form.get('action') == 'remove':
+            get_db().remove_manual_cpe(
+                flask.request.form.get('effname'),
+                flask.request.form.get('cpe_vendor'),
+                flask.request.form.get('cpe_product')
+            )
+            flask.flash('Manual CPE removed', 'success')
+
+        return flask.redirect(flask.url_for('admin_cpes'), 302)
+
+    return flask.render_template(
+        'admin-cpes.html',
+        cpes=get_db().get_manual_cpes()
+    )

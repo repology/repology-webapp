@@ -1,0 +1,57 @@
+{% extends "admin.html" %}
+
+{% block title %}Manual CPE admin - Repology{% endblock %}
+{% block header %}Manual CPE admin{% endblock %}
+
+{% block content %}
+<div class="container">
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th class="text-center minimal-column">Project</th>
+			<th class="text-center minimal-column">CPE vendor</th>
+			<th class="text-center minimal-column">CPE product</th>
+			<th class="text-center minimal-column">Misc</abbr></th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for cpe in cpes %}
+		<tr>
+			<td class="text-center minimal-column"><a href="{{ url_for('project_versions', name=cpe.effname) }}">{{ cpe.effname }}</a></td>
+			<td class="text-center minimal-column">{{ cpe.cpe_vendor }}</td>
+			<td class="text-center minimal-column">{{ cpe.cpe_product }}</td>
+			<td class="text-center minimal-column">
+			{%- if cpe.redundant -%}
+				<span class="label label-warning" title="Identical automatic CPE info exists">Redundant</span>
+			{%- endif -%}
+			{%- if cpe.orphan -%}
+				<span class="label label-warning" title="Project doesn't exist">Orphaned</span>
+			{%- endif -%}
+			</td>
+			<td>
+				<form class="form-inlinest" action="{{ url_for_self() }}" method="POST">
+					<input type="hidden" name="effname" value="{{ cpe.effname }}">
+					<input type="hidden" name="cpe_vendor" value="{{ cpe.cpe_vendor }}">
+					<input type="hidden" name="cpe_product" value="{{ cpe.cpe_product }}">
+					<button type="submit" class="btn btn-danger btn-xs" name="action" value="remove">Remove</button>
+				</form>
+			</td>
+		</tr>
+	{% endfor %}
+		<tr>
+			<td colspan="5">
+				<form class="form-inline" action="{{ url_for_self() }}" method="POST">
+					<input class="form-control" type="text" name="effname" placeholder="Project">
+					<input class="form-control" type="text" name="cpe_vendor" placeholder="CPE vendor">
+					<input class="form-control" type="text" name="cpe_product" placeholder="CPE product">
+					<button type="submit" class="btn btn-default" name="action" value="add">Add</button>
+				</form>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+</div>
+{% endblock %}
