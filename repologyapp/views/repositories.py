@@ -32,7 +32,6 @@ def repositories_statistics(sorting: Optional[str] = None) -> Any:
 
     repostats_by_name = {repostat['name']: repostat for repostat in get_db().get_active_repositories()}
     repostats = [repostats_by_name[reponame] for reponame in repometadata.active_names() if reponame in repostats_by_name]
-    showmedals = True
 
     if sorting == 'newest':
         repostats = sorted(repostats, key=lambda s: s['num_metapackages_newest'], reverse=True)
@@ -50,13 +49,11 @@ def repositories_statistics(sorting: Optional[str] = None) -> Any:
         repostats = sorted(repostats, key=lambda s: s['num_metapackages_vulnerable'], reverse=True)
     else:
         sorting = 'name'
-        showmedals = False
 
     return flask.render_template(
         'repositories-statistics.html',
         sorting=sorting,
         repostats=repostats,
-        showmedals=showmedals,
         repostats_old={},  # {repo['name']: repo for repo in get_db().GetRepositoriesHistoryAgo(60 * 60 * 24 * 7)},
         counts=get_db().get_counts(),
         autorefresh=autorefresh

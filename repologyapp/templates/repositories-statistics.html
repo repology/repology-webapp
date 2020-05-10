@@ -65,15 +65,6 @@
 		<tr id="{{ repostat.name }}">
 			<th class="text-right">
 				<a href="{{ url_for('repository', repo=repostat.name) }}">{{ repometadata[repostat.name].desc }}</a>
-				{%- if showmedals -%}
-				{% if loop.index == 1 -%}
-				<sup><span class="medal medal-gold" title="1st place"></span></sup>
-				{% elif loop.index == 2 -%}
-				<sup><span class="medal medal-silver" title="2nd place"></span></sup>
-				{% elif loop.index == 3 -%}
-				<sup><span class="medal medal-bronze" title="3rd place"></span></sup>
-				{% endif %}
-				{% endif %}
 			</th>
 
 			<td class="text-center total-cell" title="Total number of projects packaged in this repository">
