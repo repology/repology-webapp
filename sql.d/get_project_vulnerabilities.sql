@@ -49,7 +49,7 @@ FROM (
 		WHERE effname = %(effname)s
 	)
 ) AS expanded_cves
-INNER JOIN project_cpe USING (cpe_vendor, cpe_product)
+INNER JOIN all_cpes USING (cpe_vendor, cpe_product)
 WHERE effname = %(effname)s
 ORDER BY
 	-- assuming CVE-xxxx-yyyyy format
