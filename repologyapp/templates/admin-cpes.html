@@ -6,6 +6,13 @@
 {% block content %}
 <div class="container">
 
+<form class="form-inline" action="{{ url_for_self() }}" method="POST">
+	<input class="form-control" type="text" name="effname" placeholder="Project">
+	<input class="form-control" type="text" name="cpe_vendor" placeholder="CPE vendor">
+	<input class="form-control" type="text" name="cpe_product" placeholder="CPE product">
+	<button type="submit" class="btn btn-primary" name="action" value="add">Add</button>
+</form>
+
 <table class="table table-striped">
 	<thead>
 		<tr>
@@ -43,16 +50,6 @@
 			</td>
 		</tr>
 	{% endfor %}
-		<tr>
-			<td colspan="5">
-				<form class="form-inline" action="{{ url_for_self() }}" method="POST">
-					<input class="form-control" type="text" name="effname" placeholder="Project">
-					<input class="form-control" type="text" name="cpe_vendor" placeholder="CPE vendor">
-					<input class="form-control" type="text" name="cpe_product" placeholder="CPE product">
-					<button type="submit" class="btn btn-default" name="action" value="add">Add</button>
-				</form>
-			</td>
-		</tr>
 	</tbody>
 </table>
 
