@@ -28,11 +28,17 @@ SELECT
 		FROM project_cpe
 		WHERE project_cpe.cpe_vendor = manual_cpes.cpe_vendor AND project_cpe.cpe_product = manual_cpes.cpe_product
 	) AS redundant,
-	NOT EXISTS (
+	EXISTS (
 		SELECT
 			*
 		FROM metapackages
 		WHERE metapackages.effname = manual_cpes.effname AND num_repos > 0
-	) AS orphan
+	) AS has_project,
+	EXISTS (
+		SELECT
+			*
+		FROM cves
+		WHERE cpe_pairs @> ARRAY[cpe_vendor || ':' || cpe_product]
+	) AS has_cves
 FROM manual_cpes
 ORDER BY effname, cpe_vendor, cpe_product;

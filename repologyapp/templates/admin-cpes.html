@@ -26,8 +26,11 @@
 			{%- if cpe.redundant -%}
 				<span class="label label-warning" title="Identical automatic CPE info exists">Redundant</span>
 			{%- endif -%}
-			{%- if cpe.orphan -%}
-				<span class="label label-warning" title="Project doesn't exist">Orphaned</span>
+			{%- if not cpe.has_project -%}
+				<span class="label label-danger" title="Project doesn't exist">No project</span>
+			{%- endif -%}
+			{%- if not cpe.has_cves -%}
+				<span class="label label-danger" title="No CVEs with given CPE">No CVEs</span>
 			{%- endif -%}
 			</td>
 			<td>
