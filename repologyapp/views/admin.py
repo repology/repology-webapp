@@ -180,27 +180,26 @@ def admin_cpes() -> Any:
         return unauthorized()
 
     if flask.request.method == 'POST':
+        effname = flask.request.form.get('effname', '').strip()
+        vendor = flask.request.form.get('cpe_vendor', '').strip()
+        product = flask.request.form.get('cpe_product', '').strip()
+
         if flask.request.form.get('action') == 'add':
-            if not flask.request.form.get('effname'):
+            if not effname:
                 flask.flash('Project name not specified', 'danger')
-            elif not flask.request.form.get('cpe_vendor'):
+            elif not vendor:
                 flask.flash('CPE vendor not specified', 'danger')
-            elif not flask.request.form.get('cpe_product'):
+            elif not product:
                 flask.flash('CPE product not specified', 'danger')
             else:
-                get_db().add_manual_cpe(
-                    flask.request.form.get('effname'),
-                    flask.request.form.get('cpe_vendor'),
-                    flask.request.form.get('cpe_product')
-                )
-                flask.flash('Manual CPE added', 'success')
+                try:
+                    get_db().add_manual_cpe(effname, vendor, product)
+                    flask.flash(f'Manual CPE {vendor}:{product} added for {effname}', 'success')
+                except psycopg2.errors.UniqueViolation:
+                    flask.flash(f'Manual CPE {vendor}:{product} already exists for {effname}', 'danger')
         elif flask.request.form.get('action') == 'remove':
-            get_db().remove_manual_cpe(
-                flask.request.form.get('effname'),
-                flask.request.form.get('cpe_vendor'),
-                flask.request.form.get('cpe_product')
-            )
-            flask.flash('Manual CPE removed', 'success')
+            get_db().remove_manual_cpe(effname, vendor, product)
+            flask.flash(f'Manual CPE {vendor}:{product} removed for {effname}', 'success')
 
         return flask.redirect(flask.url_for('admin_cpes'), 302)
 
