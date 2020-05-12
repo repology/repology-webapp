@@ -37,8 +37,8 @@ SELECT
 	EXISTS (
 		SELECT
 			*
-		FROM cves
-		WHERE cpe_pairs @> ARRAY[cpe_vendor || ':' || cpe_product]
+		FROM vulnerable_versions
+		WHERE vulnerable_versions.cpe_vendor = manual_cpes.cpe_vendor AND vulnerable_versions.cpe_product = manual_cpes.cpe_product
 	) AS has_cves
 FROM manual_cpes
 ORDER BY effname, cpe_vendor, cpe_product;
