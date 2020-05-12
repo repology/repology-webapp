@@ -45,7 +45,7 @@ FROM (
 	WHERE cpe_pairs && (
 		SELECT
 			array_agg(cpe_vendor || ':' || cpe_product)
-		FROM project_cpe
+		FROM all_cpes
 		WHERE effname = %(effname)s
 	)
 ) AS expanded_cves
