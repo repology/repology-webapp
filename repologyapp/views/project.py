@@ -483,8 +483,10 @@ def project_vulnerabilities(name: str) -> Any:
 
     highlight_version = flask.request.args.to_dict().get('version')
 
+    cve_ids = set()
     cves: Dict[_CVEAggregation, List[_VersionRange]] = defaultdict(list)
-    for item in get_db().get_project_vulnerabilities(name):
+    for item in get_db().get_project_vulnerabilities(name, config['CVES_PER_PAGE']):
+        cve_ids.add(item[0])
         cves[
             _CVEAggregation(
                 *item[0:5]
@@ -495,10 +497,13 @@ def project_vulnerabilities(name: str) -> Any:
             ).set_highlight(highlight_version)
         )
 
+    too_many = len(cve_ids) >= config['CVES_PER_PAGE']
+
     return flask.render_template(
         'project-vulnerabilities.html',
         name=name,
         metapackage=metapackage,
         highlight_version=highlight_version,
-        cves=list(cves.items())
+        cves=list(cves.items()),
+        too_many_warning=config['CVES_PER_PAGE'] if too_many else None
     )

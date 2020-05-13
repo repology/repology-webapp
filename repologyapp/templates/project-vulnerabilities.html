@@ -12,6 +12,10 @@
 <div class="alert alert-success" role="alert">No CVEs known for this project. This is not reliable though and may be caused by lacking CPE information or our simplified CVE configurations parsing. Feel free to submit a <a href="{{ url_for("project_report", name=name) }}">report</a>.</div>
 {% else %}
 
+{% if too_many_warning %}
+<div class="alert alert-warning" role="alert">Too many CVEs found for this project, limiting to latest {{ too_many_warning }}.</div>
+{% endif %}
+
 {% if highlight_version %}
 <p>Highlighting matches for version <span class="version version-outdated">{{ highlight_version }}</span>.</p>
 {% endif %}
