@@ -17,20 +17,46 @@
 
 --------------------------------------------------------------------------------
 -- @param effname
--- @param cpe_vendor
--- @param cpe_product
+--
+-- @returns array of tuples
 --------------------------------------------------------------------------------
 WITH reset_hashes AS (
 	UPDATE project_hashes
 	SET hash = -1
 	WHERE effname = %(effname)s
+), candidates AS (
+	SELECT
+		%(effname)s AS effname,
+		cpe_vendor,
+		cpe_product
+	FROM (
+		SELECT DISTINCT
+			split_part(unnest(cpe_pairs), ':', 1) AS cpe_vendor,
+			split_part(unnest(cpe_pairs), ':', 2) AS cpe_product
+		FROM cves
+	) AS tmp
+	WHERE cpe_product = %(effname)s
 )
 INSERT INTO manual_cpes (
 	effname,
 	cpe_vendor,
 	cpe_product
-) VALUES (
-	%(effname)s,
-	%(cpe_vendor)s,
-	%(cpe_product)s
-);
+)
+SELECT *
+FROM candidates
+WHERE
+	NOT EXISTS(
+		SELECT *
+		FROM project_cpe
+		WHERE
+			project_cpe.effname = candidates.effname AND
+			project_cpe.cpe_vendor = candidates.cpe_vendor AND
+			project_cpe.cpe_product = candidates.cpe_product
+	) AND EXISTS (
+		SELECT *
+		FROM cves
+		WHERE cpe_pairs @> ARRAY[cpe_vendor || ':' || cpe_product]
+	)
+ON CONFLICT(effname, cpe_vendor, cpe_product)
+DO NOTHING
+RETURNING cpe_vendor, cpe_product;

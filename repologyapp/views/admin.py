@@ -200,6 +200,17 @@ def admin_cpes() -> Any:
         elif flask.request.form.get('action') == 'remove':
             get_db().remove_manual_cpe(effname, vendor, product)
             flask.flash(f'Manual CPE {vendor}:{product} removed for {effname}', 'success')
+        elif flask.request.form.get('action') == 'autoadd':
+            if not effname:
+                flask.flash('Project name not specified', 'danger')
+            else:
+                added = get_db().auto_add_manual_cpes(effname)
+
+                if added:
+                    cpes = ', '.join(f'{vendor}:{product}' for vendor, product in added)
+                    flask.flash(f'{len(added)} manual CPE(s) {cpes} autoadded for {effname}', 'success')
+                else:
+                    flask.flash(f'No manual CPE(s) for {effname} autoadded', 'warning')
 
         return flask.redirect(flask.url_for('admin_cpes'), 302)
 
