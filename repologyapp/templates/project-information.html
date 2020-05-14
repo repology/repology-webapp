@@ -17,7 +17,7 @@
 				<li>{#-#}
 					<span class="version version-big version-{{ versioninfo.versionclass|css_for_versionclass }}">
 						{{- versioninfo.version -}}
-						{%- if versioninfo.vulnerable and session.experimental %} <a href="{{ url_for('project_vulnerabilities', name=name, version=versioninfo.version) }}"><img src="{{ url_for("static", filename="vulnerable.v1.svg") }}" alt="Potentially vulnerable"></a>{% endif -%}
+						{%- if versioninfo.vulnerable and session.experimental %} <a href="{{ url_for('project_cves', name=name, version=versioninfo.version) }}"><img src="{{ url_for("static", filename="vulnerable.v1.svg") }}" alt="Potentially vulnerable"></a>{% endif -%}
 					</span>
 					{%- if versioninfo.numfamilies > 1 %} <b>({{ versioninfo.numfamilies }})</b>{% endif -%}
 				</li>

@@ -36,7 +36,7 @@
         <tr>
             <th class="text-right" rowspan="2">Repository</th>
             <th class="text-center" rowspan="2">Packages</th>
-			<th class="text-center" colspan="{% if session.experimental %}9{% else %}8{% endif %}">Projects</th>
+			<th class="text-center" colspan="{% if session.experimental %}10{% else %}8{% endif %}">Projects</th>
             <th class="text-center" rowspan="2">Feeds</th>
         </tr>
         <tr>
@@ -44,7 +44,7 @@
             <th class="text-center" colspan="2">Newest</th>
             <th class="text-center" colspan="2">Outdated</th>
             <th class="text-center" colspan="2">Problematic</th>
-			{% if session.experimental %}<th class="text-center">Potentially vulnerable</th>{% endif %}
+			{% if session.experimental %}<th class="text-center" colspan="2">Potentially vulnerable</th>{% endif %}
             <th class="text-center">See also</th>
         </tr>
     </thead>
@@ -101,7 +101,7 @@
                     {{- macros.safe_percent(repoinfo.num_projects_problematic, repoinfo.num_projects) -}}
                 </a>
             </td>
-			{%- else -%}<td class="text-center">-</td>{%- endif -%}
+			{%- else -%}<td class="text-center" colspan="2">-</td>{%- endif -%}
 			{% if session.experimental %}
 			{%- if repoinfo.num_projects_vulnerable -%}
             <td class="text-center vulnerable-cell">
@@ -109,7 +109,12 @@
                     {{- repoinfo.num_projects_vulnerable -}}
                 </a>
             </td>
-			{%- else -%}<td class="text-center">0</td>{%- endif -%}
+            <td class="text-center vulnerable-cell">
+                <a href="{{ url_for('projects', maintainer=maintainer, inrepo=repoinfo.repo, vulnerable=1) }}">
+                    {{- macros.safe_percent(repoinfo.num_projects_vulnerable, repoinfo.num_projects, 2) -}}
+                </a>
+            </td>
+			{%- else -%}<td class="text-center" colspan="2">-</td>{%- endif -%}
 			{% endif %}
 			<td class="text-center">
 				<a href="{{ url_for('projects', maintainer=maintainer, inrepo=repoinfo.repo, outdated=1, families_newest='2-') }}"
@@ -127,7 +132,7 @@
             </td>
 		</tr>
 	{% endfor %}
-		<tr><td colspan="12"></td></tr>
+		<tr><td colspan="{% if session.experimental %}14{% else %}12{% endif %}"></td></tr>
 		<tr>
 			<td class="text-right break-word total-cell">Total</td>
             <td class="text-center total-cell">
@@ -183,7 +188,12 @@
                     {{- maintainer_info.num_projects_vulnerable -}}
                 </a>
             </td>
-			{%- else -%}<td class="text-center">0</td>{%- endif -%}
+            <td class="text-center vulnerable-cell">
+                <a href="{{ url_for('projects', maintainer=maintainer, inrepo=maintainer_info.repo, vulnerable=1) }}">
+                    {{- macros.safe_percent(maintainer_info.num_projects_vulnerable, maintainer_info.num_projects, 2) -}}
+                </a>
+            </td>
+			{%- else -%}<td class="text-center" colspan="2">-</td>{%- endif -%}
 			{% endif %}
 			<td class="text-center">
 				<a href="{{ url_for('projects', maintainer=maintainer, outdated=1, families_newest='2-') }}"
