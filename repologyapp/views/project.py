@@ -474,8 +474,8 @@ class _CVEAggregation:
     cpe_product: str
 
 
-@ViewRegistrar('/project/<name>/vulnerabilities')
-def project_vulnerabilities(name: str) -> Any:
+@ViewRegistrar('/project/<name>/cves')
+def project_cves(name: str) -> Any:
     metapackage = get_db().get_metapackage(name)
 
     if not metapackage or metapackage['num_repos'] == 0:
@@ -485,7 +485,7 @@ def project_vulnerabilities(name: str) -> Any:
 
     cve_ids = set()
     cves: Dict[_CVEAggregation, List[_VersionRange]] = defaultdict(list)
-    for item in get_db().get_project_vulnerabilities(name, config['CVES_PER_PAGE']):
+    for item in get_db().get_project_cves(name, config['CVES_PER_PAGE']):
         cve_ids.add(item[0])
         cves[
             _CVEAggregation(
@@ -500,7 +500,7 @@ def project_vulnerabilities(name: str) -> Any:
     too_many = len(cve_ids) >= config['CVES_PER_PAGE']
 
     return flask.render_template(
-        'project-vulnerabilities.html',
+        'project-cves.html',
         name=name,
         metapackage=metapackage,
         highlight_version=highlight_version,
