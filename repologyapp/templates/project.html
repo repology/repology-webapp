@@ -9,7 +9,7 @@
 	<a href="{{ url_for("project_packages", name=name) }}" class="btn btn-default{% if request.endpoint == "project_packages" %} active{% endif %}">Packages</a>
 	<a href="{{ url_for("project_information", name=name) }}" class="btn btn-default{% if request.endpoint == "project_information" %} active{% endif %}">Information</a>
 	<a href="{{ url_for("project_history", name=name) }}" class="btn btn-default{% if request.endpoint == "project_history" %} active{% endif %}">History</a>
-	{% if metapackage.has_cves %}
+	{% if metapackage.has_cves and session.experimental %}
 	<a href="{{ url_for("project_cves", name=name) }}" class="btn btn-default{% if request.endpoint == "project_cves" %} active{% endif %}">CVEs</a>
 	{% endif %}
 	{% if metapackage.has_related %}
