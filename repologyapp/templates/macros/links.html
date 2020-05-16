@@ -1,0 +1,48 @@
+{%- macro format_link_status_code(code) -%}
+	{%- if code == -1 %}Unknown error
+
+	{%- elif code == -100 %}Connect timeout (60 seconds)
+	{%- elif code == -101 %}Invalid URL
+	{%- elif code == -102 %}Host manually blacklisted for being taken over by an unrelated entity
+
+	{%- elif code == -200 %}DNS error
+	{%- elif code == -201 %}DNS error: domain name not found
+	{%- elif code == -202 %}DNS error: no address record
+	{%- elif code == -203 %}DNS error: could not contact DNS servers
+	{%- elif code == -204 %}DNS error: timeout while contacting DNS servers
+	{%- elif code == -205 %}DNS error: IPv4-mapped address in AAAA
+
+	{%- elif code == -300 %}Connection refused
+	{%- elif code == -301 %}No route to host
+	{%- elif code == -302 %}Connection reset by peer
+	{%- elif code == -303 %}Network is unreachable
+	{%- elif code == -304 %}Server disconnected
+	{%- elif code == -306 %}Connection aborted
+	{%- elif code == -307 %}Address not available
+
+	{%- elif code == -400 %}Too many redirects (possibly, a redirect loop)
+	{%- elif code == -402 %}HTTP protocol error
+
+	{%- elif code == -500 %}SSL error
+	{%- elif code == -501 %}SSL error: certificate has expired
+	{%- elif code == -502 %}SSL error: certificate issued for different hostname
+	{%- elif code == -503 %}SSL error: self signed certificate
+	{%- elif code == -504 %}SSL error: self signed certificate in certificate chain
+	{%- elif code == -505 %}SSL error: incomplete certificate chain
+
+	{%- elif code >= 0 and code < 1000 %}HTTP {{ code }}
+	{%- else %}{{ code }}
+	{%- endif -%}
+{%- endmacro -%}
+
+{%- macro format_link_suggestions(code, url) -%}
+	{%- if code >= -399 and code <= -300 or code in (-100,-203,-204) -%}
+		(check on <a href="https://www.uptrends.com/tools/uptime" rel="nofollow">uptrends</a>, <a href="https://www.site24x7.com/check-website-availability.html" rel="nofollow">site24x7</a>)
+	{%- endif -%}
+	{%- if code == -205 -%}
+		(<a href="https://bb6-ie.blogspot.com/2017/04/do-not-put-ipv4-mapped-ipv6-addresses.html" rel="nofollow">related reading</a>)
+	{%- endif -%}
+	{%- if code >= -599 and code <= -500 -%}
+		(<a href="https://www.ssllabs.com/ssltest/analyze.html?d={{ url|extract_netloc }}" rel="nofollow">check on SSL Labs</a>)
+	{%- endif -%}
+{%- endmacro -%}
