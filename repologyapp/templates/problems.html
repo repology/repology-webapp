@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% import "macros/links.html" as mlinks %}
 {% import "macros.html" as macros %}
 
 {% block title %}Problems list - Repology{% endblock %}
@@ -31,7 +32,32 @@
 				-
 			{%- endif -%}
 			</td>
-			<td class="text-left">{{ problem.problem }}</td>
+			<td class="text-left">
+			{% if problem.type == 'homepage_dead' %}
+				Homepage link <code>{{ problem.data.url }}</code> is <a href="{{ url_for('link', url=problem.data.url) }}">dead</a> (<b class="link-error">{{ mlinks.format_link_status_code(problem.data.code) }}</b>)
+				for more than a month and should be replaced by alive link (or link to <a href="https://archive.org/">archive.org</a> as a last resort).
+			{% elif problem.type == 'homepage_permanent_https_redirect' %}
+				Homepage link <code>{{ problem.data.url }}</code> is a permanent redirect to its HTTPS counterpart <code>{{ problem.data.target }}</code> and should be updated.
+			{% elif problem.type == 'homepage_discontinued_google' %}
+				Homepage link <code>{{ problem.data.url }}</code> points to Google Code which was discontinued.
+				The link should be updated (probably along with download URLs).
+				If this link is still alive, it may point to a new project homepage.
+			{% elif problem.type == 'homepage_discontinued_codeplex' %}
+				Homepage link <code>{{ problem.data.url }}</code> points to codeplex which was discontinued.
+				The link should be updated (probably along with download URLs).
+			{% elif problem.type == 'homepage_discontinued_gna' %}
+				Homepage link <code>{{ problem.data.url }}</code> points to Gna which was discontinued.
+				The link should be updated (probably along with download URLs).
+			{% elif problem.type == 'homepage_discontinued_cpan' %}
+				Homepage link <code>{{ problem.data.url }}</code> points to CPAN which was discontinued.
+				The link should be updated to <a href="https://metacpan.org/">MetaCPAN</a> (probably along with download URLs).
+				See <a href="https://www.perl.com/article/saying-goodbye-to-search-cpan-org/">https://www.perl.com/article/saying-goodbye-to-search-cpan-org/</a> for details.
+			{% elif problem.problem is defined %}{# legacy, remove after problems are regenerated #}
+				{{ problem.problem }}
+			{% else %}
+				Unformatted problem of type {{ problem.type }}, data=<code>{{ problem.data }}</code>. The template should be updated, please report this.
+			{% endif %}
+			</td>
 		</tr>
 	{% endfor %}
 	</tbody>
