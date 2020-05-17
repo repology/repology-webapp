@@ -36,7 +36,7 @@
 			<span class="version version-big version-{{ package.versionclass|css_for_versionclass }}">
 			{%- endif -%}
 				{{- macros.package_link(package, package.version) -}}
-				{%- if vuln and session.experimental %} <a href="{{ url_for('project_cves', name=name, version=package.version) }}"><img src="{{ url_for("static", filename="vulnerable.v1.svg") }}" alt="Potentially vulnerable"></a>{% endif -%}
+				{%- if vuln %} <a href="{{ url_for('project_cves', name=name, version=package.version) }}"><img src="{{ url_for("static", filename="vulnerable.v1.svg") }}" alt="Potentially vulnerable"></a>{% endif -%}
 			</span>{#-#}
 		</td>
 		<td class="text-center">

@@ -19,21 +19,10 @@
 	</li>
 </ul>
 
-{% set we_have_experimental_features = True %}
-
-{% if we_have_experimental_features %}
-<p>You may also enable the followin experimental features affecting whole site (note that you need cookies enabled for this):</p>
+<p>You may also enable experimental mode to activate experimental features sitewide (note that you need cookies enabled for this). Currently tested features:</p>
 
 <ul>
-	<li><b>Vulnerabilities</b> - enables vulnerable versions tracking:
-		<ul>
-			<li>Markers in project lists</li>
-			<li>Markers in project versions, information, packages pages</li>
-			<li>Vulnerable package counts for repositories</li>
-			<li>Vulnerable package counts for maintainers</li>
-			<li>Project filtering based on vulnerable status</li>
-		</ul>
-	</li>
+	<li><b>None</b></li>
 </ul>
 
 <form action="{{ url_for_self() }}" method="POST">
@@ -43,7 +32,6 @@
 <button type="submit" class="btn btn-primary" name="experimental" value="disable">Disable experimental features</button>
 {% endif %}
 </form>
-{% endif %}
 
 </div> {#- container #}
 {% endblock %}

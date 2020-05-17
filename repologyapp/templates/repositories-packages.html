@@ -24,7 +24,7 @@
 	<thead>
 		<tr>
 			<th class="text-right" rowspan="2">Repository</th>
-			<th class="text-center" colspan="{% if session.experimental %}12{% else %}11{% endif %}">Packages</th>
+			<th class="text-center" colspan="12">Packages</th>
 		</tr>
 		<tr>
 			<th class="text-center">Total</th>
@@ -40,9 +40,7 @@
 			<th class="text-center"><abbr title="Untrusted">Unt.</abbr></th>
 			<th class="text-center"><abbr title="Ignored">Ign.</abbr></th>
 
-			{% if session.experimental %}
 			<th class="text-center"><abbr title="Potentially vulnerable">Vul.</abbr></th>
-			{% endif %}
 		</tr>
 	</thead>
 	<tbody>
@@ -66,9 +64,7 @@
 			<td class="text-center version-cell version-big version-untrusted">{{ repostat.num_packages_untrusted }}</td>
 			<td class="text-center version-cell version-big version-ignored">{{ repostat.num_packages_ignored }}</td>
 
-			{% if session.experimental %}
 			<td class="text-center vulnerable-cell">{{ repostat.num_packages_vulnerable }}</td>
-			{% endif %}
 		</tr>
 	{% endfor %}
 	</tbody>
