@@ -70,8 +70,6 @@
 				<code>{{ suggestion.vendor }}:{{ suggestion.product }}</code>
 				{%- endfor %}
 				{% endif %}
-			{% elif problem.problem is defined %}{# legacy, remove after problems are regenerated #}
-				{{ problem.problem }}
 			{% else %}
 				Unformatted problem of type {{ problem.type }}, data=<code>{{ problem.data }}</code>. The template should be updated, please report this.
 			{% endif %}
