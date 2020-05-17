@@ -26,7 +26,6 @@
 SELECT
 	packages.*,
 	maintainer,
-	problem,
 	"type",
 	data
 FROM problems
