@@ -7,6 +7,36 @@
 <div class="container">
 
 <article>
+	<h3 id="2020-05-17">2020-05-17: Vulnerable versions reporting launched in beta mode</h3>
+	<ul>
+		<li>Project versions which may be affected by known CVEs are marked as such in project list
+			and project pages (<a href="{{ url_for('project_versions', name='wget') }}">example</a>).</li>
+		<li>Counters of potentially vulnerable packages/projects available for <a href="{{ url_for('repositories_statistics') }}">repositories</a>
+			and maintainers (<a href="{{ url_for('maintainer', maintainer='ports@freebsd.org') }}">example</a>) are available.</li>
+		<li>List of known CVEs for each project is available (<a href="{{ url_for('project_cves', name='wget') }}">example</a>).</li>
+		<li>Filtering based on potentially vulnerable status is available in projects list
+			(<a href="{{ url_for('projects', inrepo='gentoo', vulnerable=1) }}">example</a>).</li>
+		<li>CPE related problems are reported for repositories which provide CPE information
+			(currently Gentoo family and Ravenports).</li>
+	</ul>
+	<p>Possible shortcomings:</p>
+	<ul>
+		<li>CPE information needed to match CVEs and projects may be missing for most of the latter. We rely on
+			repositories providing CPE information (currently Gentoo family and Ravenports) and manual bindings,
+			but both are currently far from being complete. This is going to gradually improve, feel free to submit
+			reports/issues on missing CVE information.</li>
+		<li>Repology currently has no way to know that a certain vulnerability was patched in some repository,
+			so even if that's so, version will still be marked as "potentially vulnerable". If you're interested
+			in fixed this, see related <a href="https://github.com/repology/repology-updater/issues/1045">Issue</a>.</li>
+		<li>Both false positives and false negatives are possible for a lot of other reasons, including incorrect
+			data in <a href="https://nvd.nist.gov">National Vulnerability Database</a> itself. See more related
+			issues on <a href="https://github.com/repology/repology-updater/issues/1043">general improvements</a>
+			and <a href="https://github.com/repology/repology-rules/issues/367">individual cases</a>. However,
+			total number of errors is quite low and is going to improve further too.</li>
+	</ul>
+</article>
+
+<article>
 	<h3 id="2020-05-11">2020-05-11</h3>
 	<ul>
 		<li>Added <a href="{{ url_for('repository', repo='siduction_unstable') }}">Siduction</a> repository.</li>
