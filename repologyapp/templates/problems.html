@@ -55,7 +55,7 @@
 			{% elif problem.type == 'cpe_unreferenced' %}
 				No CVEs found for CPE vendor:product pair <code>{{ problem.data.vendor }}:{{ problem.data.product }}</code> defined for the package, so it's likely invalid.
 				{% if problem.data.suggestions %}
-				Suggested CPE vendor:product pairs:
+				Suggested CPE vendor:product pairs (see <a href="{{ url_for('project_cves', name=problem.effname) }}">CVEs</a>):
 				{% for suggestion in problem.data.suggestions -%}
 				{%- if not loop.first %}, {% endif -%}
 				<code>{{ suggestion.vendor }}:{{ suggestion.product }}</code>
@@ -64,7 +64,7 @@
 			{% elif problem.type == 'cpe_missing' %}
 				CPE information is missing for this package, while repository defines it for other packages.
 				{% if problem.data.suggestions %}
-				Suggested CPE vendor:product pairs:
+				Suggested CPE vendor:product pairs (see <a href="{{ url_for('project_cves', name=problem.effname) }}">CVEs</a>):
 				{% for suggestion in problem.data.suggestions -%}
 				{%- if not loop.first %}, {% endif -%}
 				<code>{{ suggestion.vendor }}:{{ suggestion.product }}</code>
