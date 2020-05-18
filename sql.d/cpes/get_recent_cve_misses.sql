@@ -64,5 +64,4 @@ SELECT
 	EXISTS(SELECT * FROM metapackages WHERE effname = cpe_product) AS has_project
 FROM latest_cves_expanded_with_matches_expanded
 WHERE NOT match
-ORDER BY split_part(cve_id, '-', 2)::integer, split_part(cve_id, '-', 3)::integer;
-
+ORDER BY published DESC, split_part(cve_id, '-', 2)::integer DESC, split_part(cve_id, '-', 3)::integer DESC;
