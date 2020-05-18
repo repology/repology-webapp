@@ -20,11 +20,12 @@
 -- @param cpe_vendor
 -- @param cpe_product
 --------------------------------------------------------------------------------
-DELETE
-FROM manual_cpes
-WHERE
-	effname=%(effname)s AND cpe_vendor=%(cpe_vendor)s AND cpe_product=%(cpe_product)s;
-
-UPDATE project_hashes
-SET hash = -1
-WHERE effname = %(effname)s;
+WITH deleted AS (
+	DELETE
+	FROM manual_cpes
+	WHERE
+		effname=%(effname)s AND cpe_vendor=%(cpe_vendor)s AND cpe_product=%(cpe_product)s
+	RETURNING cpe_vendor, cpe_product
+)
+INSERT INTO cpe_updates (cpe_vendor, cpe_product)
+SELECT cpe_vendor, cpe_product FROM deleted;

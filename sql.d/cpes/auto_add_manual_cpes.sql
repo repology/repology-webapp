@@ -20,11 +20,7 @@
 --
 -- @returns array of tuples
 --------------------------------------------------------------------------------
-WITH reset_hashes AS (
-	UPDATE project_hashes
-	SET hash = -1
-	WHERE effname = %(effname)s
-), candidates AS (
+WITH candidates AS (
 	SELECT
 		%(effname)s AS effname,
 		cpe_vendor,
@@ -36,27 +32,35 @@ WITH reset_hashes AS (
 		FROM cves
 	) AS tmp
 	WHERE cpe_product = %(effname)s
+), inserted AS (
+	INSERT INTO manual_cpes (
+		effname,
+		cpe_vendor,
+		cpe_product
+	)
+	SELECT *
+	FROM candidates
+	WHERE
+		NOT EXISTS(
+			SELECT *
+			FROM project_cpe
+			WHERE
+				project_cpe.effname = candidates.effname AND
+				project_cpe.cpe_vendor = candidates.cpe_vendor AND
+				project_cpe.cpe_product = candidates.cpe_product
+		) AND EXISTS (
+			SELECT *
+			FROM cves
+			WHERE cpe_pairs @> ARRAY[cpe_vendor || ':' || cpe_product]
+		)
+	ON CONFLICT(effname, cpe_vendor, cpe_product)
+	DO NOTHING
+	RETURNING cpe_vendor, cpe_product
+), register_cpe_updates AS (
+    INSERT INTO cpe_updates (cpe_vendor, cpe_product)
+	SELECT cpe_vendor, cpe_product FROM inserted
 )
-INSERT INTO manual_cpes (
-	effname,
+SELECT
 	cpe_vendor,
 	cpe_product
-)
-SELECT *
-FROM candidates
-WHERE
-	NOT EXISTS(
-		SELECT *
-		FROM project_cpe
-		WHERE
-			project_cpe.effname = candidates.effname AND
-			project_cpe.cpe_vendor = candidates.cpe_vendor AND
-			project_cpe.cpe_product = candidates.cpe_product
-	) AND EXISTS (
-		SELECT *
-		FROM cves
-		WHERE cpe_pairs @> ARRAY[cpe_vendor || ':' || cpe_product]
-	)
-ON CONFLICT(effname, cpe_vendor, cpe_product)
-DO NOTHING
-RETURNING cpe_vendor, cpe_product;
+FROM inserted;

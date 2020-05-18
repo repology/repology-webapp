@@ -20,10 +20,9 @@
 -- @param cpe_vendor
 -- @param cpe_product
 --------------------------------------------------------------------------------
-WITH reset_hashes AS (
-	UPDATE project_hashes
-	SET hash = -1
-	WHERE effname = %(effname)s
+WITH register_cpe_update AS (
+	INSERT INTO cpe_updates (cpe_vendor, cpe_product)
+	VALUES (%(cpe_vendor)s, %(cpe_product)s)
 )
 INSERT INTO manual_cpes (
 	effname,
