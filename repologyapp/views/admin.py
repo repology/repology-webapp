@@ -174,47 +174,65 @@ def admin_name_samples() -> Any:
     )
 
 
+def handle_cpe_request() -> Any:
+    effname = flask.request.form.get('effname', '').strip()
+    vendor = flask.request.form.get('cpe_vendor', '').strip()
+    product = flask.request.form.get('cpe_product', '').strip()
+
+    if flask.request.form.get('action') == 'add':
+        if not effname:
+            flask.flash('Project name not specified', 'danger')
+        elif not vendor:
+            flask.flash('CPE vendor not specified', 'danger')
+        elif not product:
+            flask.flash('CPE product not specified', 'danger')
+        else:
+            try:
+                get_db().add_manual_cpe(effname, vendor, product)
+                flask.flash(f'Manual CPE {vendor}:{product} added for {effname}', 'success')
+            except psycopg2.errors.UniqueViolation:
+                flask.flash(f'Manual CPE {vendor}:{product} already exists for {effname}', 'danger')
+    elif flask.request.form.get('action') == 'remove':
+        get_db().remove_manual_cpe(effname, vendor, product)
+        flask.flash(f'Manual CPE {vendor}:{product} removed for {effname}', 'success')
+    elif flask.request.form.get('action') == 'autoadd':
+        if not effname:
+            flask.flash('Project name not specified', 'danger')
+        else:
+            added = get_db().auto_add_manual_cpes(effname)
+
+            if added:
+                cpes = ', '.join(f'{vendor}:{product}' for vendor, product in added)
+                flask.flash(f'{len(added)} manual CPE(s) {cpes} autoadded for {effname}', 'success')
+            else:
+                flask.flash(f'No manual CPE(s) for {effname} autoadded', 'warning')
+
+    return flask.redirect(url_for_self(), 302)
+
+
 @ViewRegistrar('/admin/cpes', methods=['GET', 'POST'])
 def admin_cpes() -> Any:
     if not flask.session.get('admin'):
         return unauthorized()
 
     if flask.request.method == 'POST':
-        effname = flask.request.form.get('effname', '').strip()
-        vendor = flask.request.form.get('cpe_vendor', '').strip()
-        product = flask.request.form.get('cpe_product', '').strip()
-
-        if flask.request.form.get('action') == 'add':
-            if not effname:
-                flask.flash('Project name not specified', 'danger')
-            elif not vendor:
-                flask.flash('CPE vendor not specified', 'danger')
-            elif not product:
-                flask.flash('CPE product not specified', 'danger')
-            else:
-                try:
-                    get_db().add_manual_cpe(effname, vendor, product)
-                    flask.flash(f'Manual CPE {vendor}:{product} added for {effname}', 'success')
-                except psycopg2.errors.UniqueViolation:
-                    flask.flash(f'Manual CPE {vendor}:{product} already exists for {effname}', 'danger')
-        elif flask.request.form.get('action') == 'remove':
-            get_db().remove_manual_cpe(effname, vendor, product)
-            flask.flash(f'Manual CPE {vendor}:{product} removed for {effname}', 'success')
-        elif flask.request.form.get('action') == 'autoadd':
-            if not effname:
-                flask.flash('Project name not specified', 'danger')
-            else:
-                added = get_db().auto_add_manual_cpes(effname)
-
-                if added:
-                    cpes = ', '.join(f'{vendor}:{product}' for vendor, product in added)
-                    flask.flash(f'{len(added)} manual CPE(s) {cpes} autoadded for {effname}', 'success')
-                else:
-                    flask.flash(f'No manual CPE(s) for {effname} autoadded', 'warning')
-
-        return flask.redirect(flask.url_for('admin_cpes'), 302)
+        return handle_cpe_request()
 
     return flask.render_template(
         'admin-cpes.html',
         cpes=get_db().get_manual_cpes()
+    )
+
+
+@ViewRegistrar('/admin/cve_misses', methods=['GET', 'POST'])
+def admin_cve_misses() -> Any:
+    if not flask.session.get('admin'):
+        return unauthorized()
+
+    if flask.request.method == 'POST':
+        return handle_cpe_request()
+
+    return flask.render_template(
+        'admin-cve-misses.html',
+        cves=get_db().get_recent_cve_misses()
     )
