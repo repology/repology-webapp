@@ -38,7 +38,11 @@ if 'SECRET_KEY' not in config:
     print('Error: SECRET_KEY is required to be set in the configuration', file=sys.stderr)
     sys.exit(1)
 
-app.config['SECRET_KEY'] = config['SECRET_KEY']
+app.config.update(
+    SECRET_KEY=config['SECRET_KEY'],
+    SESSION_COOKIE_SECURE=True,
+    SESSION_COOKIE_SAMESITE='Lax'
+)
 
 # templates: tuning
 app.jinja_env.trim_blocks = True
