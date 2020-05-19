@@ -179,7 +179,7 @@ def handle_cpe_request() -> Any:
     vendor = flask.request.form.get('cpe_vendor', '').strip()
     product = flask.request.form.get('cpe_product', '').strip()
 
-    if flask.request.form.get('action') == 'add':
+    def have_all_attrs() -> bool:
         if not effname:
             flask.flash('Project name not specified', 'danger')
         elif not vendor:
@@ -187,6 +187,11 @@ def handle_cpe_request() -> Any:
         elif not product:
             flask.flash('CPE product not specified', 'danger')
         else:
+            return True
+        return False
+
+    if flask.request.form.get('action') == 'add':
+        if have_all_attrs():
             try:
                 get_db().add_manual_cpe(effname, vendor, product)
                 flask.flash(f'Manual CPE {vendor}:{product} added for {effname}', 'success')
@@ -206,6 +211,20 @@ def handle_cpe_request() -> Any:
                 flask.flash(f'{len(added)} manual CPE(s) {cpes} autoadded for {effname}', 'success')
             else:
                 flask.flash(f'No manual CPE(s) for {effname} autoadded', 'warning')
+    elif flask.request.form.get('action') == 'redirect':
+        if have_all_attrs():
+            redirs = get_db().get_project_redirects(effname)
+
+            if len(redirs) == 0:
+                flask.flash(f'No redirects found for {effname}', 'danger')
+            elif len(redirs) > 1:
+                flask.flash(f'Redirect for {effname} leads to multiple projects {", ".join(redirs)}, cannot resolve', 'danger')
+            else:
+                try:
+                    get_db().modify_manual_cpe(effname, vendor, product, redirs[0])
+                    flask.flash(f'Manual CPE {vendor}:{product} for {effname} moved to {redirs[0]}', 'success')
+                except psycopg2.errors.UniqueViolation:
+                    flask.flash(f'Failed to move CPE {vendor}:{product} for {effname} to {redirs[0]} (target binding already exists?)', 'danger')
 
     return flask.redirect(url_for_self(), 302)
 

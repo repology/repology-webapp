@@ -47,6 +47,9 @@
 					<input type="hidden" name="cpe_vendor" value="{{ cpe.cpe_vendor }}">
 					<input type="hidden" name="cpe_product" value="{{ cpe.cpe_product }}">
 					<button type="submit" class="btn btn-danger btn-xs" name="action" value="remove">Remove</button>
+				{% if not cpe.has_project %}
+					<button type="submit" class="btn btn-warning btn-xs" name="action" value="redirect">Try redirect</button>
+				{% endif %}
 				</form>
 			</td>
 		</tr>
