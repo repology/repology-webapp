@@ -18,26 +18,26 @@
 --------------------------------------------------------------------------------
 -- @returns array of dicts
 --------------------------------------------------------------------------------
-WITH latest_cves_expanded AS (
+WITH latest_cves AS (
+	SELECT
+		cve_id,
+		added_ts,
+		published,
+		cpe_pairs
+	FROM cves
+	WHERE cpe_pairs IS NOT NULL
+	ORDER BY
+		added_ts DESC,
+		published DESC
+	LIMIT 500
+), latest_cves_expanded AS (
 	SELECT
 		cve_id,
 		added_ts,
 		published,
 		split_part(unnest(cpe_pairs), ':', 1) AS cpe_vendor,
 		split_part(unnest(cpe_pairs), ':', 2) AS cpe_product
-	FROM (
-		SELECT
-			cve_id,
-			added_ts,
-			published,
-			cpe_pairs
-		FROM cves
-		WHERE cpe_pairs IS NOT NULL
-		ORDER BY
-			added_ts DESC,
-			published DESC
-		LIMIT 500
-	) AS tmp
+	FROM latest_cves
 ), latest_cves_expanded_with_matches AS (
 	SELECT
 		*,
