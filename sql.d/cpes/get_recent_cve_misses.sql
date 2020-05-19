@@ -21,17 +21,20 @@
 WITH latest_cves_expanded AS (
 	SELECT
 		cve_id,
+		added_ts,
 		published,
 		split_part(unnest(cpe_pairs), ':', 1) AS cpe_vendor,
 		split_part(unnest(cpe_pairs), ':', 2) AS cpe_product
 	FROM (
 		SELECT
 			cve_id,
+			added_ts,
 			published,
 			cpe_pairs
 		FROM cves
 		WHERE cpe_pairs IS NOT NULL
 		ORDER BY
+			added_ts DESC,
 			published DESC
 		LIMIT 500
 	) AS tmp
@@ -49,6 +52,7 @@ WITH latest_cves_expanded AS (
 ), latest_cves_expanded_with_matches_expanded AS (
     SELECT
         cve_id,
+		added_ts,
         published,
         cpe_vendor,
         cpe_product,
@@ -64,4 +68,10 @@ SELECT
 	EXISTS(SELECT * FROM metapackages WHERE effname = cpe_product) AS has_project
 FROM latest_cves_expanded_with_matches_expanded
 WHERE NOT match
-ORDER BY published DESC, split_part(cve_id, '-', 2)::integer DESC, split_part(cve_id, '-', 3)::integer DESC;
+ORDER BY
+	added_ts DESC,
+	published DESC,
+	split_part(cve_id, '-', 2)::integer DESC,
+	split_part(cve_id, '-', 3)::integer DESC,
+	cpe_vendor,
+	cpe_product;
