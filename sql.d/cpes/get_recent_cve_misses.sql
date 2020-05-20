@@ -21,20 +21,19 @@
 WITH latest_cves AS (
 	SELECT
 		cve_id,
-		added_ts,
 		to_char(published::timestamptz at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI"Z"') AS published,
+		to_char(last_modified::timestamptz at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI"Z"') AS last_modified,
 		cpe_pairs
 	FROM cves
 	WHERE cpe_pairs IS NOT NULL
 	ORDER BY
-		added_ts DESC,
-		published DESC
+		last_modified DESC
 	LIMIT 500
 ), latest_cves_expanded AS (
 	SELECT
 		cve_id,
-		added_ts,
 		published,
+		last_modified,
 		split_part(unnest(cpe_pairs), ':', 1) AS cpe_vendor,
 		split_part(unnest(cpe_pairs), ':', 2) AS cpe_product
 	FROM latest_cves
@@ -52,8 +51,8 @@ WITH latest_cves AS (
 ), latest_cves_expanded_with_matches_expanded AS (
     SELECT
         cve_id,
-		added_ts,
-        published,
+		published,
+		last_modified,
         cpe_vendor,
         cpe_product,
         bool_or(match) OVER(partition BY cve_id) AS match
@@ -63,14 +62,14 @@ WITH latest_cves AS (
 SELECT
 	cve_id,
 	published,
+	last_modified,
 	cpe_vendor,
 	cpe_product,
 	EXISTS(SELECT * FROM metapackages WHERE effname = cpe_product) AS has_project
 FROM latest_cves_expanded_with_matches_expanded
 WHERE NOT match
 ORDER BY
-	added_ts DESC,
-	published DESC,
+	last_modified DESC,
 	split_part(cve_id, '-', 2)::integer DESC,
 	split_part(cve_id, '-', 3)::integer DESC,
 	cpe_vendor,
