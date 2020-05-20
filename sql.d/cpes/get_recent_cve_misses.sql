@@ -22,7 +22,7 @@ WITH latest_cves AS (
 	SELECT
 		cve_id,
 		added_ts,
-		published,
+		to_char(published::timestamptz at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI"Z"') AS published,
 		cpe_pairs
 	FROM cves
 	WHERE cpe_pairs IS NOT NULL

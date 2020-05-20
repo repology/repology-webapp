@@ -23,8 +23,8 @@
 --------------------------------------------------------------------------------
 SELECT
 	cve_id,
-	published,
-	last_modified,
+	to_char(published::timestamptz at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI"Z"') AS published,
+	to_char(last_modified::timestamptz at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI"Z"') AS last_modified,
 	cpe_vendor,
 	cpe_product,
 	start_version,
