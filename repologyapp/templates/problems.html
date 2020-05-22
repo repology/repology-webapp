@@ -53,7 +53,7 @@
 				The link should be updated to <a href="https://metacpan.org/">MetaCPAN</a> (probably along with download URLs).
 				See <a href="https://www.perl.com/article/saying-goodbye-to-search-cpan-org/">https://www.perl.com/article/saying-goodbye-to-search-cpan-org/</a> for details.
 			{% elif problem.type == 'cpe_unreferenced' %}
-				No CVEs found for CPE vendor:product pair <code>{{ problem.data.vendor }}:{{ problem.data.product }}</code> defined for the package, so it's likely invalid.
+				CPE vendor:product pair <code>{{ problem.data.vendor }}:{{ problem.data.product }}</code> defined for the package was not found neiter among known CVEs nor in NVD CPE dictionary, so it may be invalid.
 				{% if problem.data.suggestions %}
 				Suggested CPE vendor:product pairs (see <a href="{{ url_for('project_cves', name=problem.effname) }}">CVEs</a>):
 				{% for suggestion in problem.data.suggestions -%}
