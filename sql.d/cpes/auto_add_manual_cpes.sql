@@ -18,49 +18,37 @@
 --------------------------------------------------------------------------------
 -- @param effname
 --
--- @returns array of tuples
+-- @returns array of dicts
 --------------------------------------------------------------------------------
-WITH candidates AS (
-	SELECT
-		%(effname)s AS effname,
-		cpe_vendor,
-		cpe_product
-	FROM (
-		SELECT DISTINCT
-			split_part(unnest(cpe_pairs), ':', 1) AS cpe_vendor,
-			split_part(unnest(cpe_pairs), ':', 2) AS cpe_product
-		FROM cves
-	) AS tmp
-	WHERE cpe_product = %(effname)s
-), inserted AS (
+WITH inserted AS (
 	INSERT INTO manual_cpes (
 		effname,
 		cpe_vendor,
-		cpe_product
+		cpe_product,
+		cpe_edition,
+		cpe_lang,
+		cpe_sw_edition,
+		cpe_target_sw,
+		cpe_target_hw,
+		cpe_other
 	)
-	SELECT *
-	FROM candidates
-	WHERE
-		NOT EXISTS(
-			SELECT *
-			FROM project_cpe
-			WHERE
-				project_cpe.effname = candidates.effname AND
-				project_cpe.cpe_vendor = candidates.cpe_vendor AND
-				project_cpe.cpe_product = candidates.cpe_product
-		) AND EXISTS (
-			SELECT *
-			FROM cves
-			WHERE cpe_pairs @> ARRAY[cpe_vendor || ':' || cpe_product]
-		)
-	ON CONFLICT(effname, cpe_vendor, cpe_product)
-	DO NOTHING
-	RETURNING cpe_vendor, cpe_product
+	SELECT
+		cpe_product AS effname,
+		cpe_vendor,
+		cpe_product,
+		cpe_edition,
+		cpe_lang,
+		cpe_sw_edition,
+		cpe_target_sw,
+		cpe_target_hw,
+		cpe_other
+	FROM vulnerable_cpes
+	WHERE cpe_product = %(effname)s
+	ON CONFLICT DO NOTHING
+	RETURNING *
 ), register_cpe_updates AS (
     INSERT INTO cpe_updates (cpe_vendor, cpe_product)
 	SELECT cpe_vendor, cpe_product FROM inserted
 )
-SELECT
-	cpe_vendor,
-	cpe_product
+SELECT *
 FROM inserted;

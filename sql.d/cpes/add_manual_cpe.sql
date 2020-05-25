@@ -19,17 +19,42 @@
 -- @param effname
 -- @param cpe_vendor
 -- @param cpe_product
+-- @param cpe_edition
+-- @param cpe_lang
+-- @param cpe_sw_edition
+-- @param cpe_target_sw
+-- @param cpe_target_hw
+-- @param cpe_other
+--
+-- @returns array of dicts
 --------------------------------------------------------------------------------
-WITH register_cpe_update AS (
+WITH inserted AS (
+	INSERT INTO manual_cpes (
+		effname,
+		cpe_vendor,
+		cpe_product,
+		cpe_edition,
+		cpe_lang,
+		cpe_sw_edition,
+		cpe_target_sw,
+		cpe_target_hw,
+		cpe_other
+	) VALUES (
+		%(effname)s,
+		%(cpe_vendor)s,
+		%(cpe_product)s,
+		%(cpe_edition)s,
+		%(cpe_lang)s,
+		%(cpe_sw_edition)s,
+		%(cpe_target_sw)s,
+		%(cpe_target_hw)s,
+		%(cpe_other)s
+	)
+	ON CONFLICT DO NOTHING
+	RETURNING *
+), register_update AS (
 	INSERT INTO cpe_updates (cpe_vendor, cpe_product)
-	VALUES (%(cpe_vendor)s, %(cpe_product)s)
+	SELECT cpe_vendor, cpe_product FROM inserted
 )
-INSERT INTO manual_cpes (
-	effname,
-	cpe_vendor,
-	cpe_product
-) VALUES (
-	%(effname)s,
-	%(cpe_vendor)s,
-	%(cpe_product)s
-);
+SELECT *
+FROM inserted;

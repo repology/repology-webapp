@@ -1,4 +1,5 @@
 {% extends "project.html" %}
+{% import "macros/cpes.html" as mcpes %}
 
 {% block title %}{{ name }} vulnerabilities - Repology{% endblock %}
 {% block header %}Vulnerabilities for <strong>{{ name }}</strong>{% endblock %}
@@ -23,22 +24,20 @@
 <table class="table table-striped table-hover">
 	<thead>
 		<tr>
-			<th class="text-left minimal-column">CVE ID</th>
-			<th class="text-center minimal-column">CPE vendor:product</th>
-			<th class="text-left">Affected version(s)</th>
+			<th class="minimal-column">CVE ID</th>
+			<th class="minimal-column">CPE</th>
+			<th>Affected version(s)</th>
 		</tr>
 	</thead>
 	<tbody>
 	{% for cveagg, version_ranges in cves %}
 		<tr>
-			<td class="text-left minimal-column">
+			<td class="minimal-column">
 				<a href="https://nvd.nist.gov/vuln/detail/{{ cveagg.cve_id }}">{{ cveagg.cve_id }}</a>
 				<span class="cell-subitem" title="Published date">{{ cveagg.published }}</span>
 				<span class="cell-subitem" title="Last modified date">{{ cveagg.last_modified }}</span>
 			</td>
-			<td class="text-center minimal-column">
-				{{- cveagg.cpe_vendor }}:{{ cveagg.cpe_product -}}
-			</td>
+			<td class="minimal-column">{{ mcpes.panels(cveagg) }}</td>
 			<td class="text-left">
 			{%- for range in version_ranges -%}
 				{%- if not loop.first %} {% endif -%}

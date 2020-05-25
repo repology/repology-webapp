@@ -21,24 +21,41 @@
 SELECT
 	effname,
 	cpe_vendor,
-	cpe_product,
+    cpe_product,
+    cpe_edition,
+    cpe_lang,
+    cpe_sw_edition,
+    cpe_target_sw,
+    cpe_target_hw,
+    cpe_other,
 	EXISTS (
-		SELECT
-			*
-		FROM project_cpe
-		WHERE project_cpe.cpe_vendor = manual_cpes.cpe_vendor AND project_cpe.cpe_product = manual_cpes.cpe_product
-	) AS redundant,
+		SELECT * FROM metapackages WHERE effname = manual_cpes.effname AND num_repos > 0
+	) AS has_alive_project,
 	EXISTS (
-		SELECT
-			*
-		FROM metapackages
-		WHERE metapackages.effname = manual_cpes.effname AND num_repos > 0
-	) AS has_project,
+		SELECT * FROM project_redirects AS old INNER JOIN project_redirects AS new USING(repository_id, trackname)
+		WHERE NOT old.is_actual AND new.is_actual AND old.project_id = (SELECT id FROM metapackages WHERE effname = manual_cpes.effname)
+	) AS has_project_redirect,
 	EXISTS (
-		SELECT
-			*
-		FROM vulnerable_versions
-		WHERE vulnerable_versions.cpe_vendor = manual_cpes.cpe_vendor AND vulnerable_versions.cpe_product = manual_cpes.cpe_product
-	) AS has_cves
+		SELECT * FROM vulnerable_cpes WHERE
+			cpe_vendor = manual_cpes.cpe_vendor AND
+			cpe_product = manual_cpes.cpe_product AND
+			coalesce(nullif(cpe_edition, '*') = nullif(manual_cpes.cpe_edition, '*'), TRUE) AND
+			coalesce(nullif(cpe_lang, '*') = nullif(manual_cpes.cpe_lang, '*'), TRUE) AND
+			coalesce(nullif(cpe_sw_edition, '*') = nullif(manual_cpes.cpe_sw_edition, '*'), TRUE) AND
+			coalesce(nullif(cpe_target_sw, '*') = nullif(manual_cpes.cpe_target_sw, '*'), TRUE) AND
+			coalesce(nullif(cpe_target_hw, '*') = nullif(manual_cpes.cpe_target_hw, '*'), TRUE) AND
+			coalesce(nullif(cpe_other, '*') = nullif(manual_cpes.cpe_other, '*'), TRUE)
+	) AS has_cves,
+	EXISTS (
+		SELECT * FROM cpe_dictionary WHERE
+			cpe_vendor = manual_cpes.cpe_vendor AND
+			cpe_product = manual_cpes.cpe_product AND
+			coalesce(nullif(cpe_edition, '*') = nullif(manual_cpes.cpe_edition, '*'), TRUE) AND
+			coalesce(nullif(cpe_lang, '*') = nullif(manual_cpes.cpe_lang, '*'), TRUE) AND
+			coalesce(nullif(cpe_sw_edition, '*') = nullif(manual_cpes.cpe_sw_edition, '*'), TRUE) AND
+			coalesce(nullif(cpe_target_sw, '*') = nullif(manual_cpes.cpe_target_sw, '*'), TRUE) AND
+			coalesce(nullif(cpe_target_hw, '*') = nullif(manual_cpes.cpe_target_hw, '*'), TRUE) AND
+			coalesce(nullif(cpe_other, '*') = nullif(manual_cpes.cpe_other, '*'), TRUE)
+	) AS has_dict
 FROM manual_cpes
-ORDER BY effname, cpe_vendor, cpe_product;
+ORDER BY effname, cpe_vendor, cpe_product, cpe_edition, cpe_lang, cpe_sw_edition, cpe_target_sw, cpe_target_hw, cpe_other;

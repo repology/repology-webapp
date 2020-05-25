@@ -18,59 +18,79 @@
 --------------------------------------------------------------------------------
 -- @returns array of dicts
 --------------------------------------------------------------------------------
-WITH latest_cves AS (
+WITH latest_modified_cves AS (
 	SELECT
 		cve_id,
-		to_char(published::timestamptz at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI"Z"') AS published,
-		to_char(last_modified::timestamptz at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI"Z"') AS last_modified,
-		cpe_pairs
+		last_modified,
+		matches
 	FROM cves
 	WHERE cpe_pairs IS NOT NULL
-	ORDER BY
-		last_modified DESC
-	LIMIT 500
-), latest_cves_expanded AS (
+	ORDER BY last_modified DESC
+	LIMIT 2000
+), cves_expanded AS (
 	SELECT
 		cve_id,
-		published,
 		last_modified,
-		split_part(unnest(cpe_pairs), ':', 1) AS cpe_vendor,
-		split_part(unnest(cpe_pairs), ':', 2) AS cpe_product
-	FROM latest_cves
-), latest_cves_expanded_with_matches AS (
+		jsonb_array_elements(matches)->>0 AS cpe_vendor,
+		jsonb_array_elements(matches)->>1 AS cpe_product,
+		jsonb_array_elements(matches)->>2 AS cpe_edition,
+		jsonb_array_elements(matches)->>3 AS cpe_lang,
+		jsonb_array_elements(matches)->>4 AS cpe_sw_edition,
+		jsonb_array_elements(matches)->>5 AS cpe_target_sw,
+		jsonb_array_elements(matches)->>6 AS cpe_target_hw,
+		jsonb_array_elements(matches)->>7 AS cpe_other
+	FROM latest_modified_cves
+), cves_expanded_unmatched AS (
 	SELECT
-		*,
-		EXISTS (
+		*
+	FROM cves_expanded
+	WHERE
+		NOT EXISTS (
 			SELECT *
-			FROM all_cpes
+			FROM manual_cpes
 			WHERE
-				all_cpes.cpe_vendor = latest_cves_expanded.cpe_vendor AND
-				all_cpes.cpe_product = latest_cves_expanded.cpe_product
-		) AS match
-	FROM latest_cves_expanded
-), latest_cves_expanded_with_matches_expanded AS (
-    SELECT
-        cve_id,
-		published,
-		last_modified,
-        cpe_vendor,
-        cpe_product,
-        bool_or(match) OVER(partition BY cve_id) AS match
-    FROM
-        latest_cves_expanded_with_matches
+				cpe_vendor = cves_expanded.cpe_vendor AND
+				cpe_product = cves_expanded.cpe_product AND
+				coalesce(nullif(cpe_edition, '*') = nullif(cves_expanded.cpe_edition, '*'), TRUE) AND
+				coalesce(nullif(cpe_lang, '*') = nullif(cves_expanded.cpe_lang, '*'), TRUE) AND
+				coalesce(nullif(cpe_sw_edition, '*') = nullif(cves_expanded.cpe_sw_edition, '*'), TRUE) AND
+				coalesce(nullif(cpe_target_sw, '*') = nullif(cves_expanded.cpe_target_sw, '*'), TRUE) AND
+				coalesce(nullif(cpe_target_hw, '*') = nullif(cves_expanded.cpe_target_hw, '*'), TRUE) AND
+				coalesce(nullif(cpe_other, '*') = nullif(cves_expanded.cpe_other, '*'), TRUE)
+		)
 )
 SELECT
-	cve_id,
-	published,
-	last_modified,
+	max(last_modified) AS last_modified,
 	cpe_vendor,
 	cpe_product,
+	cpe_edition,
+	cpe_lang,
+	cpe_sw_edition,
+	cpe_target_sw,
+	cpe_target_hw,
+	cpe_other,
+	array_agg(
+		DISTINCT cve_id
+		ORDER BY cve_id
+	) AS cve_ids,
 	EXISTS(SELECT * FROM metapackages WHERE effname = cpe_product) AS has_project
-FROM latest_cves_expanded_with_matches_expanded
-WHERE NOT match
+FROM cves_expanded_unmatched
+GROUP BY
+	cpe_vendor,
+	cpe_product,
+	cpe_edition,
+	cpe_lang,
+	cpe_sw_edition,
+	cpe_target_sw,
+	cpe_target_hw,
+	cpe_other
 ORDER BY
 	last_modified DESC,
-	split_part(cve_id, '-', 2)::integer DESC,
-	split_part(cve_id, '-', 3)::integer DESC,
 	cpe_vendor,
-	cpe_product;
+	cpe_product,
+	cpe_edition,
+	cpe_lang,
+	cpe_sw_edition,
+	cpe_target_sw,
+	cpe_target_hw,
+	cpe_other;

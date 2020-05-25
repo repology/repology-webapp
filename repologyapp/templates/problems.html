@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% import "macros/links.html" as mlinks %}
+{% import "macros/cpes.html" as mcpes %}
 {% import "macros.html" as macros %}
 
 {% block title %}Problems list - Repology{% endblock %}
@@ -53,22 +54,24 @@
 				The link should be updated to <a href="https://metacpan.org/">MetaCPAN</a> (probably along with download URLs).
 				See <a href="https://www.perl.com/article/saying-goodbye-to-search-cpan-org/">https://www.perl.com/article/saying-goodbye-to-search-cpan-org/</a> for details.
 			{% elif problem.type == 'cpe_unreferenced' %}
-				CPE vendor:product pair <code>{{ problem.data.vendor }}:{{ problem.data.product }}</code> defined for the package was not found neiter among known CVEs nor in NVD CPE dictionary, so it may be invalid.
+				CPE information defined for the package:<div>{{ mcpes.panels(problem.data.cpe) }}</div>was not found neiter among known CVEs nor in NVD CPE dictionary, so it may be invalid.
 				{% if problem.data.suggestions %}
-				Suggested CPE vendor:product pairs (see <a href="{{ url_for('project_cves', name=problem.effname) }}">CVEs</a>):
-				{% for suggestion in problem.data.suggestions -%}
-				{%- if not loop.first %}, {% endif -%}
-				<code>{{ suggestion.vendor }}:{{ suggestion.product }}</code>
-				{%- endfor %}
+				Suggested CPEs (as per known <a href="{{ url_for('project_cves', name=problem.effname) }}">CVEs</a>):
+				<ul class="list-unstyled">
+				{% for suggestion in problem.data.suggestions %}
+					<li>{{ mcpes.panels(suggestion) }}</li>
+				{% endfor %}
+				</ul>
 				{% endif %}
 			{% elif problem.type == 'cpe_missing' %}
 				CPE information is missing for this package, while repository defines it for other packages.
 				{% if problem.data.suggestions %}
-				Suggested CPE vendor:product pairs (see <a href="{{ url_for('project_cves', name=problem.effname) }}">CVEs</a>):
-				{% for suggestion in problem.data.suggestions -%}
-				{%- if not loop.first %}, {% endif -%}
-				<code>{{ suggestion.vendor }}:{{ suggestion.product }}</code>
-				{%- endfor %}
+				Suggested CPEs (as per known <a href="{{ url_for('project_cves', name=problem.effname) }}">CVEs</a>):
+				<ul class="list-unstyled">
+				{% for suggestion in problem.data.suggestions %}
+					<li>{{ mcpes.panels(suggestion) }}</li>
+				{% endfor %}
+				</ul>
 				{% endif %}
 			{% else %}
 				Unformatted problem of type {{ problem.type }}, data=<code>{{ problem.data }}</code>. The template should be updated, please report this.

@@ -16,7 +16,7 @@
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 from collections import defaultdict
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable, Dict, List, Optional
 
 import flask
 
@@ -174,57 +174,111 @@ def admin_name_samples() -> Any:
     )
 
 
-def handle_cpe_request() -> Any:
-    effname = flask.request.form.get('effname', '').strip()
-    vendor = flask.request.form.get('cpe_vendor', '').strip()
-    product = flask.request.form.get('cpe_product', '').strip()
+class CpeVals:
+    _values: Dict[str, str]
 
-    def have_all_attrs() -> bool:
-        if not effname:
-            flask.flash('Project name not specified', 'danger')
-        elif not vendor:
+    def __init__(self, form: Optional[Dict[str, str]] = None):
+        self._values = {
+            'cpe_vendor': '',
+            'cpe_product': '',
+            'cpe_edition': '*',
+            'cpe_lang': '*',
+            'cpe_sw_edition': '*',
+            'cpe_target_sw': '*',
+            'cpe_target_hw': '*',
+            'cpe_other': '*',
+        }
+
+        if form is not None:
+            for k in self._values.keys():
+                if k in form:
+                    self._values[k] = form[k]
+
+    def check_all(self) -> bool:
+        for k, v in self._values.items():
+            if not v:
+                flask.flash(f'{k} not specified', 'danger')
+                return False
+
+        return True
+
+    @property
+    def cpe(self) -> str:
+        return ':'.join(['cpe', '2.3', 'a'] + [v for k, v in self._values.items() if k.startswith('cpe_')])
+
+
+def handle_cpe_request() -> Any:
+    """Process POST request related to CPEs.
+
+    Does necessary checks and modifications to the database, and
+    returns either the (redirect) response to be passed through,
+    or None which would mean that the calling endpoint should
+    be re-rendered with form fields filled with values from request,
+    allowing the user to do necessary changes.
+    """
+    effname = flask.request.form.get('effname', '').strip()
+
+    if not effname:
+        flask.flash('Project name not specified', 'danger')
+        return None
+
+    cpe_keys = ['cpe_vendor', 'cpe_product', 'cpe_edition', 'cpe_lang', 'cpe_sw_edition', 'cpe_target_sw', 'cpe_target_hw', 'cpe_other']
+    cpe_args = {key: flask.request.form.get(key, '').strip() for key in cpe_keys}
+
+    def format_cpe(vals: Dict[str, str]) -> str:
+        return ':'.join(['cpe', '2.3', 'a'] + [vals[k] for k in cpe_keys])
+
+    def check_required_cpe_fields() -> bool:
+        if not cpe_args['cpe_vendor']:
             flask.flash('CPE vendor not specified', 'danger')
-        elif not product:
+        elif not cpe_args['cpe_product']:
             flask.flash('CPE product not specified', 'danger')
         else:
             return True
         return False
 
+    added_cpes = []
+    removed_cpes = []
+
     if flask.request.form.get('action') == 'add':
-        if have_all_attrs():
-            try:
-                get_db().add_manual_cpe(effname, vendor, product)
-                flask.flash(f'Manual CPE {vendor}:{product} added for {effname}', 'success')
-            except psycopg2.errors.UniqueViolation:
-                flask.flash(f'Manual CPE {vendor}:{product} already exists for {effname}', 'danger')
-    elif flask.request.form.get('action') == 'remove':
-        get_db().remove_manual_cpe(effname, vendor, product)
-        flask.flash(f'Manual CPE {vendor}:{product} removed for {effname}', 'success')
+        if not check_required_cpe_fields():
+            return None
+
+        if not (added_cpes := get_db().add_manual_cpe(effname, **cpe_args)):
+            flask.flash(f'Cound not add {format_cpe(cpe_args)} for {effname}, already exists', 'warning')
+
     elif flask.request.form.get('action') == 'autoadd':
-        if not effname:
-            flask.flash('Project name not specified', 'danger')
-        else:
-            added = get_db().auto_add_manual_cpes(effname)
+        if not (added_cpes := get_db().auto_add_manual_cpes(effname)):
+            flask.flash(f'Could not autoadd any CPEs for {effname}', 'warning')
 
-            if added:
-                cpes = ', '.join(f'{vendor}:{product}' for vendor, product in added)
-                flask.flash(f'{len(added)} manual CPE(s) {cpes} autoadded for {effname}', 'success')
-            else:
-                flask.flash(f'No manual CPE(s) for {effname} autoadded', 'warning')
+    elif flask.request.form.get('action') == 'remove':
+        if not check_required_cpe_fields():
+            return None
+
+        if not (removed_cpes := get_db().remove_manual_cpe(effname, **cpe_args)):
+            flask.flash(f'Could not remove CPE {format_cpe(cpe_args)} for {effname}', 'danger')
+
     elif flask.request.form.get('action') == 'redirect':
-        if have_all_attrs():
-            redirs = get_db().get_project_redirects(effname)
+        if not check_required_cpe_fields():
+            return None
 
-            if len(redirs) == 0:
-                flask.flash(f'No redirects found for {effname}', 'danger')
-            elif len(redirs) > 1:
-                flask.flash(f'Redirect for {effname} leads to multiple projects {", ".join(redirs)}, cannot resolve', 'danger')
-            else:
-                try:
-                    get_db().modify_manual_cpe(effname, vendor, product, redirs[0])
-                    flask.flash(f'Manual CPE {vendor}:{product} for {effname} moved to {redirs[0]}', 'success')
-                except psycopg2.errors.UniqueViolation:
-                    flask.flash(f'Failed to move CPE {vendor}:{product} for {effname} to {redirs[0]} (target binding already exists?)', 'danger')
+        redirs = get_db().get_project_redirects(effname)
+
+        if len(redirs) == 0:
+            flask.flash(f'No redirects found for {effname}', 'danger')
+        elif len(redirs) > 1:
+            flask.flash(f'Redirect for {effname} leads to multiple projects {", ".join(redirs)}, cannot automatically resolve', 'danger')
+        elif not (removed_cpes := get_db().remove_manual_cpe(effname, **cpe_args)):
+            # if we cannot remove old redirect, something is wrong, don't continue
+            flask.flash(f'Cannot remove CPE {format_cpe(cpe_args)} for {effname}', 'danger')
+        elif not (added_cpes := get_db().add_manual_cpe(redirs[0], **cpe_args)):
+            # we may fail to add target CPE if it already exists, this is normal
+            flask.flash(f'Cound not add {format_cpe(cpe_args)} for {redirs[0]}, already exists', 'warning')
+
+    for cpe in added_cpes:
+        flask.flash(f'CPE {format_cpe(cpe)} added for {effname}', 'success')
+    for cpe in removed_cpes:
+        flask.flash(f'CPE {format_cpe(cpe)} removed for {effname}', 'success')
 
     return flask.redirect(url_for_self(), 302)
 
@@ -235,7 +289,8 @@ def admin_cpes() -> Any:
         return unauthorized()
 
     if flask.request.method == 'POST':
-        return handle_cpe_request()
+        if (response := handle_cpe_request()) is not None:
+            return response
 
     return flask.render_template(
         'admin-cpes.html',
@@ -249,9 +304,10 @@ def admin_cve_misses() -> Any:
         return unauthorized()
 
     if flask.request.method == 'POST':
-        return handle_cpe_request()
+        if (response := handle_cpe_request()) is not None:
+            return response
 
     return flask.render_template(
         'admin-cve-misses.html',
-        cves=get_db().get_recent_cve_misses()
+        items=get_db().get_recent_cve_misses()
     )

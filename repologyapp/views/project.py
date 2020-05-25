@@ -472,6 +472,12 @@ class _CVEAggregation:
     last_modified: str
     cpe_vendor: str
     cpe_product: str
+    cpe_edition: str
+    cpe_lang: str
+    cpe_sw_edition: str
+    cpe_target_sw: str
+    cpe_target_hw: str
+    cpe_other: str
 
 
 @ViewRegistrar('/project/<name>/cves')
@@ -489,11 +495,11 @@ def project_cves(name: str) -> Any:
         cve_ids.add(item[0])
         cves[
             _CVEAggregation(
-                *item[0:5]
+                *item[0:11]
             )
         ].append(
             _VersionRange(
-                *item[5:9]
+                *item[11:15]
             ).set_highlight(highlight_version)
         )
 
