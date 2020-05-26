@@ -67,6 +67,7 @@ _EXTRA_ALLOWED_ARGS = {
 
 _ALLOWED_FAMILIES = {
     'debuntu',
+    'freebsd',
 }
 
 
