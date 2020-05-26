@@ -53,7 +53,7 @@ _ALLOWED_TARGET_PAGES = [
     # passing parameters for redirect target, such as a namespace (repo=...&target:repo=...)
     AllowedTargetPage('badge_version_for_repo', 'Tiny badge with version for this repository — /badge/version-for-repo/<repo>/<name>.svg', ['name', 'repo']),
 
-    AllowedTargetPage('api_v1_project', 'API v1 project information — /api/v1/project/<name>.svg', ['name']),
+    AllowedTargetPage('api_v1_project', 'API v1 project information — /api/v1/project/<name>', ['name']),
 ]
 
 
