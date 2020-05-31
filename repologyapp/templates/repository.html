@@ -119,6 +119,7 @@
 	<li>Packages which are <a href="{{ url_for('projects', inrepo=repo, newest=1) }}">up to date</a> in this repository.</li>
 	<li>Packages which are <a href="{{ url_for('projects', inrepo=repo, outdated=1) }}">outdated</a> in this repository.</li>
 	<li>Packages which are <a href="{{ url_for('projects', inrepo=repo, outdated=1, families_newest='2-') }}">outdated</a> in this repository, but newest in 2+ families. Compared to the previous query this has smaller possibility of false positives.</li>
+	<li>Packages which are <a href="{{ url_for('projects', inrepo=repo, vulnerable=1) }}">potentially vulnerable</a> in this repository.</li>
 </ul>
 <ul>
 	<li>Packages which <a href="{{ url_for('projects', inrepo=repo, problematic=1) }}">have ignored versions</a> in this repository. There may be incorrect versions which needs fixing among these.</li>
