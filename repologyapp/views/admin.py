@@ -276,9 +276,9 @@ def handle_cpe_request() -> Any:
             flask.flash(f'Cound not add {format_cpe(cpe_args)} for {redirs[0]}, already exists', 'warning')
 
     for cpe in added_cpes:
-        flask.flash(f'CPE {format_cpe(cpe)} added for {effname}', 'success')
+        flask.flash(f'CPE {format_cpe(cpe)} added for {cpe["effname"]}', 'success')
     for cpe in removed_cpes:
-        flask.flash(f'CPE {format_cpe(cpe)} removed for {effname}', 'success')
+        flask.flash(f'CPE {format_cpe(cpe)} removed for {cpe["effname"]}', 'success')
 
     return flask.redirect(url_for_self(), 302)
 
