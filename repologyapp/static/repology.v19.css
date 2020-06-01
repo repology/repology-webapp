@@ -136,6 +136,25 @@
 	color: red;
 }
 
+.cpe-component {
+	display: inline-block;
+	border-radius: .25em;
+	background: #c0c0c0;
+	overflow: hidden;
+}
+
+.cpe-component-header {
+	font-size: 75%;
+	padding: 0 .5em;
+	background: #d0d0d0;
+	color: #606060;
+}
+
+.cpe-component-value {
+	padding: 0 .3em;
+	text-align: center;
+}
+
 .cell-subitem {
 	display: block;
 	font-size: 75%;

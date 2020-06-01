@@ -1,0 +1,20 @@
+{%- macro str(values, other) -%}
+cpe:2.3:a:{{ values.cpe_vendor }}:{{ values.cpe_product }}:{{ values.cpe_edition }}:{{ values.cpe_lang }}:{{ values.cpe_sw_edition }}:{{ values.cpe_target_sw }}:{{ values.cpe_target_hw }}:{{ values.cpe_other }}
+{%- endmacro -%}
+
+{%- macro panel(type, value, hide_any=True) -%}
+{%- if not hide_any or value != '*' -%}
+<div class="cpe-component"><div class="cpe-component-header non-selectable">{{ type }}</div><div class="cpe-component-value">{% if value == '' %}∅{% else %}{{ value }}{% endif %}</div></div>
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro panels(values, hide_any=True) -%}
+{{ panel('vendor', values.cpe_vendor, hide_any) }}
+{{ panel('product', values.cpe_product, hide_any) }}
+{{ panel('edition', values.cpe_edition, hide_any) }}
+{{ panel('lang', values.cpe_lang, hide_any) }}
+{{ panel('sw_edition', values.cpe_sw_edition, hide_any) }}
+{{ panel('target_sw', values.cpe_target_sw, hide_any) }}
+{{ panel('target_hw', values.cpe_target_hw, hide_any) }}
+{{ panel('other', values.cpe_other, hide_any) }}
+{%- endmacro -%}
