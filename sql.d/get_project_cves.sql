@@ -89,5 +89,5 @@ ORDER BY
 	-- assuming CVE-xxxx-yyyyy format
 	split_part(cve_id, '-', 2)::integer,
 	split_part(cve_id, '-', 3)::integer,
-	end_version::versiontext,
+	end_version::versiontext NULLS LAST,
 	start_version::versiontext NULLS FIRST;

@@ -42,7 +42,7 @@
 			{%- for range in version_ranges -%}
 				{%- if not loop.first %} {% endif -%}
 				<span class="version version-{{ 'outdated' if range.highlighted else 'rolling' }}">
-				{%- if range.start == range.end -%}
+				{%- if range.start == range.end and range.start is not none -%}
 					{{- range.start -}}
 				{%- else -%}
 					{%- if range.start is none -%}
@@ -51,7 +51,13 @@
 						({{ range.start }}
 					{%- else -%}
 						[{{ range.start }}
-					{%- endif %}, {{ range.end }}{% if range.end_excluded %}){% else %}]{% endif -%}
+					{%- endif %}, {% if range.end is none -%}
+						+∞)
+					{%- elif range.end_excluded -%}
+						{{ range.end }})
+					{%- else -%}
+						{{ range.end }}]
+					{%- endif -%}
 				{%- endif -%}
 				</span>
 			{%- endfor -%}

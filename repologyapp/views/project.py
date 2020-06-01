@@ -447,7 +447,7 @@ def project_report(name: str) -> Any:
 @dataclass
 class _VersionRange:
     start: Optional[str]
-    end: str
+    end: Optional[str]
     start_excluded: bool
     end_excluded: bool
     highlighted: bool = False
@@ -457,7 +457,7 @@ class _VersionRange:
             return self
         if self.start is not None and version_compare(version, self.start) < (1 if self.start_excluded else 0):
             return self
-        if version_compare(version, self.end) > (-1 if self.end_excluded else 0):
+        if self.end is not None and version_compare(version, self.end) > (-1 if self.end_excluded else 0):
             return self
 
         self.highlighted = True
