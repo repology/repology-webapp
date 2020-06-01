@@ -90,7 +90,7 @@
 					<input type="hidden" name="cpe_target_hw" value="{{ cpe.cpe_target_hw }}">
 					<input type="hidden" name="cpe_other" value="{{ cpe.cpe_other }}">
 					<button type="submit" class="btn btn-danger btn-xs" name="action" value="remove">Remove</button>
-					{% if cpe.has_project_redirect %}
+					{% if cpe.has_project_redirect and not cpe.has_alive_project %}
 					<button type="submit" class="btn btn-warning btn-xs" name="action" value="redirect">Follow redirect</button>
 					{% endif %}
 				</form>
