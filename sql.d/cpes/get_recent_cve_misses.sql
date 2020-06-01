@@ -24,9 +24,10 @@ WITH latest_modified_cves AS (
 		last_modified,
 		matches
 	FROM cves
-	WHERE cpe_pairs IS NOT NULL
+	WHERE
+		cpe_pairs IS NOT NULL AND
+		last_modified > now() - INTERVAL '2 week'
 	ORDER BY last_modified DESC
-	LIMIT 2000
 ), cves_expanded AS (
 	SELECT
 		cve_id,
