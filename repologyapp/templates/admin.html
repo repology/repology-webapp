@@ -20,6 +20,7 @@
 	<a href="{{ url_for("admin_name_samples") }}" class="btn btn-default{% if request.endpoint == "admin_name_samples" %} active{% endif %}">Name samples</a>
 	<a href="{{ url_for("admin_cpes") }}" class="btn btn-default{% if request.endpoint == "admin_cpes" %} active{% endif %}">CPEs</a>
 	<a href="{{ url_for("admin_cve_misses") }}" class="btn btn-default{% if request.endpoint == "admin_cve_misses" %} active{% endif %}">CVE misses</a>
+	<a href="{{ url_for("admin_omni_cves") }}" class="btn btn-default{% if request.endpoint == "admin_omni_cves" %} active{% endif %}">Omni CVEs</a>
 </div>
 {% endif %}
 {% endblock %}

@@ -311,3 +311,14 @@ def admin_cve_misses() -> Any:
         'admin-cve-misses.html',
         items=get_db().get_recent_cve_misses()
     )
+
+
+@ViewRegistrar('/admin/omni_cves')
+def admin_omni_cves() -> Any:
+    if not flask.session.get('admin'):
+        return unauthorized()
+
+    return flask.render_template(
+        'admin-omni-cves.html',
+        items=get_db().get_omni_cves()
+    )

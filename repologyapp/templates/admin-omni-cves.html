@@ -1,0 +1,55 @@
+{% extends "admin.html" %}
+{% import "macros.html" as macros %}
+{% import "macros/cpes.html" as mcpes %}
+
+{% block title %}Omni CVEs - Repology{% endblock %}
+{% block header %}Omni CVEs{% endblock %}
+
+{% block content %}
+<div class="container">
+
+<p>This is the list of CVEs affecting repology projects which have unlimited version ranges.</p>
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Project</th>
+			<th>CVE</th>
+			<th>Version range</th>
+			<th>CPE</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for item in items %}
+		<tr>
+			<td class="minimal-column"><a href="{{ url_for('project_versions', name=item.effname) }}">{{ item.effname }}</a></td>
+			<td class="minimal-column"><a href="https://nvd.nist.gov/vuln/detail/{{ item.cve_id }}">{{ item.cve_id }}</a></td>
+			<td class="minimal-column">
+				<span class="version version-big version-rolling }}">
+                {%- if item.start_version == item.end_version and item.start_version is not none -%}
+                    {{- item.start_version -}}
+                {%- else -%}
+                    {%- if item.start_version is none -%}
+                        (-∞
+                    {%- elif item.start_version_excluded -%}
+                        ({{ item.start_version }}
+                    {%- else -%}
+                        [{{ item.start_version }}
+                    {%- endif %}, {% if item.end_version is none -%}
+                        +∞)
+                    {%- elif item.end_version_excluded -%}
+                        {{ item.end_version }})
+                    {%- else -%}
+                        {{ item.end_version }}]
+                    {%- endif -%}
+                {%- endif -%}
+                </span>
+			</td>
+			<td>{{ mcpes.panels(item) }}</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+
+</div>
+{% endblock %}
