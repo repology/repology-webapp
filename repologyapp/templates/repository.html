@@ -173,6 +173,12 @@
 <h3>Problematic projects percentage</h3>
 <img src="{{ url_for('graph_repo_projects_problematic_percent', repo=repo) }}" alt="Problematic projects percentage graph">
 
+<h3>Potentially vulnerable projects</h3>
+<img src="{{ url_for('graph_repo_projects_vulnerable', repo=repo) }}" alt="Potentially vulnerable projects graph">
+
+<h3>Potentially vulnerable projects percentage</h3>
+<img src="{{ url_for('graph_repo_projects_vulnerable_percent', repo=repo) }}" alt="Potentially vulnerable projects percentage graph">
+
 <h3>Maintainers</h3>
 <img src="{{ url_for('graph_repo_maintainers', repo=repo) }}" alt="Maintainers graph">
 

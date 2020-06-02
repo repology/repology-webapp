@@ -134,6 +134,16 @@ def graph_repo_projects_problematic_percent(repo: str) -> Any:
     return graph_repo_generic(repo, lambda s: s['num_metapackages_problematic'] / s['num_metapackages'] * 100.0, '#808080', '%')  # type: ignore
 
 
+@ViewRegistrar('/graph/repo/<repo>/projects_vulnerable.svg')
+def graph_repo_projects_vulnerable(repo: str) -> Any:
+    return graph_repo_generic(repo, lambda s: s['num_metapackages_vulnerable'], '#ff0000')  # type: ignore
+
+
+@ViewRegistrar('/graph/repo/<repo>/projects_vulnerable_percent.svg')
+def graph_repo_projects_vulnerable_percent(repo: str) -> Any:
+    return graph_repo_generic(repo, lambda s: safe_percent(s['num_metapackages_vulnerable'], s['num_metapackages']), '#ff0000', '%')
+
+
 @ViewRegistrar('/graph/repo/<repo>/problems.svg')
 def graph_repo_problems(repo: str) -> Any:
     return graph_repo_generic(repo, lambda s: s['num_problems'], '#c00000')  # type: ignore
