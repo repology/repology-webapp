@@ -34,6 +34,34 @@
     text-decoration: none;
 }
 
+.site-alert-outer {
+	background: rgb(238, 162, 54);
+}
+
+.site-alert-inner {
+	font-weight: bold;
+	font-size: 120%;
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.site-alert-inner img {
+	margin: 5px;
+	display: block;
+}
+
+.site-alert-inner p {
+	display: block;
+	margin: 5px;
+}
+
+.site-alert-inner a:link, .site-alert-inner a:visited, .site-alert-inner a:active, .site-alert-inner a:hover {
+	color: white;
+	text-decoration: underline;
+}
+
 .footer {
     background-color: #2A2730;
     color: #99979C;

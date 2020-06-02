@@ -11,12 +11,25 @@
 {% endblock %}
 	<title>{% block title %}Repology{% endblock %}</title>
 	<link rel="stylesheet" href="{{ url_for("static", filename="bootstrap.min.v3.3.7.css") }}">
-	<link rel="stylesheet" href="{{ url_for("static", filename="repology.v19.css") }}">
+	<link rel="stylesheet" href="{{ url_for("static", filename="repology.v20.css") }}">
 	<link rel="icon" href="{{ url_for("static", filename="repology.v1.ico") }}" sizes="16x16 32x32 64x64" type="image/x-icon">
 	<link rel="search" type="application/opensearchdescription+xml" title="Repology packages" href="{{ url_for("opensearch_project") }}">
 	<link rel="search" type="application/opensearchdescription+xml" title="Repology maintainers" href="{{ url_for("opensearch_maintainer") }}">
 </head>
 <body>
+
+{% if now().month == 6 and now().day == 6 and ':' not in request.environ.REMOTE_ADDR %}
+<div class="site-alert-outer">
+	<div class="container site-alert-inner">
+		<img src="https://www.worldipv6launch.org/wp-content/themes/ipv6/downloads/World_IPv6_launch_logo.svg" alt="IPv6 logo" width="auto" height="64">
+		<p>You are connected to Repology using legacy IPv4 protocol.
+		Due to <a href="https://en.wikipedia.org/wiki/IPv6#IPv4_address_exhaustion">IPv4 address exhaustion</a>
+		it may become too expensive or impossible for Repology to support IPv4 in the nearest future.
+		We fully support actual version if the Internet Protocol, <a href="https://en.wikipedia.org/wiki/IPv6">IPv6</a>,
+		and strongly advice you to get IPv6 connectivity as soon as possible too.</p>
+	</div>
+</div>
+{% endif %}
 
 <nav class="navbar navbar-default navbar-static-top">
 	<div class="container">
