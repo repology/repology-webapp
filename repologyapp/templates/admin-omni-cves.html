@@ -8,7 +8,11 @@
 {% block content %}
 <div class="container">
 
-<p>This is the list of CVEs affecting repology projects which have unlimited version ranges.</p>
+<p>This is the list of CVEs affecting repology projects which have unlimited version ranges,
+covering all new and future versions. It may be that no fix was released for some of these
+CVEs yet, or it may be an error in NVD which should be fixed.</p>
+
+<p><b>{{ items|length }}</b> item(s) total</p>
 
 <table class="table table-striped">
 	<thead>
