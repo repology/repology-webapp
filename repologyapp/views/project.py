@@ -69,8 +69,6 @@ def handle_nonexisting_project(name: str, metapackage: Dict[str, Any]) -> Any:
             404
         )
     else:
-        has_history, has_reports = get_db().project_has_history_or_reports(name)
-
         return (
             flask.render_template(
                 'project-410.html',
@@ -78,8 +76,7 @@ def handle_nonexisting_project(name: str, metapackage: Dict[str, Any]) -> Any:
                 metapackage=metapackage,
                 metapackages=metapackages,
                 metapackagedata=metapackagedata,
-                has_history=has_history,
-                has_reports=has_reports
+                **get_db().get_project_leftovers_summary(name)
             ),
             404
         )
@@ -484,9 +481,6 @@ class _CVEAggregation:
 def project_cves(name: str) -> Any:
     metapackage = get_db().get_metapackage(name)
 
-    if not metapackage or metapackage['num_repos'] == 0:
-        return handle_nonexisting_project(name, metapackage)
-
     highlight_version = flask.request.args.to_dict().get('version')
 
     cve_ids = set()
@@ -504,6 +498,9 @@ def project_cves(name: str) -> Any:
         )
 
     too_many = len(cve_ids) >= config['CVES_PER_PAGE']
+
+    if (not metapackage or metapackage['num_repos'] == 0) and not cves:  # treat specially: allow showing CVEs even for nonexisting projects
+        return handle_nonexisting_project(name, metapackage)
 
     return flask.render_template(
         'project-cves.html',

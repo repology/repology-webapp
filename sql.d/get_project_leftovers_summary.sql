@@ -1,4 +1,4 @@
--- Copyright (C) 2019 Dmitry Marakasov <amdmi3@amdmi3.ru>
+-- Copyright (C) 2019-2020 Dmitry Marakasov <amdmi3@amdmi3.ru>
 --
 -- This file is part of repology
 --
@@ -16,11 +16,9 @@
 -- along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 --------------------------------------------------------------------------------
---
 -- @param effname
 --
--- @returns single tuple
---
+-- @returns single dict
 --------------------------------------------------------------------------------
 SELECT
 	EXISTS (
@@ -32,4 +30,9 @@ SELECT
 		SELECT *
 		FROM reports
 		WHERE effname = %(effname)s
-	) AS has_reports;
+	) AS has_reports,
+	EXISTS (
+		SELECT *
+		FROM vulnerable_projects
+		WHERE effname = %(effname)s
+	) AS has_cves;

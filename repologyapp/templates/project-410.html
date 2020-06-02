@@ -20,11 +20,12 @@
 	{% if metapackages %}
 	<p>There are some projects which may be related to what you're looking for, they are listed below.</p>
 	{% endif %}
-	{% if has_history or has_reports %}
+	{% if has_history or has_reports or has_cves %}
 	<p>Also, some historical data is still available for the gone project, which may be of interest:
 		{%- if has_history %} <a href="{{ url_for('project_history', name=name) }}">history</a>{% endif -%}
-		{%- if has_reports %}{% if has_history %},{% endif %} <a href="{{ url_for('project_report', name=name) }}">reports</a>{% endif -%}.
-	</p>
+		{%- if has_reports %}{% if has_history %},{% endif %} <a href="{{ url_for('project_report', name=name) }}">reports</a>{% endif -%}
+		{%- if has_cves %}{% if has_history or has_reports %},{% endif %} <a href="{{ url_for('project_cves', name=name) }}">CVEs</a>{% endif -%}
+	.</p>
 	{% endif %}
 </div>
 
