@@ -53,9 +53,10 @@
 				{%- elif not anyurl %}<span class="text-danger" title="Either Homepage or Downloads are required">✘</span>{% endif -%}
 			</td>
 			<td class="text-center">
-				{%- if 'name' in used %}<abbr title="generic name">N</abbr>{% endif -%}
-				{%- if 'srcname' in used %}<abbr title="source (package) name">S</abbr>{% endif -%}
-				{%- if 'binname' in used %}<abbr title="binary (package) name">B</abbr>{% endif -%}
+				{%- if 'name' in used %}<abbr title="generic name">n</abbr>{% endif -%}
+				{%- if 'srcname' in used %}<abbr title="source (package) name">s</abbr>{% endif -%}
+				{%- if 'binname' in used %}<abbr title="binary (package) name">b</abbr>{% endif -%}
+				{%- if 'binnames' in used %}<abbr title="binary (package) names taken from source packages">B</abbr>{% endif -%}
 			</td>
 			<td class="text-center">{% if 'cpe_product' in used or 'cpe_vendor' in used %}✔{% endif %}</td>
 		</tr>
