@@ -57,7 +57,7 @@
 				{%- if 'srcname' in used %}<abbr title="source (package) name">S</abbr>{% endif -%}
 				{%- if 'binname' in used %}<abbr title="binary (package) name">B</abbr>{% endif -%}
 			</td>
-			<td class="text-center">{% if 'cpe_vendor' in used %}✔{% endif %}</td>
+			<td class="text-center">{% if 'cpe_product' in used or 'cpe_vendor' in used %}✔{% endif %}</td>
 		</tr>
 	{% endfor %}
 	</tbody>
