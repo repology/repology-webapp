@@ -24,23 +24,12 @@
 --------------------------------------------------------------------------------
 SELECT
 	effname,
-	delta,
-	has_related
-FROM
-(
-	SELECT
-		effname,
-		sum(delta) AS delta
-	FROM project_turnover
-	WHERE ts >= now() - interval '%(period)s second'
-	GROUP BY effname
-	HAVING sum(delta) {% if negative %}< -1{% else %}> 1{% endif %}
-	ORDER BY delta {% if negative %}ASC{% else %}DESC{% endif %}, effname
-	-- important to limit the inner query, otherwise a lot of `metapackages`
-	-- rows would be fetched and ineffective plan involving seqscan would
-	-- be chosen
-	LIMIT %(limit)s
-) AS turnover
-INNER JOIN metapackages USING(effname)
--- keep sorted
-ORDER BY delta {% if negative %}ASC{% else %}DESC{% endif %}, effname;
+	sum(delta) AS delta,
+	now() - max(ts) FILTER(WHERE delta {% if negative %}< 0{% else %}> 0{% endif %}) AS age_since_last_change,
+	(SELECT has_related FROM metapackages WHERE effname = project_turnover.effname) AS has_related
+FROM project_turnover
+WHERE ts >= now() - %(period)s
+GROUP BY effname
+HAVING sum(delta) {% if negative %}< -1{% else %}> 1{% endif %}
+ORDER BY delta {% if negative %}ASC{% else %}DESC{% endif %}, age_since_last_change, effname
+LIMIT %(limit)s;

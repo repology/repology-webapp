@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% import "macros.html" as macros %}
 
 {% block title %}Trending projects - Repology{% endblock %}
 {% block header %}Trending projects{% endblock %}
@@ -12,6 +13,7 @@
 				<tr>
 					<th class="text-center">Change</th>
 					<th>Project</th>
+					<th>Last change ago</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -29,6 +31,9 @@
 					{%- if project.has_related -%}
 						<a href="{{ url_for('project_related', name=project.effname) }}">∗</a>
 					{%- endif -%}
+					</td>
+					<td>
+						{{- macros.format_time_interval(project.age_since_last_change) -}}
 					</td>
 				</tr>
 			{% endfor %}
