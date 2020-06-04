@@ -35,7 +35,12 @@ FROM
 	WHERE ts >= now() - interval '%(period)s second'
 	GROUP BY effname
 	HAVING sum(delta) {% if negative %}< -1{% else %}> 1{% endif %}
+	ORDER BY delta {% if negative %}ASC{% else %}DESC{% endif %}, effname
+	-- important to limit the inner query, otherwise a lot of `metapackages`
+	-- rows would be fetched and ineffective plan involving seqscan would
+	-- be chosen
+	LIMIT %(limit)s
 ) AS turnover
 INNER JOIN metapackages USING(effname)
-ORDER BY delta {% if negative %}ASC{% else %}DESC{% endif %}, effname
-LIMIT %(limit)s;
+-- keep sorted
+ORDER BY delta {% if negative %}ASC{% else %}DESC{% endif %}, effname;
