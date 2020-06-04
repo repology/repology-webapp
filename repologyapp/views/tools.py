@@ -78,6 +78,9 @@ def tool_project_by() -> Any:
     name = flask.request.args.get('name')
     noautoresolve = bool(flask.request.args.get('noautoresolve'))
 
+    if repo not in repometadata.active_names():
+        flask.abort(404)
+
     target_page = None
 
     for allowed_target_page in _ALLOWED_TARGET_PAGES:
