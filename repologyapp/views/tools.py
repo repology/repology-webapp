@@ -78,9 +78,6 @@ def tool_project_by() -> Any:
     name = flask.request.args.get('name')
     noautoresolve = bool(flask.request.args.get('noautoresolve'))
 
-    if repo not in repometadata.active_names():
-        flask.abort(404)
-
     target_page = None
 
     for allowed_target_page in _ALLOWED_TARGET_PAGES:
@@ -93,6 +90,8 @@ def tool_project_by() -> Any:
     if repo and name_type and target_page:
         if not repometadata[repo]['family'] in _ALLOWED_FAMILIES:
             flask.abort(403)
+        elif repo not in repometadata.active_names():
+            flask.abort(404)
         elif name:
             targets = []
 
