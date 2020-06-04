@@ -24,6 +24,7 @@ __all__ = ['url_for_self']
 
 
 def url_for_self(**args: Any) -> Any:
+    assert(flask.request.endpoint is not None)
     return flask.url_for(flask.request.endpoint, **dict(flask.request.view_args, **args))
 
 
