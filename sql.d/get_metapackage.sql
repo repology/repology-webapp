@@ -24,7 +24,7 @@
 --------------------------------------------------------------------------------
 SELECT
 	*,
-    now() - first_seen AS first_seen_ago,
-    now() - orphaned_at AS orphaned_ago
+	now() - first_seen AS first_seen_ago,
+	now() - orphaned_at AS orphaned_ago
 FROM metapackages
 WHERE effname = %(effname)s;

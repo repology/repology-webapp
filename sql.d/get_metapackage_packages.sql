@@ -30,15 +30,15 @@
 SELECT
 {% if minimal or summarizable or detailed %}
 	repo,
-    family,
+	family,
 
-    visiblename,
-    effname,
+	visiblename,
+	effname,
 
-    version,
-    versionclass,
+	version,
+	versionclass,
 
-    flags
+	flags
 {%  if summarizable or detailed %},
 	maintainers
 {%   if detailed %},

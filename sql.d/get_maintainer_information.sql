@@ -37,10 +37,10 @@ SELECT
 	num_packages_vulnerable,
 
 	num_projects,
-    num_projects_newest,
-    num_projects_outdated,
-    num_projects_problematic,
-    num_projects_vulnerable,
+	num_projects_newest,
+	num_projects_outdated,
+	num_projects_problematic,
+	num_projects_vulnerable,
 
 	(SELECT jsonb_object_agg(key, (value->>0)::integer) FROM jsonb_each(counts_per_repo)) AS num_packages_per_repo,
 

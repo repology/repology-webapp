@@ -34,7 +34,7 @@ WITH expanded_cves AS (
 		jsonb_array_elements(matches)->>8 AS start_version,
 		jsonb_array_elements(matches)->>9 AS end_version,
 		(jsonb_array_elements(matches)->>10)::boolean AS start_version_excluded,
-        (jsonb_array_elements(matches)->>11)::boolean AS end_version_excluded
+		(jsonb_array_elements(matches)->>11)::boolean AS end_version_excluded
 	FROM cves
 )
 SELECT
@@ -42,13 +42,13 @@ SELECT
 	effname
 FROM expanded_cves
 INNER JOIN manual_cpes ON
-    expanded_cves.cpe_vendor = manual_cpes.cpe_vendor AND
-    expanded_cves.cpe_product = manual_cpes.cpe_product AND
-    coalesce(nullif(expanded_cves.cpe_edition, '*') = nullif(manual_cpes.cpe_edition, '*'), TRUE) AND
-    coalesce(nullif(expanded_cves.cpe_lang, '*') = nullif(manual_cpes.cpe_lang, '*'), TRUE) AND
-    coalesce(nullif(expanded_cves.cpe_sw_edition, '*') = nullif(manual_cpes.cpe_sw_edition, '*'), TRUE) AND
-    coalesce(nullif(expanded_cves.cpe_target_sw, '*') = nullif(manual_cpes.cpe_target_sw, '*'), TRUE) AND
-    coalesce(nullif(expanded_cves.cpe_target_hw, '*') = nullif(manual_cpes.cpe_target_hw, '*'), TRUE) AND
-    coalesce(nullif(expanded_cves.cpe_other, '*') = nullif(manual_cpes.cpe_other, '*'), TRUE)
+	expanded_cves.cpe_vendor = manual_cpes.cpe_vendor AND
+	expanded_cves.cpe_product = manual_cpes.cpe_product AND
+	coalesce(nullif(expanded_cves.cpe_edition, '*') = nullif(manual_cpes.cpe_edition, '*'), TRUE) AND
+	coalesce(nullif(expanded_cves.cpe_lang, '*') = nullif(manual_cpes.cpe_lang, '*'), TRUE) AND
+	coalesce(nullif(expanded_cves.cpe_sw_edition, '*') = nullif(manual_cpes.cpe_sw_edition, '*'), TRUE) AND
+	coalesce(nullif(expanded_cves.cpe_target_sw, '*') = nullif(manual_cpes.cpe_target_sw, '*'), TRUE) AND
+	coalesce(nullif(expanded_cves.cpe_target_hw, '*') = nullif(manual_cpes.cpe_target_hw, '*'), TRUE) AND
+	coalesce(nullif(expanded_cves.cpe_other, '*') = nullif(manual_cpes.cpe_other, '*'), TRUE)
 WHERE end_version IS NULL
 ORDER BY effname, cve_id;

@@ -47,7 +47,7 @@ WITH inserted AS (
 	ON CONFLICT DO NOTHING
 	RETURNING *
 ), register_cpe_updates AS (
-    INSERT INTO cpe_updates (cpe_vendor, cpe_product)
+	INSERT INTO cpe_updates (cpe_vendor, cpe_product)
 	SELECT cpe_vendor, cpe_product FROM inserted
 )
 SELECT *

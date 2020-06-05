@@ -86,7 +86,7 @@
 			</a>
 		</td>
 		<td><code>[![{{ repometadata[repo].singular }}]({{ REPOLOGY_HOME }}{{ url_for('badge_version_for_repo', name=name, repo=repo) }})]({{ REPOLOGY_HOME }}{{ url_for('project_versions', name=name) }})</code></td>
-		<td><code>&lt;a href=&quot;{{ REPOLOGY_HOME }}{{ url_for('project_versions', name=name) }}&quot;&gt;<br>&nbsp;&nbsp;&nbsp;&lt;img src=&quot;{{ REPOLOGY_HOME }}{{ url_for('badge_version_for_repo', name=name, repo=repo)}}&quot; alt=&quot;{{ repometadata[repo].singular }}&quot;&gt;<br>&lt;/a&gt;</code></td>
+		<td><code>&lt;a href=&quot;{{ REPOLOGY_HOME }}{{ url_for('project_versions', name=name) }}&quot;&gt;<br>&nbsp;&nbsp;&lt;img src=&quot;{{ REPOLOGY_HOME }}{{ url_for('badge_version_for_repo', name=name, repo=repo)}}&quot; alt=&quot;{{ repometadata[repo].singular }}&quot;&gt;<br>&lt;/a&gt;</code></td>
 	</tr>
 	{% endfor %}
 </table>

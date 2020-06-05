@@ -29,11 +29,11 @@ SELECT
 	no_changes,
 
 	start_ts,
-    finish_ts,
+	finish_ts,
 
-    num_lines,
-    num_warnings,
-    num_errors
+	num_lines,
+	num_warnings,
+	num_errors
 FROM
 	runs
 WHERE

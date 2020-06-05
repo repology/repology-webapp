@@ -28,35 +28,35 @@
 --------------------------------------------------------------------------------
 SELECT
 {% if minimal or summarizable or detailed %}
-    repo,
-    family,
+	repo,
+	family,
 
-    visiblename,
-    effname,
+	visiblename,
+	effname,
 
-    version,
-    versionclass,
+	version,
+	versionclass,
 
-    flags
+	flags
 {%  if summarizable or detailed %},
-    maintainers
+	maintainers
 {%   if detailed %},
-    subrepo,
+	subrepo,
 
 	name,
 	srcname,
 	binname,
 	trackname,
 
-    origversion,
-    rawversion,
+	origversion,
+	rawversion,
 
-    category,
-    comment,
-    homepage,
-    licenses,
-    downloads,
-    extrafields
+	category,
+	comment,
+	homepage,
+	licenses,
+	downloads,
+	extrafields
 {%   endif %}
 {%  endif %}
 {% elif fields %}
