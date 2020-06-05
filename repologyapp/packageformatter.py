@@ -75,7 +75,7 @@ class PackageFormatter(string.Formatter):
             value = pkgdata['category'] if pkgdata['category'] is not None else ''
         elif key == 'archrepo':
             value = 'community' if pkgdata['subrepo'].startswith('community') else 'packages'
-        elif key in pkgdata['extrafields']:
+        elif pkgdata['extrafields'] is not None and key in pkgdata['extrafields']:
             value = pkgdata['extrafields'][key]
 
         if value is None:

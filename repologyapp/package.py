@@ -152,7 +152,7 @@ class PackageDataMinimal:
 
 @dataclass
 class PackageDataSummarizable(PackageDataMinimal):
-    maintainers: List[str]
+    maintainers: Optional[List[str]]
 
 
 @dataclass
@@ -170,8 +170,8 @@ class PackageDataDetailed(PackageDataSummarizable):
     category: Optional[str]
     comment: Optional[str]
     homepage: Optional[str]
-    licenses: List[str]
-    downloads: List[str]
+    licenses: Optional[List[str]]
+    downloads: Optional[List[str]]
 
     extrafields: Dict[str, str]
 

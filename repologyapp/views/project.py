@@ -200,16 +200,19 @@ def project_information(name: str) -> Any:
 
         if package.comment:
             append_info('summaries', package.comment, package)
-        for maintainer in package.maintainers:
-            append_info('maintainers', maintainer, package)
+        if package.maintainers is not None:
+            for maintainer in package.maintainers:
+                append_info('maintainers', maintainer, package)
         if package.category:
             append_info('categories', package.category, package)
         if package.homepage:
             append_info('homepages', package.homepage, package)
-        for download in package.downloads:
-            append_info('downloads', download, package)
-        for license_ in package.licenses:
-            append_info('licenses', license_, package)
+        if package.downloads is not None:
+            for download in package.downloads:
+                append_info('downloads', download, package)
+        if package.licenses is not None:
+            for license_ in package.licenses:
+                append_info('licenses', license_, package)
 
     if 'repos' in information:
         # preserve repos order

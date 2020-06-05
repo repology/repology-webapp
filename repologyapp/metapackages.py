@@ -179,7 +179,7 @@ def packages_to_summary_items(packages: Iterable[AnyPackageDataSummarizable], re
 
         versioninfo = UserVisibleVersionInfo(package)
 
-        if want_selected and (repo is None or repo == package.repo) and (maintainer is None or maintainer in package.maintainers):
+        if want_selected and (repo is None or repo == package.repo) and (maintainer is None or package.maintainers is not None and maintainer in package.maintainers):
             target = summaries[package.effname]['explicit']
         elif package.versionclass in [PackageStatus.OUTDATED, PackageStatus.LEGACY]:
             target = summaries[package.effname]['outdated']
