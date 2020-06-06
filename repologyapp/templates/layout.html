@@ -18,7 +18,7 @@
 </head>
 <body>
 
-{% if now().month == 6 and now().day == 6 and ':' not in request.environ.REMOTE_ADDR %}
+{% if now().month == 6 and now().day == 6 and ':' not in request.environ.REMOTE_ADDR and request.endpoint != 'index' %}
 <div class="site-alert-outer">
 	<div class="container site-alert-inner">
 		<img src="https://www.worldipv6launch.org/wp-content/themes/ipv6/downloads/World_IPv6_launch_logo.svg" alt="IPv6 logo" width="auto" height="64">
