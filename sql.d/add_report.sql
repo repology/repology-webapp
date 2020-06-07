@@ -23,16 +23,12 @@
 -- @param comment
 --------------------------------------------------------------------------------
 INSERT INTO reports (
-	created,
-	updated,
 	effname,
 	need_verignore,
 	need_split,
 	need_merge,
 	comment
 ) VALUES (
-	now(),
-	now(),
 	%(effname)s,
 	%(need_verignore)s,
 	%(need_split)s,
