@@ -1,4 +1,4 @@
--- Copyright (C) 2016-2018 Dmitry Marakasov <amdmi3@amdmi3.ru>
+-- Copyright (C) 2016-2018,2020 Dmitry Marakasov <amdmi3@amdmi3.ru>
 --
 -- This file is part of repology
 --
@@ -16,19 +16,15 @@
 -- along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 --------------------------------------------------------------------------------
---
--- @param client
 -- @param effname
 -- @param need_verignore
 -- @param need_split
 -- @param need_merge
 -- @param comment
---
 --------------------------------------------------------------------------------
 INSERT INTO reports (
 	created,
 	updated,
-	client,
 	effname,
 	need_verignore,
 	need_split,
@@ -37,7 +33,6 @@ INSERT INTO reports (
 ) VALUES (
 	now(),
 	now(),
-	%(client)s,
 	%(effname)s,
 	%(need_verignore)s,
 	%(need_split)s,

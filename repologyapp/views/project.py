@@ -418,7 +418,6 @@ def project_report(name: str) -> Any:
 
         if not errors:
             get_db().add_report(
-                flask.request.remote_addr,
                 name,
                 need_verignore,
                 need_split,

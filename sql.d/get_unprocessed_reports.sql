@@ -1,4 +1,4 @@
--- Copyright (C) 2018 Dmitry Marakasov <amdmi3@amdmi3.ru>
+-- Copyright (C) 2018,2020 Dmitry Marakasov <amdmi3@amdmi3.ru>
 --
 -- This file is part of repology
 --
@@ -16,11 +16,9 @@
 -- along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 --------------------------------------------------------------------------------
---
 -- @param limit=None
 --
 -- @returns array of dicts
---
 --------------------------------------------------------------------------------
 SELECT
 	id,
@@ -31,8 +29,7 @@ SELECT
 	need_merge,
 	comment,
 	reply,
-	accepted,
-	client
+	accepted
 FROM reports
 WHERE accepted IS NULL
 ORDER BY created DESC
