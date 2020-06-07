@@ -127,6 +127,7 @@ DROP TABLE public.cpe_dictionary;
 DROP TABLE public.category_metapackages;
 DROP FUNCTION public.version_set_changed(old text[], new text[]);
 DROP FUNCTION public.simplify_url(url text);
+DROP FUNCTION public.project_get_related(source_project_id integer, maxresults integer);
 DROP FUNCTION public.nullifless(value1 integer, value2 integer);
 DROP FUNCTION public.nullifless(value1 double precision, value2 double precision);
 DROP FUNCTION public.metapackage_create_events_trigger();
@@ -529,6 +530,91 @@ $$;
 
 
 ALTER FUNCTION public.nullifless(value1 integer, value2 integer) OWNER TO repology_test;
+
+--
+-- Name: project_get_related(integer, integer); Type: FUNCTION; Schema: public; Owner: repology_test
+--
+
+CREATE FUNCTION public.project_get_related(source_project_id integer, maxresults integer) RETURNS TABLE(project_id integer, rank double precision)
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	continue boolean := true;
+BEGIN
+	-- Seed the algorithm with base project
+	CREATE TEMPORARY TABLE related ON COMMIT DROP AS
+	SELECT
+		source_project_id AS metapackage_id,
+		1.0::float AS rank;
+
+	-- Recursively discover new projects through project homepage links,
+	-- calculating rank along the way.
+	-- The rank calculation algorithm is roughly as follows:
+	WHILE continue LOOP
+		CREATE TEMPORARY TABLE new_related ON COMMIT DROP AS
+		WITH pass1 AS (
+			-- Step 1 - follow links for known projects
+			SELECT
+				urlhash,
+				-- 1.2. Weight from multiple projects on a single link is summed.
+				sum(tmp.rank) AS rank,
+				count(*) AS incoming_projects
+			FROM (
+				SELECT
+					urlhash,
+					-- 1.1. For each project taking part in this iteration, take it's rank and
+					-- divide it among its links, taking link rank into account.
+					related.rank / (SELECT count(*) FROM related) / count(*) OVER (PARTITION BY metapackage_id) * url_relations.rank AS rank
+				FROM related INNER JOIN url_relations USING(metapackage_id)
+			) AS tmp
+			GROUP BY urlhash
+		), pass2 AS (
+			-- Step 2 - projects from links discovered on step 1
+			SELECT
+				metapackage_id,
+				-- 2.2. Similar to 1.2, rank passed by all links to a single project is summed
+				sum(tmp.rank) AS rank
+			FROM (
+				SELECT
+					metapackage_id,
+					-- 2.1. Now, for each link, divide its rank among the projects it points
+					-- to, ignoring projects the rank came from on this iteration.
+					-- Link weights are not accounted for second time.
+					pass1.rank / (nullif(count(*) OVER (PARTITION BY urlhash), incoming_projects) - incoming_projects) AS rank
+				FROM pass1 INNER JOIN url_relations USING(urlhash)
+			) AS tmp
+			GROUP BY metapackage_id
+		)
+		-- 3. Merge with result of previous iteration
+		SELECT
+			metapackage_id,
+			greatest(related.rank, pass2.rank) AS rank
+		FROM related
+		FULL OUTER JOIN pass2 USING(metapackage_id)
+		ORDER BY rank DESC, metapackage_id
+		LIMIT maxresults;
+
+		-- If we couldn't find any more relevant projects on this step, stop
+		SELECT INTO continue (SELECT sum(new_related.rank) FROM new_related) > (SELECT sum(related.rank) FROM related);
+
+		DROP TABLE related;
+		ALTER TABLE new_related RENAME TO related;
+	END LOOP;
+
+	RETURN QUERY
+	SELECT
+		metapackage_id,
+		-- Since it's common for the ranks calculated above to be very small (like 1e-8),
+		-- perform logarithmic conversion to make them more human-readable. It mapping is
+		-- as follows: 1.0 → 100, 0.1 → 90, 0.01 → 80, 0.001 → 70 etc., but never less
+		-- than zero
+		greatest(0.0, 100.0 + log(related.rank) * 10.0)
+	FROM
+		related;
+END; $$;
+
+
+ALTER FUNCTION public.project_get_related(source_project_id integer, maxresults integer) OWNER TO repology_test;
 
 --
 -- Name: simplify_url(text); Type: FUNCTION; Schema: public; Owner: repology_test
@@ -1336,7 +1422,8 @@ ALTER TABLE public.statistics_history OWNER TO repology_test;
 
 CREATE TABLE public.url_relations (
     metapackage_id integer NOT NULL,
-    urlhash bigint NOT NULL
+    urlhash bigint NOT NULL,
+    rank double precision NOT NULL
 );
 
 
@@ -1348,7 +1435,8 @@ ALTER TABLE public.url_relations OWNER TO repology_test;
 
 CREATE TABLE public.url_relations_all (
     metapackage_id integer NOT NULL,
-    urlhash bigint NOT NULL
+    urlhash bigint NOT NULL,
+    rank double precision NOT NULL
 );
 
 
@@ -1464,34 +1552,34 @@ COPY public.cves (cve_id, published, last_modified, matches, cpe_pairs) FROM std
 --
 
 COPY public.links (url, first_extracted, orphaned_since, next_check, last_checked, ipv4_last_success, ipv4_last_failure, ipv4_success, ipv4_status_code, ipv4_permanent_redirect_target, ipv6_last_success, ipv6_last_failure, ipv6_success, ipv6_status_code, ipv6_permanent_redirect_target) FROM stdin;
-http://www.virtualbox.org/	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://ccreweb.org/software/kforth/kforth.html	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-https://asciinema.org/	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://www.vorbis.com/	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://download.virtualbox.org/virtualbox/5.0.30/SDKRef.pdf	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://www.baudline.com/baudline_1.08_linux_x86_64.tar.gz	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://www.baudline.com/	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://download.virtualbox.org/virtualbox/5.0.30/VirtualBox-5.0.30.tar.bz2	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://www.oracle.com/technetwork/database/database-technologies/express-edition/overview/index.html	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://download.oracle.com/otn/linux/oracle11g/xe/oracle-xe-11.2.0-1.0.x86_64.rpm.zip	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://www.kernel.org/pub/linux/daemons/autofs/v5/autofs-5.0.5.tar.bz2	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://unbeatenpath.net/software/away/away-0.9.5.tar.bz2	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-ftp://ccreweb.org/software/kforth/linux/kforth-x86-linux-1.5.2.tar.gz	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-mirror://gnu-alpha/aspell/aspell-0.60.7-rc1.tar.gz	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://www.baudline.com/baudline_1.08_linux_i686.tar.gz	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-mirror://sourceforge/chromium-bsu/chromium-bsu-0.9.15.1.tar.gz	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-ftp://ftp.kernel.org/pub/linux/daemons/autofs/	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-https://www.teamviewer.com/	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://wiki.freebsd.org/DmitryMarakasov/kiconvtool	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://liba52.sourceforge.net/	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://www.zlib.net/	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-https://github.com/asciinema/asciinema/archive/v1.3.0.tar.gz	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://download.virtualbox.org/virtualbox/5.0.30/UserManual.pdf	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://chromium-bsu.sourceforge.net/	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://unbeatenpath.net/software/away/	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-https://download.teamviewer.com/download/teamviewer_i386.deb	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://download.virtualbox.org/virtualbox/5.0.30/VBoxGuestAdditions_5.0.30.iso	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-http://aspell.net/	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://www.virtualbox.org/	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://ccreweb.org/software/kforth/kforth.html	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+https://asciinema.org/	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://www.vorbis.com/	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://download.virtualbox.org/virtualbox/5.0.30/SDKRef.pdf	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://www.baudline.com/baudline_1.08_linux_x86_64.tar.gz	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://www.baudline.com/	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://download.virtualbox.org/virtualbox/5.0.30/VirtualBox-5.0.30.tar.bz2	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://www.oracle.com/technetwork/database/database-technologies/express-edition/overview/index.html	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://download.oracle.com/otn/linux/oracle11g/xe/oracle-xe-11.2.0-1.0.x86_64.rpm.zip	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://www.kernel.org/pub/linux/daemons/autofs/v5/autofs-5.0.5.tar.bz2	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://unbeatenpath.net/software/away/away-0.9.5.tar.bz2	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+ftp://ccreweb.org/software/kforth/linux/kforth-x86-linux-1.5.2.tar.gz	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+mirror://gnu-alpha/aspell/aspell-0.60.7-rc1.tar.gz	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://www.baudline.com/baudline_1.08_linux_i686.tar.gz	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+mirror://sourceforge/chromium-bsu/chromium-bsu-0.9.15.1.tar.gz	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+ftp://ftp.kernel.org/pub/linux/daemons/autofs/	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+https://www.teamviewer.com/	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://wiki.freebsd.org/DmitryMarakasov/kiconvtool	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://liba52.sourceforge.net/	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://www.zlib.net/	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+https://github.com/asciinema/asciinema/archive/v1.3.0.tar.gz	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://download.virtualbox.org/virtualbox/5.0.30/UserManual.pdf	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://chromium-bsu.sourceforge.net/	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://unbeatenpath.net/software/away/	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+https://download.teamviewer.com/download/teamviewer_i386.deb	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://download.virtualbox.org/virtualbox/5.0.30/VBoxGuestAdditions_5.0.30.iso	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+http://aspell.net/	2020-06-07 03:58:43.947037+03	\N	2020-06-07 03:58:43.947037+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
 \.
 
 
@@ -1500,44 +1588,44 @@ http://aspell.net/	2020-06-05 17:19:47.904297+03	\N	2020-06-05 17:19:47.904297+0
 --
 
 COPY public.log_lines (run_id, lineno, "timestamp", severity, message) FROM stdin;
-1	1	2020-06-05 17:19:47.664451+03	notice	parsing started
-1	2	2020-06-05 17:19:47.666706+03	notice	parsing source core started
-1	3	2020-06-05 17:19:47.686433+03	notice	parsing source core complete
-1	4	2020-06-05 17:19:47.68756+03	notice	parsing source extra started
-1	5	2020-06-05 17:19:47.690249+03	notice	parsing source extra complete
-1	6	2020-06-05 17:19:47.691235+03	notice	parsing source community started
-1	7	2020-06-05 17:19:47.693885+03	notice	parsing source community complete
-1	8	2020-06-05 17:19:47.69489+03	notice	parsing source multilib started
-1	9	2020-06-05 17:19:47.698269+03	notice	parsing source multilib complete
-1	10	2020-06-05 17:19:47.702793+03	notice	parsing complete, 1 packages
-2	1	2020-06-05 17:19:47.715608+03	notice	parsing started
-2	2	2020-06-05 17:19:47.716758+03	notice	parsing source CPAN started
-2	3	2020-06-05 17:19:47.725614+03	notice	parsing source CPAN complete
-2	4	2020-06-05 17:19:47.729082+03	notice	parsing complete, 1 packages
-3	1	2020-06-05 17:19:47.738816+03	notice	parsing started
-3	2	2020-06-05 17:19:47.740903+03	notice	parsing source main started
-3	3	2020-06-05 17:19:47.752137+03	notice	parsing source main complete
-3	4	2020-06-05 17:19:47.753458+03	notice	parsing source contrib started
-3	5	2020-06-05 17:19:47.758782+03	notice	parsing source contrib complete
-3	6	2020-06-05 17:19:47.760593+03	notice	parsing source non-free started
-3	7	2020-06-05 17:19:47.763981+03	notice	parsing source non-free complete
-3	8	2020-06-05 17:19:47.766784+03	notice	parsing complete, 1 packages
-4	1	2020-06-05 17:19:47.778085+03	notice	parsing started
-4	2	2020-06-05 17:19:47.779411+03	notice	parsing source INDEX-11 started
-4	3	2020-06-05 17:19:47.790092+03	notice	parsing source INDEX-11 complete
-4	4	2020-06-05 17:19:47.792727+03	notice	parsing complete, 2 packages
-5	1	2020-06-05 17:19:47.80116+03	notice	parsing started
-5	2	2020-06-05 17:19:47.802749+03	notice	parsing source gentoo started
-5	3	2020-06-05 17:19:47.82555+03	notice	parsing source gentoo complete
-5	4	2020-06-05 17:19:47.828637+03	notice	parsing complete, 4 packages
-6	1	2020-06-05 17:19:47.838428+03	notice	parsing started
-6	2	2020-06-05 17:19:47.839937+03	notice	parsing source recipes started
-6	3	2020-06-05 17:19:47.850216+03	notice	parsing source recipes complete
-6	4	2020-06-05 17:19:47.853194+03	notice	parsing complete, 1 packages
-7	1	2020-06-05 17:19:47.863099+03	notice	parsing started
-7	2	2020-06-05 17:19:47.864726+03	notice	parsing source slackbuilds started
-7	3	2020-06-05 17:19:47.896126+03	notice	parsing source slackbuilds complete
-7	4	2020-06-05 17:19:47.899714+03	notice	parsing complete, 5 packages
+1	1	2020-06-07 03:58:43.780571+03	notice	parsing started
+1	2	2020-06-07 03:58:43.782102+03	notice	parsing source core started
+1	3	2020-06-07 03:58:43.795497+03	notice	parsing source core complete
+1	4	2020-06-07 03:58:43.796692+03	notice	parsing source extra started
+1	5	2020-06-07 03:58:43.799606+03	notice	parsing source extra complete
+1	6	2020-06-07 03:58:43.80078+03	notice	parsing source community started
+1	7	2020-06-07 03:58:43.803413+03	notice	parsing source community complete
+1	8	2020-06-07 03:58:43.804406+03	notice	parsing source multilib started
+1	9	2020-06-07 03:58:43.807012+03	notice	parsing source multilib complete
+1	10	2020-06-07 03:58:43.809766+03	notice	parsing complete, 1 packages
+2	1	2020-06-07 03:58:43.817234+03	notice	parsing started
+2	2	2020-06-07 03:58:43.818502+03	notice	parsing source CPAN started
+2	3	2020-06-07 03:58:43.824546+03	notice	parsing source CPAN complete
+2	4	2020-06-07 03:58:43.827028+03	notice	parsing complete, 1 packages
+3	1	2020-06-07 03:58:43.834057+03	notice	parsing started
+3	2	2020-06-07 03:58:43.835336+03	notice	parsing source main started
+3	3	2020-06-07 03:58:43.841451+03	notice	parsing source main complete
+3	4	2020-06-07 03:58:43.842586+03	notice	parsing source contrib started
+3	5	2020-06-07 03:58:43.845518+03	notice	parsing source contrib complete
+3	6	2020-06-07 03:58:43.846512+03	notice	parsing source non-free started
+3	7	2020-06-07 03:58:43.849466+03	notice	parsing source non-free complete
+3	8	2020-06-07 03:58:43.852022+03	notice	parsing complete, 1 packages
+4	1	2020-06-07 03:58:43.859042+03	notice	parsing started
+4	2	2020-06-07 03:58:43.860283+03	notice	parsing source INDEX-11 started
+4	3	2020-06-07 03:58:43.868853+03	notice	parsing source INDEX-11 complete
+4	4	2020-06-07 03:58:43.871215+03	notice	parsing complete, 2 packages
+5	1	2020-06-07 03:58:43.878144+03	notice	parsing started
+5	2	2020-06-07 03:58:43.879315+03	notice	parsing source gentoo started
+5	3	2020-06-07 03:58:43.895683+03	notice	parsing source gentoo complete
+5	4	2020-06-07 03:58:43.898236+03	notice	parsing complete, 4 packages
+6	1	2020-06-07 03:58:43.904931+03	notice	parsing started
+6	2	2020-06-07 03:58:43.906041+03	notice	parsing source recipes started
+6	3	2020-06-07 03:58:43.912037+03	notice	parsing source recipes complete
+6	4	2020-06-07 03:58:43.914565+03	notice	parsing complete, 1 packages
+7	1	2020-06-07 03:58:43.921511+03	notice	parsing started
+7	2	2020-06-07 03:58:43.922675+03	notice	parsing source slackbuilds started
+7	3	2020-06-07 03:58:43.940655+03	notice	parsing source slackbuilds complete
+7	4	2020-06-07 03:58:43.943192+03	notice	parsing complete, 5 packages
 \.
 
 
@@ -1600,21 +1688,21 @@ COPY public.maintainer_repo_metapackages_events (id, maintainer_id, repository_i
 --
 
 COPY public.maintainers (id, maintainer, num_packages, num_packages_newest, num_packages_outdated, num_packages_ignored, num_packages_unique, num_packages_devel, num_packages_legacy, num_packages_incorrect, num_packages_untrusted, num_packages_noscheme, num_packages_rolling, num_packages_vulnerable, num_projects, num_projects_newest, num_projects_outdated, num_projects_problematic, num_projects_vulnerable, counts_per_repo, num_projects_per_category, num_repos, first_seen, orphaned_at) FROM stdin;
-13	jaldhar@cpan	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"cpan": [1, 1, 1, 0, 0, 0]}	\N	1	2020-06-05 17:19:47.904297+03	\N
-2	dmitrij.ledkov@ubuntu.com	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"debian_unstable": [1, 1, 1, 0, 0, 0]}	{"devel": 1}	1	2020-06-05 17:19:47.904297+03	\N
-9	games@gentoo.org	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"gentoo": [1, 1, 1, 0, 0, 0]}	{"games-action": 1}	1	2020-06-05 17:19:47.904297+03	\N
-5	kensington@gentoo.org	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"gentoo": [1, 1, 1, 0, 0, 0]}	{"app-misc": 1}	1	2020-06-05 17:19:47.904297+03	\N
-16	naddy@freebsd.org	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"freebsd": [1, 1, 1, 0, 0, 0]}	{"audio": 1}	1	2020-06-05 17:19:47.904297+03	\N
-10	gschoen@iinet.net.au	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"slackbuilds": [1, 1, 1, 0, 0, 0]}	{"development": 1}	1	2020-06-05 17:19:47.904297+03	\N
-11	amdmi3@freebsd.org	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"freebsd": [1, 1, 1, 0, 0, 0]}	{"sysutils": 1}	1	2020-06-05 17:19:47.904297+03	\N
-3	sam+deb@zoy.org	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"debian_unstable": [1, 1, 1, 0, 0, 0]}	{"devel": 1}	1	2020-06-05 17:19:47.904297+03	\N
-14	willysr@slackbuilds.org	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"slackbuilds": [1, 1, 1, 0, 0, 0]}	{"network": 1}	1	2020-06-05 17:19:47.904297+03	\N
-6	maintainer-needed@gentoo.org	2	0	0	0	2	0	0	0	0	0	0	0	2	2	0	0	0	{"gentoo": [2, 2, 2, 0, 0, 0]}	{"app-misc": 1, "app-test": 1}	1	2020-06-05 17:19:47.904297+03	\N
-12	slack.dhabyx@gmail.com	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"slackbuilds": [1, 1, 1, 0, 0, 0]}	{"system": 1}	1	2020-06-05 17:19:47.904297+03	\N
-8	joshuakwood@gmail.com	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"slackbuilds": [1, 1, 1, 0, 0, 0]}	{"ham": 1}	1	2020-06-05 17:19:47.904297+03	\N
-15	pprkut@liwjatan.at	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"slackbuilds": [1, 1, 1, 0, 0, 0]}	{"system": 1}	1	2020-06-05 17:19:47.904297+03	\N
-4	siretart@tauware.de	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"debian_unstable": [1, 1, 1, 0, 0, 0]}	{"devel": 1}	1	2020-06-05 17:19:47.904297+03	\N
-1	pkg-multimedia-maintainers@lists.alioth.debian.org	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"debian_unstable": [1, 1, 1, 0, 0, 0]}	{"devel": 1}	1	2020-06-05 17:19:47.904297+03	\N
+13	jaldhar@cpan	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"cpan": [1, 1, 1, 0, 0, 0]}	\N	1	2020-06-07 03:58:43.947037+03	\N
+2	dmitrij.ledkov@ubuntu.com	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"debian_unstable": [1, 1, 1, 0, 0, 0]}	{"devel": 1}	1	2020-06-07 03:58:43.947037+03	\N
+9	games@gentoo.org	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"gentoo": [1, 1, 1, 0, 0, 0]}	{"games-action": 1}	1	2020-06-07 03:58:43.947037+03	\N
+5	kensington@gentoo.org	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"gentoo": [1, 1, 1, 0, 0, 0]}	{"app-misc": 1}	1	2020-06-07 03:58:43.947037+03	\N
+16	naddy@freebsd.org	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"freebsd": [1, 1, 1, 0, 0, 0]}	{"audio": 1}	1	2020-06-07 03:58:43.947037+03	\N
+10	gschoen@iinet.net.au	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"slackbuilds": [1, 1, 1, 0, 0, 0]}	{"development": 1}	1	2020-06-07 03:58:43.947037+03	\N
+11	amdmi3@freebsd.org	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"freebsd": [1, 1, 1, 0, 0, 0]}	{"sysutils": 1}	1	2020-06-07 03:58:43.947037+03	\N
+3	sam+deb@zoy.org	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"debian_unstable": [1, 1, 1, 0, 0, 0]}	{"devel": 1}	1	2020-06-07 03:58:43.947037+03	\N
+14	willysr@slackbuilds.org	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"slackbuilds": [1, 1, 1, 0, 0, 0]}	{"network": 1}	1	2020-06-07 03:58:43.947037+03	\N
+6	maintainer-needed@gentoo.org	2	0	0	0	2	0	0	0	0	0	0	0	2	2	0	0	0	{"gentoo": [2, 2, 2, 0, 0, 0]}	{"app-misc": 1, "app-test": 1}	1	2020-06-07 03:58:43.947037+03	\N
+12	slack.dhabyx@gmail.com	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"slackbuilds": [1, 1, 1, 0, 0, 0]}	{"system": 1}	1	2020-06-07 03:58:43.947037+03	\N
+8	joshuakwood@gmail.com	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"slackbuilds": [1, 1, 1, 0, 0, 0]}	{"ham": 1}	1	2020-06-07 03:58:43.947037+03	\N
+15	pprkut@liwjatan.at	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"slackbuilds": [1, 1, 1, 0, 0, 0]}	{"system": 1}	1	2020-06-07 03:58:43.947037+03	\N
+4	siretart@tauware.de	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"debian_unstable": [1, 1, 1, 0, 0, 0]}	{"devel": 1}	1	2020-06-07 03:58:43.947037+03	\N
+1	pkg-multimedia-maintainers@lists.alioth.debian.org	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	{"debian_unstable": [1, 1, 1, 0, 0, 0]}	{"devel": 1}	1	2020-06-07 03:58:43.947037+03	\N
 \.
 
 
@@ -1631,21 +1719,21 @@ COPY public.manual_cpes (effname, cpe_vendor, cpe_product, cpe_edition, cpe_lang
 --
 
 COPY public.metapackages (id, effname, num_repos, num_repos_nonshadow, num_families, num_repos_newest, num_families_newest, has_related, has_cves, first_seen, orphaned_at) FROM stdin;
-1	a52dec	1	1	1	0	0	f	f	2020-06-05 17:19:47.904297+03	\N
-2	asciinema	1	1	1	0	0	f	f	2020-06-05 17:19:47.904297+03	\N
-3	aspell	1	1	1	0	0	f	f	2020-06-05 17:19:47.904297+03	\N
-4	autofs	1	1	1	0	0	f	f	2020-06-05 17:19:47.904297+03	\N
-5	away	1	1	1	0	0	f	f	2020-06-05 17:19:47.904297+03	\N
-6	baudline	1	1	1	0	0	f	f	2020-06-05 17:19:47.904297+03	\N
-7	chromium-bsu	1	1	1	0	0	f	f	2020-06-05 17:19:47.904297+03	\N
-8	kforth	1	1	1	0	0	f	f	2020-06-05 17:19:47.904297+03	\N
-9	kiconvtool	1	1	1	0	0	f	f	2020-06-05 17:19:47.904297+03	\N
-10	oracle-xe	1	1	1	0	0	f	f	2020-06-05 17:19:47.904297+03	\N
-11	perl:acme-brainfuck	1	0	1	0	0	f	f	2020-06-05 17:19:47.904297+03	\N
-12	teamviewer	1	1	1	0	0	f	f	2020-06-05 17:19:47.904297+03	\N
-13	virtualbox	1	1	1	0	0	f	f	2020-06-05 17:19:47.904297+03	\N
-14	vorbis-tools	1	1	1	0	0	f	f	2020-06-05 17:19:47.904297+03	\N
-15	zlib	1	1	1	0	0	f	f	2020-06-05 17:19:47.904297+03	\N
+1	a52dec	1	1	1	0	0	f	f	2020-06-07 03:58:43.947037+03	\N
+2	asciinema	1	1	1	0	0	f	f	2020-06-07 03:58:43.947037+03	\N
+3	aspell	1	1	1	0	0	f	f	2020-06-07 03:58:43.947037+03	\N
+4	autofs	1	1	1	0	0	f	f	2020-06-07 03:58:43.947037+03	\N
+5	away	1	1	1	0	0	f	f	2020-06-07 03:58:43.947037+03	\N
+6	baudline	1	1	1	0	0	f	f	2020-06-07 03:58:43.947037+03	\N
+7	chromium-bsu	1	1	1	0	0	f	f	2020-06-07 03:58:43.947037+03	\N
+8	kforth	1	1	1	0	0	f	f	2020-06-07 03:58:43.947037+03	\N
+9	kiconvtool	1	1	1	0	0	f	f	2020-06-07 03:58:43.947037+03	\N
+10	oracle-xe	1	1	1	0	0	f	f	2020-06-07 03:58:43.947037+03	\N
+11	perl:acme-brainfuck	1	0	1	0	0	f	f	2020-06-07 03:58:43.947037+03	\N
+12	teamviewer	1	1	1	0	0	f	f	2020-06-07 03:58:43.947037+03	\N
+13	virtualbox	1	1	1	0	0	f	f	2020-06-07 03:58:43.947037+03	\N
+14	vorbis-tools	1	1	1	0	0	f	f	2020-06-07 03:58:43.947037+03	\N
+15	zlib	1	1	1	0	0	f	f	2020-06-07 03:58:43.947037+03	\N
 \.
 
 
@@ -1654,21 +1742,21 @@ COPY public.metapackages (id, effname, num_repos, num_repos_nonshadow, num_famil
 --
 
 COPY public.metapackages_events (effname, ts, type, data) FROM stdin;
-a52dec	2020-06-05 17:19:47.904297+03	history_start	{"all_repos": ["debian_unstable"], "newest_repos": ["debian_unstable"], "newest_versions": ["0.7.4"]}
-asciinema	2020-06-05 17:19:47.904297+03	history_start	{"all_repos": ["gentoo"], "newest_repos": ["gentoo"], "newest_versions": ["1.3.0"]}
-aspell	2020-06-05 17:19:47.904297+03	history_start	{"all_repos": ["gentoo"], "devel_repos": ["gentoo"], "devel_versions": ["0.60.7_rc1"]}
-autofs	2020-06-05 17:19:47.904297+03	history_start	{"all_repos": ["gobolinux"], "newest_repos": ["gobolinux"], "newest_versions": ["5.0.5"]}
-away	2020-06-05 17:19:47.904297+03	history_start	{"all_repos": ["gentoo"], "newest_repos": ["gentoo"], "newest_versions": ["0.9.5"]}
-baudline	2020-06-05 17:19:47.904297+03	history_start	{"all_repos": ["slackbuilds"], "newest_repos": ["slackbuilds"], "newest_versions": ["1.08"]}
-chromium-bsu	2020-06-05 17:19:47.904297+03	history_start	{"all_repos": ["gentoo"], "newest_repos": ["gentoo"], "newest_versions": ["0.9.15.1"]}
-kforth	2020-06-05 17:19:47.904297+03	history_start	{"all_repos": ["slackbuilds"], "newest_repos": ["slackbuilds"], "newest_versions": ["1.5.2p1"]}
-kiconvtool	2020-06-05 17:19:47.904297+03	history_start	{"all_repos": ["freebsd"], "newest_repos": ["freebsd"], "newest_versions": ["0.97"]}
-oracle-xe	2020-06-05 17:19:47.904297+03	history_start	{"all_repos": ["slackbuilds"], "newest_repos": ["slackbuilds"], "newest_versions": ["11.2.0"]}
-perl:acme-brainfuck	2020-06-05 17:19:47.904297+03	history_start	{"all_repos": ["cpan"], "newest_repos": ["cpan"], "newest_versions": ["1.1.1"]}
-teamviewer	2020-06-05 17:19:47.904297+03	history_start	{"all_repos": ["slackbuilds"], "newest_repos": ["slackbuilds"], "newest_versions": ["12.0.76279"]}
-virtualbox	2020-06-05 17:19:47.904297+03	history_start	{"all_repos": ["slackbuilds"], "newest_repos": ["slackbuilds"], "newest_versions": ["5.0.30"]}
-vorbis-tools	2020-06-05 17:19:47.904297+03	history_start	{"all_repos": ["freebsd"], "newest_repos": ["freebsd"], "newest_versions": ["1.4.0"]}
-zlib	2020-06-05 17:19:47.904297+03	history_start	{"all_repos": ["arch"], "newest_repos": ["arch"], "newest_versions": ["1.2.8"]}
+a52dec	2020-06-07 03:58:43.947037+03	history_start	{"all_repos": ["debian_unstable"], "newest_repos": ["debian_unstable"], "newest_versions": ["0.7.4"]}
+asciinema	2020-06-07 03:58:43.947037+03	history_start	{"all_repos": ["gentoo"], "newest_repos": ["gentoo"], "newest_versions": ["1.3.0"]}
+aspell	2020-06-07 03:58:43.947037+03	history_start	{"all_repos": ["gentoo"], "devel_repos": ["gentoo"], "devel_versions": ["0.60.7_rc1"]}
+autofs	2020-06-07 03:58:43.947037+03	history_start	{"all_repos": ["gobolinux"], "newest_repos": ["gobolinux"], "newest_versions": ["5.0.5"]}
+away	2020-06-07 03:58:43.947037+03	history_start	{"all_repos": ["gentoo"], "newest_repos": ["gentoo"], "newest_versions": ["0.9.5"]}
+baudline	2020-06-07 03:58:43.947037+03	history_start	{"all_repos": ["slackbuilds"], "newest_repos": ["slackbuilds"], "newest_versions": ["1.08"]}
+chromium-bsu	2020-06-07 03:58:43.947037+03	history_start	{"all_repos": ["gentoo"], "newest_repos": ["gentoo"], "newest_versions": ["0.9.15.1"]}
+kforth	2020-06-07 03:58:43.947037+03	history_start	{"all_repos": ["slackbuilds"], "newest_repos": ["slackbuilds"], "newest_versions": ["1.5.2p1"]}
+kiconvtool	2020-06-07 03:58:43.947037+03	history_start	{"all_repos": ["freebsd"], "newest_repos": ["freebsd"], "newest_versions": ["0.97"]}
+oracle-xe	2020-06-07 03:58:43.947037+03	history_start	{"all_repos": ["slackbuilds"], "newest_repos": ["slackbuilds"], "newest_versions": ["11.2.0"]}
+perl:acme-brainfuck	2020-06-07 03:58:43.947037+03	history_start	{"all_repos": ["cpan"], "newest_repos": ["cpan"], "newest_versions": ["1.1.1"]}
+teamviewer	2020-06-07 03:58:43.947037+03	history_start	{"all_repos": ["slackbuilds"], "newest_repos": ["slackbuilds"], "newest_versions": ["12.0.76279"]}
+virtualbox	2020-06-07 03:58:43.947037+03	history_start	{"all_repos": ["slackbuilds"], "newest_repos": ["slackbuilds"], "newest_versions": ["5.0.30"]}
+vorbis-tools	2020-06-07 03:58:43.947037+03	history_start	{"all_repos": ["freebsd"], "newest_repos": ["freebsd"], "newest_versions": ["1.4.0"]}
+zlib	2020-06-07 03:58:43.947037+03	history_start	{"all_repos": ["arch"], "newest_repos": ["arch"], "newest_versions": ["1.2.8"]}
 \.
 
 
@@ -1740,25 +1828,25 @@ zlib	3853738594163880899
 --
 
 COPY public.project_names (project_id, repository_id, name_type, name) FROM stdin;
-14	3	srcname	audio/vorbis-tools
-1	6	binname	liba52-0.7.4-dev
-14	3	binname	vorbis-tools
-7	5	srcname	games-action/chromium-bsu
-6	2	srcname	ham/baudline
-11	4	name	Acme-Brainfuck
-10	2	srcname	system/oracle-xe
-15	7	binname	zlib
-3	5	srcname	app-test/aspell
 9	3	srcname	sysutils/kiconvtool
-1	6	binname	liba52-0.7.4
-8	2	srcname	development/kforth
-9	3	binname	kiconvtool
 5	5	srcname	app-misc/away
-2	5	srcname	app-misc/asciinema
-13	2	srcname	system/virtualbox
+9	3	binname	kiconvtool
 4	1	name	AutoFS
+3	5	srcname	app-test/aspell
+6	2	srcname	ham/baudline
+1	6	binname	liba52-0.7.4-dev
+13	2	srcname	system/virtualbox
+10	2	srcname	system/oracle-xe
 12	2	srcname	network/teamviewer
+8	2	srcname	development/kforth
 1	6	srcname	a52dec
+15	7	binname	zlib
+2	5	srcname	app-misc/asciinema
+14	3	binname	vorbis-tools
+14	3	srcname	audio/vorbis-tools
+1	6	binname	liba52-0.7.4
+7	5	srcname	games-action/chromium-bsu
+11	4	name	Acme-Brainfuck
 15	7	srcname	zlib
 \.
 
@@ -1784,21 +1872,21 @@ COPY public.project_redirects_manual (oldname, newname) FROM stdin;
 --
 
 COPY public.project_releases (effname, version, start_ts, trusted_start_ts, end_ts) FROM stdin;
-a52dec	0.7.4	2020-06-05 17:19:47.904297+03	2020-06-05 17:19:47.904297+03	\N
-asciinema	1.3.0	2020-06-05 17:19:47.904297+03	2020-06-05 17:19:47.904297+03	\N
-aspell	0.60.7_rc1	2020-06-05 17:19:47.904297+03	2020-06-05 17:19:47.904297+03	\N
-autofs	5.0.5	2020-06-05 17:19:47.904297+03	2020-06-05 17:19:47.904297+03	\N
-away	0.9.5	2020-06-05 17:19:47.904297+03	2020-06-05 17:19:47.904297+03	\N
-baudline	1.08	2020-06-05 17:19:47.904297+03	2020-06-05 17:19:47.904297+03	\N
-chromium-bsu	0.9.15.1	2020-06-05 17:19:47.904297+03	2020-06-05 17:19:47.904297+03	\N
-kforth	1.5.2p1	2020-06-05 17:19:47.904297+03	2020-06-05 17:19:47.904297+03	\N
-kiconvtool	0.97	2020-06-05 17:19:47.904297+03	2020-06-05 17:19:47.904297+03	\N
-oracle-xe	11.2.0	2020-06-05 17:19:47.904297+03	2020-06-05 17:19:47.904297+03	\N
-perl:acme-brainfuck	1.1.1	2020-06-05 17:19:47.904297+03	2020-06-05 17:19:47.904297+03	\N
-teamviewer	12.0.76279	2020-06-05 17:19:47.904297+03	2020-06-05 17:19:47.904297+03	\N
-virtualbox	5.0.30	2020-06-05 17:19:47.904297+03	2020-06-05 17:19:47.904297+03	\N
-vorbis-tools	1.4.0	2020-06-05 17:19:47.904297+03	2020-06-05 17:19:47.904297+03	\N
-zlib	1.2.8	2020-06-05 17:19:47.904297+03	2020-06-05 17:19:47.904297+03	\N
+a52dec	0.7.4	2020-06-07 03:58:43.947037+03	2020-06-07 03:58:43.947037+03	\N
+asciinema	1.3.0	2020-06-07 03:58:43.947037+03	2020-06-07 03:58:43.947037+03	\N
+aspell	0.60.7_rc1	2020-06-07 03:58:43.947037+03	2020-06-07 03:58:43.947037+03	\N
+autofs	5.0.5	2020-06-07 03:58:43.947037+03	2020-06-07 03:58:43.947037+03	\N
+away	0.9.5	2020-06-07 03:58:43.947037+03	2020-06-07 03:58:43.947037+03	\N
+baudline	1.08	2020-06-07 03:58:43.947037+03	2020-06-07 03:58:43.947037+03	\N
+chromium-bsu	0.9.15.1	2020-06-07 03:58:43.947037+03	2020-06-07 03:58:43.947037+03	\N
+kforth	1.5.2p1	2020-06-07 03:58:43.947037+03	2020-06-07 03:58:43.947037+03	\N
+kiconvtool	0.97	2020-06-07 03:58:43.947037+03	2020-06-07 03:58:43.947037+03	\N
+oracle-xe	11.2.0	2020-06-07 03:58:43.947037+03	2020-06-07 03:58:43.947037+03	\N
+perl:acme-brainfuck	1.1.1	2020-06-07 03:58:43.947037+03	2020-06-07 03:58:43.947037+03	\N
+teamviewer	12.0.76279	2020-06-07 03:58:43.947037+03	2020-06-07 03:58:43.947037+03	\N
+virtualbox	5.0.30	2020-06-07 03:58:43.947037+03	2020-06-07 03:58:43.947037+03	\N
+vorbis-tools	1.4.0	2020-06-07 03:58:43.947037+03	2020-06-07 03:58:43.947037+03	\N
+zlib	1.2.8	2020-06-07 03:58:43.947037+03	2020-06-07 03:58:43.947037+03	\N
 \.
 
 
@@ -1837,21 +1925,21 @@ COPY public.repo_metapackages (repository_id, effname, newest, outdated, problem
 --
 
 COPY public.repo_track_versions (repository_id, refcount, trackname, version, start_ts, end_ts, any_statuses, any_flags) FROM stdin;
-6	1	a52dec	0.7.4	2020-06-05 17:19:47.904297+03	\N	16	0
-4	1	Acme-Brainfuck	1.1.1	2020-06-05 17:19:47.904297+03	\N	16	0
-5	1	games-action/chromium-bsu	0.9.15.1	2020-06-05 17:19:47.904297+03	\N	16	1024
-5	1	app-misc/asciinema	1.3.0	2020-06-05 17:19:47.904297+03	\N	16	1024
-3	1	sysutils/kiconvtool	0.97	2020-06-05 17:19:47.904297+03	\N	16	0
-5	1	app-misc/away	0.9.5	2020-06-05 17:19:47.904297+03	\N	16	1024
-3	1	audio/vorbis-tools	1.4.0	2020-06-05 17:19:47.904297+03	\N	16	0
-5	1	app-test/aspell	0.60.7_rc1	2020-06-05 17:19:47.904297+03	\N	16	1026
-2	1	development/kforth	1.5.2p1	2020-06-05 17:19:47.904297+03	\N	16	0
-1	1	AutoFS	5.0.5	2020-06-05 17:19:47.904297+03	\N	16	0
-7	1	zlib	1.2.8	2020-06-05 17:19:47.904297+03	\N	16	0
-2	1	system/oracle-xe	11.2.0	2020-06-05 17:19:47.904297+03	\N	16	0
-2	1	network/teamviewer	12.0.76279	2020-06-05 17:19:47.904297+03	\N	16	0
-2	1	system/virtualbox	5.0.30	2020-06-05 17:19:47.904297+03	\N	16	0
-2	1	ham/baudline	1.08	2020-06-05 17:19:47.904297+03	\N	16	0
+6	1	a52dec	0.7.4	2020-06-07 03:58:43.947037+03	\N	16	0
+4	1	Acme-Brainfuck	1.1.1	2020-06-07 03:58:43.947037+03	\N	16	0
+5	1	games-action/chromium-bsu	0.9.15.1	2020-06-07 03:58:43.947037+03	\N	16	1024
+5	1	app-misc/asciinema	1.3.0	2020-06-07 03:58:43.947037+03	\N	16	1024
+3	1	sysutils/kiconvtool	0.97	2020-06-07 03:58:43.947037+03	\N	16	0
+5	1	app-misc/away	0.9.5	2020-06-07 03:58:43.947037+03	\N	16	1024
+3	1	audio/vorbis-tools	1.4.0	2020-06-07 03:58:43.947037+03	\N	16	0
+5	1	app-test/aspell	0.60.7_rc1	2020-06-07 03:58:43.947037+03	\N	16	1026
+2	1	development/kforth	1.5.2p1	2020-06-07 03:58:43.947037+03	\N	16	0
+1	1	AutoFS	5.0.5	2020-06-07 03:58:43.947037+03	\N	16	0
+7	1	zlib	1.2.8	2020-06-07 03:58:43.947037+03	\N	16	0
+2	1	system/oracle-xe	11.2.0	2020-06-07 03:58:43.947037+03	\N	16	0
+2	1	network/teamviewer	12.0.76279	2020-06-07 03:58:43.947037+03	\N	16	0
+2	1	system/virtualbox	5.0.30	2020-06-07 03:58:43.947037+03	\N	16	0
+2	1	ham/baudline	1.08	2020-06-07 03:58:43.947037+03	\N	16	0
 \.
 
 
@@ -1860,21 +1948,21 @@ COPY public.repo_track_versions (repository_id, refcount, trackname, version, st
 --
 
 COPY public.repo_tracks (repository_id, refcount, start_ts, restart_ts, end_ts, trackname) FROM stdin;
-2	1	2020-06-05 17:19:47.904297+03	\N	\N	ham/baudline
-2	1	2020-06-05 17:19:47.904297+03	\N	\N	development/kforth
-1	1	2020-06-05 17:19:47.904297+03	\N	\N	AutoFS
-3	1	2020-06-05 17:19:47.904297+03	\N	\N	sysutils/kiconvtool
-5	1	2020-06-05 17:19:47.904297+03	\N	\N	games-action/chromium-bsu
-5	1	2020-06-05 17:19:47.904297+03	\N	\N	app-misc/asciinema
-3	1	2020-06-05 17:19:47.904297+03	\N	\N	audio/vorbis-tools
-6	1	2020-06-05 17:19:47.904297+03	\N	\N	a52dec
-2	1	2020-06-05 17:19:47.904297+03	\N	\N	network/teamviewer
-4	1	2020-06-05 17:19:47.904297+03	\N	\N	Acme-Brainfuck
-5	1	2020-06-05 17:19:47.904297+03	\N	\N	app-test/aspell
-2	1	2020-06-05 17:19:47.904297+03	\N	\N	system/virtualbox
-5	1	2020-06-05 17:19:47.904297+03	\N	\N	app-misc/away
-7	1	2020-06-05 17:19:47.904297+03	\N	\N	zlib
-2	1	2020-06-05 17:19:47.904297+03	\N	\N	system/oracle-xe
+2	1	2020-06-07 03:58:43.947037+03	\N	\N	ham/baudline
+2	1	2020-06-07 03:58:43.947037+03	\N	\N	development/kforth
+1	1	2020-06-07 03:58:43.947037+03	\N	\N	AutoFS
+3	1	2020-06-07 03:58:43.947037+03	\N	\N	sysutils/kiconvtool
+5	1	2020-06-07 03:58:43.947037+03	\N	\N	games-action/chromium-bsu
+5	1	2020-06-07 03:58:43.947037+03	\N	\N	app-misc/asciinema
+3	1	2020-06-07 03:58:43.947037+03	\N	\N	audio/vorbis-tools
+6	1	2020-06-07 03:58:43.947037+03	\N	\N	a52dec
+2	1	2020-06-07 03:58:43.947037+03	\N	\N	network/teamviewer
+4	1	2020-06-07 03:58:43.947037+03	\N	\N	Acme-Brainfuck
+5	1	2020-06-07 03:58:43.947037+03	\N	\N	app-test/aspell
+2	1	2020-06-07 03:58:43.947037+03	\N	\N	system/virtualbox
+5	1	2020-06-07 03:58:43.947037+03	\N	\N	app-misc/away
+7	1	2020-06-07 03:58:43.947037+03	\N	\N	zlib
+2	1	2020-06-07 03:58:43.947037+03	\N	\N	system/oracle-xe
 \.
 
 
@@ -1891,13 +1979,13 @@ COPY public.reports (id, created, updated, client, effname, need_verignore, need
 --
 
 COPY public.repositories (id, name, state, num_packages, num_packages_newest, num_packages_outdated, num_packages_ignored, num_packages_unique, num_packages_devel, num_packages_legacy, num_packages_incorrect, num_packages_untrusted, num_packages_noscheme, num_packages_rolling, num_packages_vulnerable, num_metapackages, num_metapackages_unique, num_metapackages_newest, num_metapackages_outdated, num_metapackages_comparable, num_metapackages_problematic, num_metapackages_vulnerable, num_problems, num_maintainers, first_seen, last_seen, last_fetched, last_parsed, last_updated, used_package_fields, ruleset_hash, metadata, sortname, type, "desc", statsgroup, singular, family, color, shadow, repolinks, packagelinks) FROM stdin;
-7	arch	active	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	0	0	0	0	2020-06-05 17:19:35.422441+03	2020-06-05 17:19:35.422441+03	\N	2020-06-05 17:19:47.709037+03	2020-06-05 17:19:47.904297+03	{binname,family,projectname_seed,rawversion,versionclass,visiblename,trackname,comment,version,srcname,homepage,subrepo,effname,origversion,repo,licenses}	f3844b65fd111a7b509074d7887b109c566b8dde8678658ca18459e7a121effb	{"desc": "Arch", "name": "arch", "type": "repository", "color": "0088cc", "family": "arch", "shadow": false, "singular": "Arch package", "sortname": "arch", "repolinks": [{"url": "https://www.archlinux.org/", "desc": "Arch Linux home"}, {"url": "https://www.archlinux.org/packages/", "desc": "Arch Linux Packages"}], "statsgroup": "Arch+derivs", "packagelinks": [{"url": "https://www.archlinux.org/packages/?q={binname}", "desc": "Package details on www.archlinux.org"}, {"url": "https://git.archlinux.org/svntogit/{archrepo}.git/tree/trunk?h=packages/{srcname}", "desc": "Git repository"}, {"url": "https://git.archlinux.org/svntogit/{archrepo}.git/tree/trunk/PKGBUILD?h=packages/{srcname}", "desc": "PKGBUILD"}, {"url": "https://www.archlinux.org/packages/{subrepo}/x86_64/{binname}/", "desc": "Package information (x86_64)"}], "update_period": 600}	arch	repository	Arch	Arch+derivs	Arch package	arch	0088cc	f	[{"url": "https://www.archlinux.org/", "desc": "Arch Linux home"}, {"url": "https://www.archlinux.org/packages/", "desc": "Arch Linux Packages"}]	[{"url": "https://www.archlinux.org/packages/?q={binname}", "desc": "Package details on www.archlinux.org"}, {"url": "https://git.archlinux.org/svntogit/{archrepo}.git/tree/trunk?h=packages/{srcname}", "desc": "Git repository"}, {"url": "https://git.archlinux.org/svntogit/{archrepo}.git/tree/trunk/PKGBUILD?h=packages/{srcname}", "desc": "PKGBUILD"}, {"url": "https://www.archlinux.org/packages/{subrepo}/x86_64/{binname}/", "desc": "Package information (x86_64)"}]
-4	cpan	active	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	1	1	2020-06-05 17:19:35.422441+03	2020-06-05 17:19:35.422441+03	\N	2020-06-05 17:19:47.732207+03	2020-06-05 17:19:47.904297+03	{family,projectname_seed,shadow,rawversion,versionclass,visiblename,trackname,name,version,maintainers,homepage,repo,effname,origversion}	f3844b65fd111a7b509074d7887b109c566b8dde8678658ca18459e7a121effb	{"desc": "CPAN", "name": "cpan", "type": "modules", "color": null, "family": "cpan", "shadow": true, "singular": "CPAN package", "sortname": "cpan", "repolinks": [{"url": "http://cpan.org/", "desc": "CPAN"}], "statsgroup": "CPAN", "packagelinks": [], "update_period": 600}	cpan	modules	CPAN	CPAN	CPAN package	cpan	\N	t	[{"url": "http://cpan.org/", "desc": "CPAN"}]	[]
-6	debian_unstable	active	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	0	0	0	4	2020-06-05 17:19:35.422441+03	2020-06-05 17:19:35.422441+03	\N	2020-06-05 17:19:47.771835+03	2020-06-05 17:19:47.904297+03	{family,projectname_seed,binnames,rawversion,versionclass,visiblename,trackname,category,version,maintainers,srcname,homepage,subrepo,effname,origversion,repo}	f3844b65fd111a7b509074d7887b109c566b8dde8678658ca18459e7a121effb	{"desc": "Debian Unstable", "name": "debian_unstable", "type": "repository", "color": "c70036", "family": "debuntu", "shadow": false, "singular": "Debian Unstable package", "sortname": "debian_unstable", "repolinks": [{"url": "https://www.debian.org/distrib/packages", "desc": "Debian packages"}, {"url": "https://packages.debian.org/unstable/", "desc": "Debian packages in unstable"}, {"url": "https://buildd.debian.org/", "desc": "Debian package auto-building status"}], "statsgroup": "Debian+derivs", "packagelinks": [{"url": "https://packages.debian.org/unstable/source/{srcname}", "desc": "Package details on packages.debian.org"}, {"url": "https://bugs.debian.org/{srcname}", "desc": "Related bugs in Debian bug tracker"}, {"url": "https://buildd.debian.org/status/package.php?p={srcname}&suite=unstable", "desc": "Package auto-building status"}, {"url": "https://qa.debian.org/popcon-graph.php?packages={srcname}", "desc": "Popularity contest statistics"}], "update_period": 600}	debian_unstable	repository	Debian Unstable	Debian+derivs	Debian Unstable package	debuntu	c70036	f	[{"url": "https://www.debian.org/distrib/packages", "desc": "Debian packages"}, {"url": "https://packages.debian.org/unstable/", "desc": "Debian packages in unstable"}, {"url": "https://buildd.debian.org/", "desc": "Debian package auto-building status"}]	[{"url": "https://packages.debian.org/unstable/source/{srcname}", "desc": "Package details on packages.debian.org"}, {"url": "https://bugs.debian.org/{srcname}", "desc": "Related bugs in Debian bug tracker"}, {"url": "https://buildd.debian.org/status/package.php?p={srcname}&suite=unstable", "desc": "Package auto-building status"}, {"url": "https://qa.debian.org/popcon-graph.php?packages={srcname}", "desc": "Popularity contest statistics"}]
-3	freebsd	active	2	0	0	0	2	0	0	0	0	0	0	0	2	2	0	0	0	0	0	0	2	2020-06-05 17:19:35.422441+03	2020-06-05 17:19:35.422441+03	\N	2020-06-05 17:19:47.795271+03	2020-06-05 17:19:47.904297+03	{binname,family,projectname_seed,rawversion,versionclass,visiblename,trackname,category,comment,version,maintainers,srcname,homepage,repo,effname,origversion}	f3844b65fd111a7b509074d7887b109c566b8dde8678658ca18459e7a121effb	{"desc": "FreeBSD Ports", "name": "freebsd", "type": "repository", "color": "990000", "family": "freebsd", "shadow": false, "singular": "FreeBSD port", "sortname": "freebsd", "repolinks": [{"url": "https://www.freebsd.org/", "desc": "FreeBSD home"}, {"url": "https://www.freebsd.org/ports/", "desc": "About FreeBSD ports"}, {"url": "https://www.freshports.org/", "desc": "FreshPorts - The Place For Ports"}, {"url": "https://svnweb.freebsd.org/ports/head/", "desc": "FreeBSD ports SVN repository"}, {"url": "https://pkg-status.freebsd.org/", "desc": "Package builds status"}], "statsgroup": "FreeBSD Ports", "packagelinks": [{"url": "https://www.freshports.org/{srcname}", "desc": "FreshPorts page"}, {"url": "https://svnweb.freebsd.org/ports/head/{srcname}/", "desc": "SVNWeb"}, {"url": "https://svnweb.freebsd.org/ports/head/{srcname}/Makefile?view=co", "desc": "Port's Makefile"}, {"url": "http://portsmon.freebsd.org/portoverview.py?category={srcname|dirname}&portname={srcname|basename}", "desc": "PortsMon"}, {"url": "https://bugs.freebsd.org/bugzilla/buglist.cgi?quicksearch={srcname}", "desc": "Related bugs in FreeBSD bugzilla"}], "update_period": 600}	freebsd	repository	FreeBSD Ports	FreeBSD Ports	FreeBSD port	freebsd	990000	f	[{"url": "https://www.freebsd.org/", "desc": "FreeBSD home"}, {"url": "https://www.freebsd.org/ports/", "desc": "About FreeBSD ports"}, {"url": "https://www.freshports.org/", "desc": "FreshPorts - The Place For Ports"}, {"url": "https://svnweb.freebsd.org/ports/head/", "desc": "FreeBSD ports SVN repository"}, {"url": "https://pkg-status.freebsd.org/", "desc": "Package builds status"}]	[{"url": "https://www.freshports.org/{srcname}", "desc": "FreshPorts page"}, {"url": "https://svnweb.freebsd.org/ports/head/{srcname}/", "desc": "SVNWeb"}, {"url": "https://svnweb.freebsd.org/ports/head/{srcname}/Makefile?view=co", "desc": "Port's Makefile"}, {"url": "http://portsmon.freebsd.org/portoverview.py?category={srcname|dirname}&portname={srcname|basename}", "desc": "PortsMon"}, {"url": "https://bugs.freebsd.org/bugzilla/buglist.cgi?quicksearch={srcname}", "desc": "Related bugs in FreeBSD bugzilla"}]
-5	gentoo	active	4	0	0	0	4	0	0	0	0	0	0	0	4	4	0	0	0	0	0	0	3	2020-06-05 17:19:35.422441+03	2020-06-05 17:19:35.422441+03	\N	2020-06-05 17:19:47.832025+03	2020-06-05 17:19:47.904297+03	{family,projectname_seed,downloads,rawversion,versionclass,visiblename,trackname,category,flags,comment,version,maintainers,srcname,homepage,repo,effname,origversion,licenses}	f3844b65fd111a7b509074d7887b109c566b8dde8678658ca18459e7a121effb	{"desc": "Gentoo", "name": "gentoo", "type": "repository", "color": "62548f", "family": "gentoo", "shadow": false, "singular": "Gentoo package", "sortname": "gentoo", "repolinks": [{"url": "https://gentoo.org/", "desc": "Gentoo Linux home"}, {"url": "https://packages.gentoo.org/", "desc": "Gentoo Packages"}, {"url": "https://gitweb.gentoo.org/repo/gentoo.git/tree/", "desc": "Official Gentoo ebuild repository"}, {"url": "https://github.com/gentoo/gentoo", "desc": "Gentoo ebuild repository mirror on GitHub"}], "statsgroup": "Gentoo", "packagelinks": [{"url": "https://packages.gentoo.org/packages/{srcname}", "desc": "Package details"}, {"url": "https://gitweb.gentoo.org/repo/gentoo.git/tree/{srcname}/{srcname|basename}-{rawversion}.ebuild", "desc": "View ebuild"}], "update_period": 600}	gentoo	repository	Gentoo	Gentoo	Gentoo package	gentoo	62548f	f	[{"url": "https://gentoo.org/", "desc": "Gentoo Linux home"}, {"url": "https://packages.gentoo.org/", "desc": "Gentoo Packages"}, {"url": "https://gitweb.gentoo.org/repo/gentoo.git/tree/", "desc": "Official Gentoo ebuild repository"}, {"url": "https://github.com/gentoo/gentoo", "desc": "Gentoo ebuild repository mirror on GitHub"}]	[{"url": "https://packages.gentoo.org/packages/{srcname}", "desc": "Package details"}, {"url": "https://gitweb.gentoo.org/repo/gentoo.git/tree/{srcname}/{srcname|basename}-{rawversion}.ebuild", "desc": "View ebuild"}]
-1	gobolinux	active	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	0	0	0	0	2020-06-05 17:19:35.422441+03	2020-06-05 17:19:35.422441+03	\N	2020-06-05 17:19:47.856049+03	2020-06-05 17:19:47.904297+03	{family,projectname_seed,downloads,rawversion,versionclass,visiblename,trackname,name,comment,version,homepage,repo,effname,origversion,licenses}	f3844b65fd111a7b509074d7887b109c566b8dde8678658ca18459e7a121effb	{"desc": "GoboLinux", "name": "gobolinux", "type": "repository", "color": null, "family": "gobolinux", "shadow": false, "singular": "GoboLinux package", "sortname": "gobolinux", "repolinks": [{"url": "http://gobolinux.org/", "desc": "GoboLinux home"}, {"url": "https://github.com/gobolinux/Recipes", "desc": "GoboLinux recipes repository"}], "statsgroup": "GoboLinux", "packagelinks": [{"url": "https://github.com/gobolinux/Recipes/tree/master/{name}/{origversion}", "desc": "Git"}], "update_period": 600}	gobolinux	repository	GoboLinux	GoboLinux	GoboLinux package	gobolinux	\N	f	[{"url": "http://gobolinux.org/", "desc": "GoboLinux home"}, {"url": "https://github.com/gobolinux/Recipes", "desc": "GoboLinux recipes repository"}]	[{"url": "https://github.com/gobolinux/Recipes/tree/master/{name}/{origversion}", "desc": "Git"}]
-2	slackbuilds	active	5	0	0	0	5	0	0	0	0	0	0	0	5	5	0	0	0	0	0	0	5	2020-06-05 17:19:35.422441+03	2020-06-05 17:19:35.422441+03	\N	2020-06-05 17:19:47.902514+03	2020-06-05 17:19:47.904297+03	{family,projectname_seed,downloads,rawversion,versionclass,visiblename,trackname,category,version,maintainers,srcname,homepage,repo,effname,origversion,branch}	f3844b65fd111a7b509074d7887b109c566b8dde8678658ca18459e7a121effb	{"desc": "SlackBuilds", "name": "slackbuilds", "type": "repository", "color": "000000", "family": "slackbuilds", "shadow": false, "singular": "SlackBuilds package", "sortname": "slackbuilds", "repolinks": [{"url": "https://slackbuilds.org/", "desc": "SlackBuilds.org"}], "statsgroup": "SlackBuilds", "packagelinks": [{"url": "https://slackbuilds.org/repository/14.2/{srcname}/", "desc": "SlackBuilds.org page"}], "update_period": 600}	slackbuilds	repository	SlackBuilds	SlackBuilds	SlackBuilds package	slackbuilds	000000	f	[{"url": "https://slackbuilds.org/", "desc": "SlackBuilds.org"}]	[{"url": "https://slackbuilds.org/repository/14.2/{srcname}/", "desc": "SlackBuilds.org page"}]
+7	arch	active	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	0	0	0	0	2020-06-07 03:58:31.696138+03	2020-06-07 03:58:31.696138+03	\N	2020-06-07 03:58:43.812501+03	2020-06-07 03:58:43.947037+03	{srcname,licenses,subrepo,binname,effname,version,versionclass,family,trackname,projectname_seed,repo,homepage,origversion,visiblename,rawversion,comment}	e6435bdf61ebbd436ec8d1b25dcd5bb658d8e68278200eb00b996e0a443676ff	{"desc": "Arch", "name": "arch", "type": "repository", "color": "0088cc", "family": "arch", "shadow": false, "singular": "Arch package", "sortname": "arch", "repolinks": [{"url": "https://www.archlinux.org/", "desc": "Arch Linux home"}, {"url": "https://www.archlinux.org/packages/", "desc": "Arch Linux Packages"}], "statsgroup": "Arch+derivs", "packagelinks": [{"url": "https://www.archlinux.org/packages/?q={binname}", "desc": "Package details on www.archlinux.org"}, {"url": "https://git.archlinux.org/svntogit/{archrepo}.git/tree/trunk?h=packages/{srcname}", "desc": "Git repository"}, {"url": "https://git.archlinux.org/svntogit/{archrepo}.git/tree/trunk/PKGBUILD?h=packages/{srcname}", "desc": "PKGBUILD"}, {"url": "https://www.archlinux.org/packages/{subrepo}/x86_64/{binname}/", "desc": "Package information (x86_64)"}], "update_period": 600}	arch	repository	Arch	Arch+derivs	Arch package	arch	0088cc	f	[{"url": "https://www.archlinux.org/", "desc": "Arch Linux home"}, {"url": "https://www.archlinux.org/packages/", "desc": "Arch Linux Packages"}]	[{"url": "https://www.archlinux.org/packages/?q={binname}", "desc": "Package details on www.archlinux.org"}, {"url": "https://git.archlinux.org/svntogit/{archrepo}.git/tree/trunk?h=packages/{srcname}", "desc": "Git repository"}, {"url": "https://git.archlinux.org/svntogit/{archrepo}.git/tree/trunk/PKGBUILD?h=packages/{srcname}", "desc": "PKGBUILD"}, {"url": "https://www.archlinux.org/packages/{subrepo}/x86_64/{binname}/", "desc": "Package information (x86_64)"}]
+4	cpan	active	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	1	1	2020-06-07 03:58:31.696138+03	2020-06-07 03:58:31.696138+03	\N	2020-06-07 03:58:43.8294+03	2020-06-07 03:58:43.947037+03	{effname,version,versionclass,family,trackname,projectname_seed,name,repo,shadow,maintainers,homepage,origversion,visiblename,rawversion}	e6435bdf61ebbd436ec8d1b25dcd5bb658d8e68278200eb00b996e0a443676ff	{"desc": "CPAN", "name": "cpan", "type": "modules", "color": null, "family": "cpan", "shadow": true, "singular": "CPAN package", "sortname": "cpan", "repolinks": [{"url": "http://cpan.org/", "desc": "CPAN"}], "statsgroup": "CPAN", "packagelinks": [], "update_period": 600}	cpan	modules	CPAN	CPAN	CPAN package	cpan	\N	t	[{"url": "http://cpan.org/", "desc": "CPAN"}]	[]
+6	debian_unstable	active	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	0	0	0	4	2020-06-07 03:58:31.696138+03	2020-06-07 03:58:31.696138+03	\N	2020-06-07 03:58:43.854314+03	2020-06-07 03:58:43.947037+03	{binnames,srcname,effname,version,versionclass,family,trackname,projectname_seed,category,repo,maintainers,homepage,origversion,visiblename,rawversion,subrepo}	e6435bdf61ebbd436ec8d1b25dcd5bb658d8e68278200eb00b996e0a443676ff	{"desc": "Debian Unstable", "name": "debian_unstable", "type": "repository", "color": "c70036", "family": "debuntu", "shadow": false, "singular": "Debian Unstable package", "sortname": "debian_unstable", "repolinks": [{"url": "https://www.debian.org/distrib/packages", "desc": "Debian packages"}, {"url": "https://packages.debian.org/unstable/", "desc": "Debian packages in unstable"}, {"url": "https://buildd.debian.org/", "desc": "Debian package auto-building status"}], "statsgroup": "Debian+derivs", "packagelinks": [{"url": "https://packages.debian.org/unstable/source/{srcname}", "desc": "Package details on packages.debian.org"}, {"url": "https://bugs.debian.org/{srcname}", "desc": "Related bugs in Debian bug tracker"}, {"url": "https://buildd.debian.org/status/package.php?p={srcname}&suite=unstable", "desc": "Package auto-building status"}, {"url": "https://qa.debian.org/popcon-graph.php?packages={srcname}", "desc": "Popularity contest statistics"}], "update_period": 600}	debian_unstable	repository	Debian Unstable	Debian+derivs	Debian Unstable package	debuntu	c70036	f	[{"url": "https://www.debian.org/distrib/packages", "desc": "Debian packages"}, {"url": "https://packages.debian.org/unstable/", "desc": "Debian packages in unstable"}, {"url": "https://buildd.debian.org/", "desc": "Debian package auto-building status"}]	[{"url": "https://packages.debian.org/unstable/source/{srcname}", "desc": "Package details on packages.debian.org"}, {"url": "https://bugs.debian.org/{srcname}", "desc": "Related bugs in Debian bug tracker"}, {"url": "https://buildd.debian.org/status/package.php?p={srcname}&suite=unstable", "desc": "Package auto-building status"}, {"url": "https://qa.debian.org/popcon-graph.php?packages={srcname}", "desc": "Popularity contest statistics"}]
+3	freebsd	active	2	0	0	0	2	0	0	0	0	0	0	0	2	2	0	0	0	0	0	0	2	2020-06-07 03:58:31.696138+03	2020-06-07 03:58:31.696138+03	\N	2020-06-07 03:58:43.873535+03	2020-06-07 03:58:43.947037+03	{srcname,binname,effname,version,versionclass,family,trackname,projectname_seed,category,repo,maintainers,homepage,origversion,visiblename,rawversion,comment}	e6435bdf61ebbd436ec8d1b25dcd5bb658d8e68278200eb00b996e0a443676ff	{"desc": "FreeBSD Ports", "name": "freebsd", "type": "repository", "color": "990000", "family": "freebsd", "shadow": false, "singular": "FreeBSD port", "sortname": "freebsd", "repolinks": [{"url": "https://www.freebsd.org/", "desc": "FreeBSD home"}, {"url": "https://www.freebsd.org/ports/", "desc": "About FreeBSD ports"}, {"url": "https://www.freshports.org/", "desc": "FreshPorts - The Place For Ports"}, {"url": "https://svnweb.freebsd.org/ports/head/", "desc": "FreeBSD ports SVN repository"}, {"url": "https://pkg-status.freebsd.org/", "desc": "Package builds status"}], "statsgroup": "FreeBSD Ports", "packagelinks": [{"url": "https://www.freshports.org/{srcname}", "desc": "FreshPorts page"}, {"url": "https://svnweb.freebsd.org/ports/head/{srcname}/", "desc": "SVNWeb"}, {"url": "https://svnweb.freebsd.org/ports/head/{srcname}/Makefile?view=co", "desc": "Port's Makefile"}, {"url": "http://portsmon.freebsd.org/portoverview.py?category={srcname|dirname}&portname={srcname|basename}", "desc": "PortsMon"}, {"url": "https://bugs.freebsd.org/bugzilla/buglist.cgi?quicksearch={srcname}", "desc": "Related bugs in FreeBSD bugzilla"}], "update_period": 600}	freebsd	repository	FreeBSD Ports	FreeBSD Ports	FreeBSD port	freebsd	990000	f	[{"url": "https://www.freebsd.org/", "desc": "FreeBSD home"}, {"url": "https://www.freebsd.org/ports/", "desc": "About FreeBSD ports"}, {"url": "https://www.freshports.org/", "desc": "FreshPorts - The Place For Ports"}, {"url": "https://svnweb.freebsd.org/ports/head/", "desc": "FreeBSD ports SVN repository"}, {"url": "https://pkg-status.freebsd.org/", "desc": "Package builds status"}]	[{"url": "https://www.freshports.org/{srcname}", "desc": "FreshPorts page"}, {"url": "https://svnweb.freebsd.org/ports/head/{srcname}/", "desc": "SVNWeb"}, {"url": "https://svnweb.freebsd.org/ports/head/{srcname}/Makefile?view=co", "desc": "Port's Makefile"}, {"url": "http://portsmon.freebsd.org/portoverview.py?category={srcname|dirname}&portname={srcname|basename}", "desc": "PortsMon"}, {"url": "https://bugs.freebsd.org/bugzilla/buglist.cgi?quicksearch={srcname}", "desc": "Related bugs in FreeBSD bugzilla"}]
+5	gentoo	active	4	0	0	0	4	0	0	0	0	0	0	0	4	4	0	0	0	0	0	0	3	2020-06-07 03:58:31.696138+03	2020-06-07 03:58:31.696138+03	\N	2020-06-07 03:58:43.900515+03	2020-06-07 03:58:43.947037+03	{srcname,licenses,effname,version,versionclass,family,trackname,downloads,projectname_seed,repo,category,maintainers,homepage,origversion,flags,visiblename,rawversion,comment}	e6435bdf61ebbd436ec8d1b25dcd5bb658d8e68278200eb00b996e0a443676ff	{"desc": "Gentoo", "name": "gentoo", "type": "repository", "color": "62548f", "family": "gentoo", "shadow": false, "singular": "Gentoo package", "sortname": "gentoo", "repolinks": [{"url": "https://gentoo.org/", "desc": "Gentoo Linux home"}, {"url": "https://packages.gentoo.org/", "desc": "Gentoo Packages"}, {"url": "https://gitweb.gentoo.org/repo/gentoo.git/tree/", "desc": "Official Gentoo ebuild repository"}, {"url": "https://github.com/gentoo/gentoo", "desc": "Gentoo ebuild repository mirror on GitHub"}], "statsgroup": "Gentoo", "packagelinks": [{"url": "https://packages.gentoo.org/packages/{srcname}", "desc": "Package details"}, {"url": "https://gitweb.gentoo.org/repo/gentoo.git/tree/{srcname}/{srcname|basename}-{rawversion}.ebuild", "desc": "View ebuild"}], "update_period": 600}	gentoo	repository	Gentoo	Gentoo	Gentoo package	gentoo	62548f	f	[{"url": "https://gentoo.org/", "desc": "Gentoo Linux home"}, {"url": "https://packages.gentoo.org/", "desc": "Gentoo Packages"}, {"url": "https://gitweb.gentoo.org/repo/gentoo.git/tree/", "desc": "Official Gentoo ebuild repository"}, {"url": "https://github.com/gentoo/gentoo", "desc": "Gentoo ebuild repository mirror on GitHub"}]	[{"url": "https://packages.gentoo.org/packages/{srcname}", "desc": "Package details"}, {"url": "https://gitweb.gentoo.org/repo/gentoo.git/tree/{srcname}/{srcname|basename}-{rawversion}.ebuild", "desc": "View ebuild"}]
+1	gobolinux	active	1	0	0	0	1	0	0	0	0	0	0	0	1	1	0	0	0	0	0	0	0	2020-06-07 03:58:31.696138+03	2020-06-07 03:58:31.696138+03	\N	2020-06-07 03:58:43.9169+03	2020-06-07 03:58:43.947037+03	{licenses,effname,version,versionclass,family,trackname,downloads,projectname_seed,repo,name,homepage,origversion,visiblename,rawversion,comment}	e6435bdf61ebbd436ec8d1b25dcd5bb658d8e68278200eb00b996e0a443676ff	{"desc": "GoboLinux", "name": "gobolinux", "type": "repository", "color": null, "family": "gobolinux", "shadow": false, "singular": "GoboLinux package", "sortname": "gobolinux", "repolinks": [{"url": "http://gobolinux.org/", "desc": "GoboLinux home"}, {"url": "https://github.com/gobolinux/Recipes", "desc": "GoboLinux recipes repository"}], "statsgroup": "GoboLinux", "packagelinks": [{"url": "https://github.com/gobolinux/Recipes/tree/master/{name}/{origversion}", "desc": "Git"}], "update_period": 600}	gobolinux	repository	GoboLinux	GoboLinux	GoboLinux package	gobolinux	\N	f	[{"url": "http://gobolinux.org/", "desc": "GoboLinux home"}, {"url": "https://github.com/gobolinux/Recipes", "desc": "GoboLinux recipes repository"}]	[{"url": "https://github.com/gobolinux/Recipes/tree/master/{name}/{origversion}", "desc": "Git"}]
+2	slackbuilds	active	5	0	0	0	5	0	0	0	0	0	0	0	5	5	0	0	0	0	0	0	5	2020-06-07 03:58:31.696138+03	2020-06-07 03:58:31.696138+03	\N	2020-06-07 03:58:43.945595+03	2020-06-07 03:58:43.947037+03	{srcname,effname,version,versionclass,family,trackname,downloads,projectname_seed,repo,category,maintainers,homepage,origversion,branch,visiblename,rawversion}	e6435bdf61ebbd436ec8d1b25dcd5bb658d8e68278200eb00b996e0a443676ff	{"desc": "SlackBuilds", "name": "slackbuilds", "type": "repository", "color": "000000", "family": "slackbuilds", "shadow": false, "singular": "SlackBuilds package", "sortname": "slackbuilds", "repolinks": [{"url": "https://slackbuilds.org/", "desc": "SlackBuilds.org"}], "statsgroup": "SlackBuilds", "packagelinks": [{"url": "https://slackbuilds.org/repository/14.2/{srcname}/", "desc": "SlackBuilds.org page"}], "update_period": 600}	slackbuilds	repository	SlackBuilds	SlackBuilds	SlackBuilds package	slackbuilds	000000	f	[{"url": "https://slackbuilds.org/", "desc": "SlackBuilds.org"}]	[{"url": "https://slackbuilds.org/repository/14.2/{srcname}/", "desc": "SlackBuilds.org page"}]
 \.
 
 
@@ -1906,7 +1994,7 @@ COPY public.repositories (id, name, state, num_packages, num_packages_newest, nu
 --
 
 COPY public.repositories_history (ts, snapshot) FROM stdin;
-2020-06-05 17:19:47.904297+03	{"arch": {"num_problems": 0, "num_maintainers": 0, "num_metapackages": 1, "num_metapackages_newest": 0, "num_metapackages_unique": 1, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_vulnerable": 0, "num_metapackages_problematic": 0}, "cpan": {"num_problems": 1, "num_maintainers": 1, "num_metapackages": 0, "num_metapackages_newest": 0, "num_metapackages_unique": 0, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_vulnerable": 0, "num_metapackages_problematic": 0}, "gentoo": {"num_problems": 0, "num_maintainers": 3, "num_metapackages": 4, "num_metapackages_newest": 0, "num_metapackages_unique": 4, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_vulnerable": 0, "num_metapackages_problematic": 0}, "freebsd": {"num_problems": 0, "num_maintainers": 2, "num_metapackages": 2, "num_metapackages_newest": 0, "num_metapackages_unique": 2, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_vulnerable": 0, "num_metapackages_problematic": 0}, "gobolinux": {"num_problems": 0, "num_maintainers": 0, "num_metapackages": 1, "num_metapackages_newest": 0, "num_metapackages_unique": 1, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_vulnerable": 0, "num_metapackages_problematic": 0}, "slackbuilds": {"num_problems": 0, "num_maintainers": 5, "num_metapackages": 5, "num_metapackages_newest": 0, "num_metapackages_unique": 5, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_vulnerable": 0, "num_metapackages_problematic": 0}, "debian_unstable": {"num_problems": 0, "num_maintainers": 4, "num_metapackages": 1, "num_metapackages_newest": 0, "num_metapackages_unique": 1, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_vulnerable": 0, "num_metapackages_problematic": 0}}
+2020-06-07 03:58:43.947037+03	{"arch": {"num_problems": 0, "num_maintainers": 0, "num_metapackages": 1, "num_metapackages_newest": 0, "num_metapackages_unique": 1, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_vulnerable": 0, "num_metapackages_problematic": 0}, "cpan": {"num_problems": 1, "num_maintainers": 1, "num_metapackages": 0, "num_metapackages_newest": 0, "num_metapackages_unique": 0, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_vulnerable": 0, "num_metapackages_problematic": 0}, "gentoo": {"num_problems": 0, "num_maintainers": 3, "num_metapackages": 4, "num_metapackages_newest": 0, "num_metapackages_unique": 4, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_vulnerable": 0, "num_metapackages_problematic": 0}, "freebsd": {"num_problems": 0, "num_maintainers": 2, "num_metapackages": 2, "num_metapackages_newest": 0, "num_metapackages_unique": 2, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_vulnerable": 0, "num_metapackages_problematic": 0}, "gobolinux": {"num_problems": 0, "num_maintainers": 0, "num_metapackages": 1, "num_metapackages_newest": 0, "num_metapackages_unique": 1, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_vulnerable": 0, "num_metapackages_problematic": 0}, "slackbuilds": {"num_problems": 0, "num_maintainers": 5, "num_metapackages": 5, "num_metapackages_newest": 0, "num_metapackages_unique": 5, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_vulnerable": 0, "num_metapackages_problematic": 0}, "debian_unstable": {"num_problems": 0, "num_maintainers": 4, "num_metapackages": 1, "num_metapackages_newest": 0, "num_metapackages_unique": 1, "num_metapackages_outdated": 0, "num_metapackages_comparable": 0, "num_metapackages_vulnerable": 0, "num_metapackages_problematic": 0}}
 \.
 
 
@@ -1915,13 +2003,13 @@ COPY public.repositories_history (ts, snapshot) FROM stdin;
 --
 
 COPY public.repositories_history_new (repository_id, ts, num_problems, num_maintainers, num_projects, num_projects_unique, num_projects_newest, num_projects_outdated, num_projects_comparable, num_projects_problematic, num_projects_vulnerable) FROM stdin;
-1	2020-06-05 17:19:47.904297+03	0	0	1	1	0	0	0	0	0
-4	2020-06-05 17:19:47.904297+03	1	1	0	0	0	0	0	0	0
-2	2020-06-05 17:19:47.904297+03	0	5	5	5	0	0	0	0	0
-7	2020-06-05 17:19:47.904297+03	0	0	1	1	0	0	0	0	0
-6	2020-06-05 17:19:47.904297+03	0	4	1	1	0	0	0	0	0
-5	2020-06-05 17:19:47.904297+03	0	3	4	4	0	0	0	0	0
-3	2020-06-05 17:19:47.904297+03	0	2	2	2	0	0	0	0	0
+1	2020-06-07 03:58:43.947037+03	0	0	1	1	0	0	0	0	0
+4	2020-06-07 03:58:43.947037+03	1	1	0	0	0	0	0	0	0
+2	2020-06-07 03:58:43.947037+03	0	5	5	5	0	0	0	0	0
+7	2020-06-07 03:58:43.947037+03	0	0	1	1	0	0	0	0	0
+6	2020-06-07 03:58:43.947037+03	0	4	1	1	0	0	0	0	0
+5	2020-06-07 03:58:43.947037+03	0	3	4	4	0	0	0	0	0
+3	2020-06-07 03:58:43.947037+03	0	2	2	2	0	0	0	0	0
 \.
 
 
@@ -1962,13 +2050,13 @@ COPY public.repository_project_maintainers (maintainer_id, project_id, repositor
 --
 
 COPY public.runs (id, type, repository_id, status, no_changes, start_ts, finish_ts, num_lines, num_warnings, num_errors, utime, stime, maxrss, maxrss_delta, traceback) FROM stdin;
-1	parse	7	successful	f	2020-06-05 17:19:47.659346+03	2020-06-05 17:19:47.704916+03	10	0	0	00:00:00.017166	00:00:00.008001	96240	844	\N
-2	parse	4	successful	f	2020-06-05 17:19:47.714005+03	2020-06-05 17:19:47.730669+03	4	0	0	00:00:00.009944	00:00:00.000026	96964	724	\N
-3	parse	6	successful	f	2020-06-05 17:19:47.736853+03	2020-06-05 17:19:47.768512+03	8	0	0	00:00:00.010378	00:00:00.007743	97544	576	\N
-4	parse	3	successful	f	2020-06-05 17:19:47.776076+03	2020-06-05 17:19:47.793921+03	4	0	0	00:00:00.010784	00:00:00	98064	520	\N
-5	parse	5	successful	f	2020-06-05 17:19:47.799202+03	2020-06-05 17:19:47.830115+03	4	0	0	00:00:00.02124	00:00:00.000027	98240	176	\N
-6	parse	1	successful	f	2020-06-05 17:19:47.836409+03	2020-06-05 17:19:47.854561+03	4	0	0	00:00:00.010953	00:00:00	98240	0	\N
-7	parse	2	successful	f	2020-06-05 17:19:47.86103+03	2020-06-05 17:19:47.901088+03	4	0	0	00:00:00.023767	00:00:00.007666	98240	0	\N
+1	parse	7	successful	f	2020-06-07 03:58:43.777112+03	2020-06-07 03:58:43.810988+03	10	0	0	00:00:00.019838	00:00:00.000032	98572	928	\N
+2	parse	4	successful	f	2020-06-07 03:58:43.815745+03	2020-06-07 03:58:43.828231+03	4	0	0	00:00:00.00642	00:00:00	99276	704	\N
+3	parse	6	successful	f	2020-06-07 03:58:43.832574+03	2020-06-07 03:58:43.853149+03	8	0	0	00:00:00.01091	00:00:00	99864	588	\N
+4	parse	3	successful	f	2020-06-07 03:58:43.857572+03	2020-06-07 03:58:43.872299+03	4	0	0	00:00:00.009013	00:00:00	100312	272	\N
+5	parse	5	successful	f	2020-06-07 03:58:43.876656+03	2020-06-07 03:58:43.899348+03	4	0	0	00:00:00.016698	00:00:00	100328	16	\N
+6	parse	1	successful	f	2020-06-07 03:58:43.903537+03	2020-06-07 03:58:43.915777+03	4	0	0	00:00:00.006353	00:00:00	100344	16	\N
+7	parse	2	successful	f	2020-06-07 03:58:43.920108+03	2020-06-07 03:58:43.944307+03	4	0	0	00:00:00.018314	00:00:00	100356	12	\N
 \.
 
 
@@ -1986,7 +2074,7 @@ COPY public.statistics (num_packages, num_metapackages, num_problems, num_mainta
 --
 
 COPY public.statistics_history (ts, snapshot) FROM stdin;
-2020-06-05 17:19:47.904297+03	{"num_packages": 15, "num_problems": 1, "num_maintainers": 15, "num_metapackages": 14, "num_urls_checked": 0}
+2020-06-07 03:58:43.947037+03	{"num_packages": 15, "num_problems": 1, "num_maintainers": 15, "num_metapackages": 14, "num_urls_checked": 0}
 \.
 
 
@@ -1994,7 +2082,7 @@ COPY public.statistics_history (ts, snapshot) FROM stdin;
 -- Data for Name: url_relations; Type: TABLE DATA; Schema: public; Owner: repology_test
 --
 
-COPY public.url_relations (metapackage_id, urlhash) FROM stdin;
+COPY public.url_relations (metapackage_id, urlhash, rank) FROM stdin;
 \.
 
 
@@ -2002,21 +2090,21 @@ COPY public.url_relations (metapackage_id, urlhash) FROM stdin;
 -- Data for Name: url_relations_all; Type: TABLE DATA; Schema: public; Owner: repology_test
 --
 
-COPY public.url_relations_all (metapackage_id, urlhash) FROM stdin;
-1	-6077476760067996376
-2	3490203301255378983
-3	-2836390072400046438
-5	-695720082797309195
-6	-2678859427031366852
-7	-4535905535348466812
-8	-6003843800635942089
-9	8578644866517750217
-10	8442068323236658063
-11	921174328525418101
-12	2323294126506090197
-13	5266043467733527660
-14	1013301472977689047
-15	-6992331818153831371
+COPY public.url_relations_all (metapackage_id, urlhash, rank) FROM stdin;
+1	-6077476760067996376	1
+2	3490203301255378983	1
+3	-2836390072400046438	1
+5	-695720082797309195	1
+6	-2678859427031366852	1
+7	-4535905535348466812	1
+8	-6003843800635942089	1
+9	8578644866517750217	1
+10	8442068323236658063	1
+11	921174328525418101	1
+12	2323294126506090197	1
+13	5266043467733527660	1
+14	1013301472977689047	1
+15	-6992331818153831371	1
 \.
 
 
