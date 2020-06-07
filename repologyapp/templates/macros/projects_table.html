@@ -5,9 +5,9 @@
 
 <table class="table table-striped table-condensed">
 	<thead>
-	{% for metapackagename, data in metapackagedata|dictsort %}
+	{% for metapackagename, metapackage in metapackages.items() %}
 	{% set headerevery = 50 %}
-	{% set metapackage = metapackages[metapackagename] %}
+	{% set data = metapackagedata[metapackagename] %}
 	{% if loop.first or (headerevery != 0 and loop.index0 % headerevery == 0) %}
 		<tr>
 			<th>Project</th>

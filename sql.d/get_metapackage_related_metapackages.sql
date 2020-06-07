@@ -47,4 +47,5 @@ WHERE id IN (
 		metapackage_id
 	FROM r
 	LIMIT %(limit)s
-);
+)
+ORDER BY effname;

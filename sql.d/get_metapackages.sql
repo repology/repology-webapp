@@ -27,4 +27,5 @@ SELECT
 	num_families,
 	has_related
 FROM metapackages
-WHERE effname = ANY(%(effnames)s);
+WHERE effname = ANY(%(effnames)s)
+ORDER BY effname;
