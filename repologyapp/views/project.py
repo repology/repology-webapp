@@ -333,7 +333,7 @@ def project_related(name: str) -> Any:
     if not metapackage or metapackage['num_repos'] == 0:
         return handle_nonexisting_project(name, metapackage)
 
-    metapackages = get_db().get_metapackage_related_metapackages(name, limit=config['METAPACKAGES_PER_PAGE'])
+    metapackages = get_db().get_project_related_projects(name, limit=config['METAPACKAGES_PER_PAGE'])
 
     metapackagedata = packages_to_summary_items(
         PackageDataSummarizable(**item)

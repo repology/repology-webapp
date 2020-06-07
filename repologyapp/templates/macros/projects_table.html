@@ -22,6 +22,9 @@
 			<th title="Versions considered newest">Newest</th>
 			<th title="Versions considered outdated">Outdated</th>
 			<th title="Versions excluded from comparison">Ignored</th>
+			{% if 'rank' in metapackage %}
+			<th title="Versions excluded from comparison">Rank</th>
+			{% endif %}
 		</tr>
 	{% if loop.first %}</thead><tbody>{% endif %}
 	{% endif %}
@@ -74,6 +77,9 @@
 				{%- if versioninfo.spread > 1 %}<sup>{{ versioninfo.spread }}</sup>{% endif %}
 			{% endfor %}
 			</td>
+			{% if 'rank' in metapackage %}
+			<td>{{ metapackage.rank|round(2) }}</td>
+			{% endif %}
 		</tr>
 	{% endfor %}
 	</tbody>
