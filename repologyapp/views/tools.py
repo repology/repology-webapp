@@ -90,10 +90,10 @@ def tool_project_by() -> Any:
     template_url = None
 
     if repo and name_type and target_page:
-        if not repometadata[repo]['family'] in _ALLOWED_FAMILIES:
-            flask.abort(403)
-        elif repo not in repometadata.active_names():
-            flask.abort(404)
+        if repo not in repometadata.active_names():
+            return (flask.render_template('project-by-failed.html', reason='no_repo'), 404)
+        elif not repometadata[repo]['family'] in _ALLOWED_FAMILIES:
+            return (flask.render_template('project-by-failed.html', reason='disallowed_repo'), 403)
         elif name:
             targets = []
 
@@ -104,7 +104,7 @@ def tool_project_by() -> Any:
                 targets.append((project, flask.url_for(target_page.endpoint, **real_args)))
 
             if not targets:
-                flask.abort(404)
+                return (flask.render_template('project-by-failed.html', reason='no_package'), 404)
             elif noautoresolve and len(targets) > 1:
                 return flask.render_template(
                     'project-by-ambiguity.html',
