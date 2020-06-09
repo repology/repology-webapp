@@ -162,7 +162,7 @@ def index() -> Any:
         'postgresql',
         'privoxy',
         'procmail',
-        'python3',
+        'python',
         'qemu',
         'rdesktop',
         'redis',
