@@ -17,12 +17,12 @@
 
 import time
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Optional
 
 from repologyapp.config import config
 from repologyapp.db import get_db
 from repologyapp.globals import get_text_width
-from repologyapp.view_registry import ViewRegistrar
+from repologyapp.view_registry import Response, ViewRegistrar
 from repologyapp.xmlwriter import XmlDocument
 
 
@@ -35,7 +35,7 @@ class _Release:
 
 
 @ViewRegistrar('/graph/project/<project>/releases.svg')
-def graph_releases(project: str) -> Any:
+def graph_releases(project: str) -> Response:
     releases = [_Release(**row) for row in get_db().get_project_releases(project)]
 
     row_height = 20

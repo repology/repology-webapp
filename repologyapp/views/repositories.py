@@ -15,19 +15,19 @@
 # You should have received a copy of the GNU General Public License
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Any, Optional
+from typing import Optional
 
 import flask
 
 from repologyapp.db import get_db
 from repologyapp.globals import repometadata
 from repologyapp.math import safe_percent
-from repologyapp.view_registry import ViewRegistrar
+from repologyapp.view_registry import Response, ViewRegistrar
 
 
 @ViewRegistrar('/repositories/statistics')
 @ViewRegistrar('/repositories/statistics/<sorting>')
-def repositories_statistics(sorting: Optional[str] = None) -> Any:
+def repositories_statistics(sorting: Optional[str] = None) -> Response:
     autorefresh = flask.request.args.to_dict().get('autorefresh')
 
     repostats_by_name = {repostat['name']: repostat for repostat in get_db().get_active_repositories()}
@@ -63,7 +63,7 @@ def repositories_statistics(sorting: Optional[str] = None) -> Any:
 
 
 @ViewRegistrar('/repositories/packages')
-def repositories_packages() -> Any:
+def repositories_packages() -> Response:
     autorefresh = flask.request.args.to_dict().get('autorefresh')
 
     repostats_by_name = {repostat['name']: repostat for repostat in get_db().get_active_repositories()}
@@ -78,7 +78,7 @@ def repositories_packages() -> Any:
 
 
 @ViewRegistrar('/repositories/updates')
-def repositories_updates() -> Any:
+def repositories_updates() -> Response:
     autorefresh = flask.request.args.to_dict().get('autorefresh')
 
     return flask.render_template(
@@ -89,7 +89,7 @@ def repositories_updates() -> Any:
 
 
 @ViewRegistrar('/repositories/graphs')
-def repositories_graphs() -> Any:
+def repositories_graphs() -> Response:
     autorefresh = flask.request.args.to_dict().get('autorefresh')
 
     return flask.render_template(
@@ -99,7 +99,7 @@ def repositories_graphs() -> Any:
 
 
 @ViewRegistrar('/repositories/fields')
-def repositories_fields() -> Any:
+def repositories_fields() -> Response:
     autorefresh = flask.request.args.to_dict().get('autorefresh')
 
     return flask.render_template(

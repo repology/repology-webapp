@@ -19,7 +19,7 @@ import re
 from collections import defaultdict
 from functools import cmp_to_key
 from itertools import zip_longest
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import flask
 
@@ -30,11 +30,11 @@ from repologyapp.db import get_db
 from repologyapp.globals import repometadata
 from repologyapp.package import PackageDataMinimal, PackageStatus
 from repologyapp.packageproc import packageset_to_best, packageset_to_best_by_repo
-from repologyapp.view_registry import ViewRegistrar
+from repologyapp.view_registry import Response, ViewRegistrar
 
 
 @ViewRegistrar('/badge/vertical-allrepos/<name>.svg')
-def badge_vertical_allrepos(name: str) -> Any:
+def badge_vertical_allrepos(name: str) -> Response:
     args = flask.request.args.to_dict()
 
     best_pkg_by_repo = packageset_to_best_by_repo(
@@ -88,7 +88,7 @@ def badge_vertical_allrepos(name: str) -> Any:
 
 
 @ViewRegistrar('/badge/tiny-repos/<name>.svg')
-def badge_tiny_repos(name: str) -> Any:
+def badge_tiny_repos(name: str) -> Response:
     return render_generic_badge([[
         BadgeCell(flask.request.args.to_dict().get('header', 'in repositories'), collapsible=True),
         BadgeCell(str(get_db().get_metapackage_families_count(name)), '#007ec6'),
@@ -96,7 +96,7 @@ def badge_tiny_repos(name: str) -> Any:
 
 
 @ViewRegistrar('/badge/version-for-repo/<repo>/<name>.svg')
-def badge_version_for_repo(repo: str, name: str) -> Any:
+def badge_version_for_repo(repo: str, name: str) -> Response:
     if repo not in repometadata.all_names():
         flask.abort(404)
 
@@ -126,7 +126,7 @@ def badge_version_for_repo(repo: str, name: str) -> Any:
 
 
 @ViewRegistrar('/badge/latest-versions/<name>.svg')
-def badge_latest_versions(name: str) -> Any:
+def badge_latest_versions(name: str) -> Response:
     versions = sorted(set((
         package['version']
         for package in get_db().get_metapackage_packages(name, fields=['version', 'versionclass'])
@@ -152,7 +152,7 @@ def badge_latest_versions(name: str) -> Any:
 
 
 @ViewRegistrar('/badge/versions-matrix.svg')
-def badge_versions_matrix() -> Any:
+def badge_versions_matrix() -> Response:
     args = flask.request.args.to_dict()
 
     header = args.get('header')

@@ -24,12 +24,12 @@ from repologyapp.db import get_db
 from repologyapp.metapackage_request import MetapackageRequest
 from repologyapp.metapackages import MetapackagesFilterInfo, get_packages_name_range, packages_to_summary_items
 from repologyapp.package import PackageDataSummarizable
-from repologyapp.view_registry import ViewRegistrar
+from repologyapp.view_registry import Response, ViewRegistrar
 
 
 @ViewRegistrar('/projects/')
 @ViewRegistrar('/projects/<bound>/')
-def projects(bound: Optional[str] = None) -> Any:
+def projects(bound: Optional[str] = None) -> Response:
     # process search
     filterinfo = MetapackagesFilterInfo()
     filterinfo.parse_flask_args()

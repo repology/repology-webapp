@@ -33,10 +33,10 @@ from repologyapp.metapackages import packages_to_summary_items
 from repologyapp.package import PackageDataDetailed, PackageDataMinimal, PackageDataSummarizable, PackageStatus
 from repologyapp.packageproc import packageset_aggregate_by_version, packageset_sort_by_name_version, packageset_sort_by_version
 from repologyapp.version import UserVisibleVersionInfo, iter_aggregate_versions
-from repologyapp.view_registry import ViewRegistrar
+from repologyapp.view_registry import Response, ViewRegistrar
 
 
-def handle_nonexisting_project(name: str, metapackage: Dict[str, Any]) -> Any:
+def handle_nonexisting_project(name: str, metapackage: Dict[str, Any]) -> Response:
     # we don't show anything to user when REDIRECTS_PER_PAGE is reached as
     # number of redirect targets is natually limited and we don't expect it to be reached
     redirects = get_db().get_project_redirects(name, limit=config['REDIRECTS_PER_PAGE'])
@@ -84,7 +84,7 @@ def handle_nonexisting_project(name: str, metapackage: Dict[str, Any]) -> Any:
 
 
 @ViewRegistrar('/project/<name>/versions')
-def project_versions(name: str) -> Any:
+def project_versions(name: str) -> Response:
     metapackage = get_db().get_metapackage(name)
 
     if not metapackage or metapackage['num_repos'] == 0:
@@ -113,7 +113,7 @@ def project_versions(name: str) -> Any:
 
 
 @ViewRegistrar('/project/<name>/versions-compact')
-def project_versions_compact(name: str) -> Any:
+def project_versions_compact(name: str) -> Response:
     metapackage = get_db().get_metapackage(name)
 
     if not metapackage or metapackage['num_repos'] == 0:
@@ -143,7 +143,7 @@ def project_versions_compact(name: str) -> Any:
 
 
 @ViewRegistrar('/project/<name>/packages')
-def project_packages(name: str) -> Any:
+def project_packages(name: str) -> Response:
     metapackage = get_db().get_metapackage(name)
 
     if not metapackage or metapackage['num_repos'] == 0:
@@ -168,7 +168,7 @@ def project_packages(name: str) -> Any:
 
 
 @ViewRegistrar('/project/<name>/information')
-def project_information(name: str) -> Any:
+def project_information(name: str) -> Response:
     metapackage = get_db().get_metapackage(name)
 
     if not metapackage or metapackage['num_repos'] == 0:
@@ -234,7 +234,7 @@ def project_information(name: str) -> Any:
 
 
 @ViewRegistrar('/project/<name>/history')
-def project_history(name: str) -> Any:
+def project_history(name: str) -> Response:
     def prepare_repos(repos: Collection[str]) -> List[str]:
         if not repos:
             return []
@@ -327,7 +327,7 @@ def project_history(name: str) -> Any:
 
 
 @ViewRegistrar('/project/<name>/related')
-def project_related(name: str) -> Any:
+def project_related(name: str) -> Response:
     metapackage = get_db().get_metapackage(name)
 
     if not metapackage or metapackage['num_repos'] == 0:
@@ -358,7 +358,7 @@ def project_related(name: str) -> Any:
 
 
 @ViewRegistrar('/project/<name>/badges')
-def project_badges(name: str) -> Any:
+def project_badges(name: str) -> Response:
     metapackage = get_db().get_metapackage(name)
 
     if not metapackage or metapackage['num_repos'] == 0:
@@ -379,7 +379,7 @@ def project_badges(name: str) -> Any:
 
 
 @ViewRegistrar('/project/<name>/report', methods=['GET', 'POST'])
-def project_report(name: str) -> Any:
+def project_report(name: str) -> Response:
     metapackage = get_db().get_metapackage(name)
 
     reports = get_db().get_metapackage_reports(name)
@@ -481,7 +481,7 @@ class _CVEAggregation:
 
 
 @ViewRegistrar('/project/<name>/cves')
-def project_cves(name: str) -> Any:
+def project_cves(name: str) -> Response:
     metapackage = get_db().get_metapackage(name)
 
     highlight_version = flask.request.args.to_dict().get('version')

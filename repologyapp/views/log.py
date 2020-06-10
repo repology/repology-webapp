@@ -15,16 +15,14 @@
 # You should have received a copy of the GNU General Public License
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Any
-
 import flask
 
 from repologyapp.db import get_db
-from repologyapp.view_registry import ViewRegistrar
+from repologyapp.view_registry import Response, ViewRegistrar
 
 
 @ViewRegistrar('/log/<run_id>')
-def log(run_id: int) -> Any:
+def log(run_id: int) -> Response:
     autorefresh = flask.request.args.to_dict().get('autorefresh')
 
     run = get_db().get_run(int(run_id))

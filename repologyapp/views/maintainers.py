@@ -17,7 +17,7 @@
 
 import datetime
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Optional
 
 import flask
 
@@ -25,12 +25,12 @@ from repologyapp.config import config
 from repologyapp.db import get_db
 from repologyapp.feed_helpers import unicalize_feed_timestamps
 from repologyapp.globals import repometadata
-from repologyapp.view_registry import ViewRegistrar
+from repologyapp.view_registry import Response, ViewRegistrar
 
 
 @ViewRegistrar('/maintainers/')
 @ViewRegistrar('/maintainers/<bound>/')
-def maintainers(bound: Optional[str] = None) -> Any:
+def maintainers(bound: Optional[str] = None) -> Response:
     reverse = False
     if bound and bound.startswith('..'):
         bound = bound[2:]
@@ -82,7 +82,7 @@ def maintainers(bound: Optional[str] = None) -> Any:
 
 
 @ViewRegistrar('/maintainer/<maintainer>')
-def maintainer(maintainer: str) -> Any:
+def maintainer(maintainer: str) -> Response:
     maintainer = maintainer.lower()
 
     maintainer_info = get_db().get_maintainer_information(maintainer)
@@ -140,7 +140,7 @@ def maintainer(maintainer: str) -> Any:
 
 
 @ViewRegistrar('/maintainer/<maintainer>/problems')
-def maintainer_problems(maintainer: str) -> Any:
+def maintainer_problems(maintainer: str) -> Response:
     maintainer = maintainer.lower()
 
     return flask.render_template(
@@ -154,7 +154,7 @@ def maintainer_problems(maintainer: str) -> Any:
 
 
 @ViewRegistrar('/maintainer/<maintainer>/feed-for-repo/<repo>')
-def maintainer_repo_feed(maintainer: str, repo: str) -> Any:
+def maintainer_repo_feed(maintainer: str, repo: str) -> Response:
     autorefresh = flask.request.args.to_dict().get('autorefresh')
 
     return flask.render_template(
@@ -173,7 +173,7 @@ def maintainer_repo_feed(maintainer: str, repo: str) -> Any:
 
 
 @ViewRegistrar('/maintainer/<maintainer>/feed-for-repo/<repo>/atom')
-def maintainer_repo_feed_atom(maintainer: str, repo: str) -> Any:
+def maintainer_repo_feed_atom(maintainer: str, repo: str) -> Response:
     return (
         flask.render_template(
             'maintainer-repo-feed-atom.xml',

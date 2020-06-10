@@ -24,7 +24,7 @@ from repologyapp.config import config
 from repologyapp.db import get_db
 from repologyapp.metapackages import MetapackagesFilterInfo, packages_to_metapackages
 from repologyapp.package import PackageDataDetailed, PackageStatus
-from repologyapp.view_registry import ViewRegistrar
+from repologyapp.view_registry import Response, ViewRegistrar
 
 
 def api_v1_package_to_json(package: PackageDataDetailed) -> Dict[str, Any]:
@@ -73,13 +73,13 @@ def dump_json(data: Any) -> str:
 
 @ViewRegistrar('/api')
 @ViewRegistrar('/api/v1')
-def api_v1() -> Any:
+def api_v1() -> Response:
     return flask.render_template('api.html', per_page=config['METAPACKAGES_PER_PAGE'])
 
 
 @ViewRegistrar('/api/v1/projects/')
 @ViewRegistrar('/api/v1/projects/<bound>/')
-def api_v1_projects(bound: Optional[str] = None) -> Any:
+def api_v1_projects(bound: Optional[str] = None) -> Response:
     filterinfo = MetapackagesFilterInfo()
     filterinfo.parse_flask_args()
 
@@ -106,7 +106,7 @@ def api_v1_projects(bound: Optional[str] = None) -> Any:
 
 
 @ViewRegistrar('/api/v1/project/<name>')
-def api_v1_project(name: str) -> Any:
+def api_v1_project(name: str) -> Response:
     return (
         dump_json(
             list(
@@ -119,7 +119,7 @@ def api_v1_project(name: str) -> Any:
 
 
 @ViewRegistrar('/api/v1/repository/<repo>/problems')
-def api_v1_repository_problems(repo: str) -> Any:
+def api_v1_repository_problems(repo: str) -> Response:
     return (
         dump_json(get_db().get_repository_problems(repo)),
         {'Content-type': 'application/json'}
@@ -127,7 +127,7 @@ def api_v1_repository_problems(repo: str) -> Any:
 
 
 @ViewRegistrar('/api/v1/maintainer/<maintainer>/problems')
-def api_v1_maintainer_problems(maintainer: str) -> Any:
+def api_v1_maintainer_problems(maintainer: str) -> Response:
     return (
         dump_json(get_db().get_maintainer_problems(maintainer)),
         {'Content-type': 'application/json'}
@@ -135,7 +135,7 @@ def api_v1_maintainer_problems(maintainer: str) -> Any:
 
 
 @ViewRegistrar('/api/experimental/distromap')
-def api_experimental_distromap() -> Any:
+def api_experimental_distromap() -> Response:
     args = flask.request.args.to_dict()
 
     expand = bool(args.get('expand'))

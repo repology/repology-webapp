@@ -16,7 +16,6 @@
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
-from typing import Any
 
 import flask
 
@@ -24,11 +23,11 @@ from repologyapp.config import config
 from repologyapp.db import get_db
 from repologyapp.feed_helpers import unicalize_feed_timestamps
 from repologyapp.globals import repometadata
-from repologyapp.view_registry import ViewRegistrar
+from repologyapp.view_registry import Response, ViewRegistrar
 
 
 @ViewRegistrar('/repository/<repo>')
-def repository(repo: str) -> Any:
+def repository(repo: str) -> Response:
     autorefresh = flask.request.args.to_dict().get('autorefresh')
 
     if repo not in repometadata.all_names():
@@ -47,7 +46,7 @@ def repository(repo: str) -> Any:
 
 
 @ViewRegistrar('/repository/<repo>/problems')
-def repository_problems(repo: str) -> Any:
+def repository_problems(repo: str) -> Response:
     if repo not in repometadata.active_names():
         flask.abort(404)
 
@@ -55,7 +54,7 @@ def repository_problems(repo: str) -> Any:
 
 
 @ViewRegistrar('/repository/<repo>/feed')
-def repository_feed(repo: str) -> Any:
+def repository_feed(repo: str) -> Response:
     autorefresh = flask.request.args.to_dict().get('autorefresh')
 
     return flask.render_template(
@@ -72,7 +71,7 @@ def repository_feed(repo: str) -> Any:
 
 
 @ViewRegistrar('/repository/<repo>/feed/atom')
-def repository_feed_atom(repo: str) -> Any:
+def repository_feed_atom(repo: str) -> Response:
     return (
         flask.render_template(
             'repository-feed-atom.xml',

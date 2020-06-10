@@ -17,7 +17,7 @@
 
 from dataclasses import dataclass
 from datetime import timedelta
-from typing import Any, List
+from typing import List
 
 import flask
 
@@ -25,7 +25,7 @@ from repologyapp.config import config
 from repologyapp.db import get_db
 from repologyapp.globals import repometadata
 from repologyapp.template_functions import url_for_self
-from repologyapp.view_registry import ViewRegistrar
+from repologyapp.view_registry import Response, ViewRegistrar
 
 
 @dataclass
@@ -74,7 +74,7 @@ _ALLOWED_FAMILIES = {
 
 
 @ViewRegistrar('/tools/project-by')
-def tool_project_by() -> Any:
+def tool_project_by() -> Response:
     repo = flask.request.args.get('repo')
     name_type = flask.request.args.get('name_type')
     name = flask.request.args.get('name')
@@ -125,7 +125,7 @@ def tool_project_by() -> Any:
 
 
 @ViewRegistrar('/tools/trending')
-def trending() -> Any:
+def trending() -> Response:
     return flask.render_template(
         'projects-trending.html',
         trending=get_db().get_trending_projects(timedelta(days=31), config['TRENDING_PER_PAGE']),

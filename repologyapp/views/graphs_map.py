@@ -21,7 +21,7 @@ from typing import Any, Callable, Dict, Tuple
 
 from repologyapp.db import get_db
 from repologyapp.globals import repometadata
-from repologyapp.view_registry import ViewRegistrar
+from repologyapp.view_registry import Response, ViewRegistrar
 from repologyapp.xmlwriter import XmlDocument
 
 
@@ -46,7 +46,7 @@ def map_repo_generic(getx: Callable[[Dict[str, Any]], float],
                      namex: str = 'X',
                      namey: str = 'Y',
                      unitx: str = '',
-                     unity: str = '') -> Any:
+                     unity: str = '') -> Response:
 
     points = [
         _MapPoint(
@@ -142,7 +142,7 @@ def map_repo_generic(getx: Callable[[Dict[str, Any]], float],
 
 
 @ViewRegistrar('/graph/map_repo_size_fresh.svg')
-def graph_map_repo_size_fresh() -> Any:
+def graph_map_repo_size_fresh() -> Response:
     return map_repo_generic(
         # XXX: to fix following type ignores, repometadata should be converted into dataclass
         getx=lambda repo: repo['num_metapackages'],  # type: ignore
@@ -153,7 +153,7 @@ def graph_map_repo_size_fresh() -> Any:
 
 
 @ViewRegistrar('/graph/map_repo_size_fresh_nonunique.svg')
-def graph_map_repo_size_fresh_nonunique() -> Any:
+def graph_map_repo_size_fresh_nonunique() -> Response:
     return map_repo_generic(
         getx=lambda repo: repo['num_metapackages_newest'] + repo['num_metapackages_outdated'],  # type: ignore
         gety=lambda repo: repo['num_metapackages_newest'],  # type: ignore
@@ -163,7 +163,7 @@ def graph_map_repo_size_fresh_nonunique() -> Any:
 
 
 @ViewRegistrar('/graph/map_repo_size_freshness.svg')
-def graph_map_repo_size_freshness() -> Any:
+def graph_map_repo_size_freshness() -> Response:
     return map_repo_generic(
         getx=lambda repo: repo['num_metapackages'],  # type: ignore
         gety=lambda repo: 100.0 * repo['num_metapackages_newest'] / repo['num_metapackages'] if repo['num_metapackages'] else 0.0,  # type: ignore

@@ -15,43 +15,41 @@
 # You should have received a copy of the GNU General Public License
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Any
-
 import flask
 
-from repologyapp.view_registry import ViewRegistrar
+from repologyapp.view_registry import Response, ViewRegistrar
 
 
 @ViewRegistrar('/news')
-def news() -> Any:
+def news() -> Response:
     return flask.render_template('news.html')
 
 
 @ViewRegistrar('/about')
-def about() -> Any:
+def about() -> Response:
     return flask.render_template('about.html')
 
 
 @ViewRegistrar('/docs')
-def docs() -> Any:
+def docs() -> Response:
     return flask.render_template('docs.html')
 
 
 @ViewRegistrar('/addrepo')
-def addrepo() -> Any:
+def addrepo() -> Response:
     return flask.render_template('addrepo.html')
 
 
 @ViewRegistrar('/bots')
-def bots() -> Any:
+def bots() -> Response:
     return flask.render_template('bots.html')
 
 
 @ViewRegistrar('/favicon.ico')
-def favicon() -> Any:
-    return flask.current_app.send_static_file('repology.v1.ico')
+def favicon() -> Response:
+    return flask.current_app.send_static_file('repology.v1.ico')  # type: ignore  # typeshed fix pending https://github.com/python/typeshed/pull/4216
 
 
 @ViewRegistrar('/tools')
-def tools() -> Any:
+def tools() -> Response:
     return flask.render_template('tools.html')

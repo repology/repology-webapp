@@ -15,16 +15,14 @@
 # You should have received a copy of the GNU General Public License
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Any
-
 import flask
 
 from repologyapp.db import get_db
-from repologyapp.view_registry import ViewRegistrar
+from repologyapp.view_registry import Response, ViewRegistrar
 
 
 @ViewRegistrar('/link/<path:url>')
-def link(url: str) -> Any:
+def link(url: str) -> Response:
     linkinfo = get_db().get_link_status(url)
 
     if not linkinfo:

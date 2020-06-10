@@ -25,15 +25,15 @@ import psycopg2
 from repologyapp.config import config
 from repologyapp.db import get_db
 from repologyapp.template_functions import url_for_self
-from repologyapp.view_registry import ViewRegistrar
+from repologyapp.view_registry import Response, ViewRegistrar
 
 
-def unauthorized() -> Any:
+def unauthorized() -> Response:
     return flask.redirect(flask.url_for('admin'))
 
 
 @ViewRegistrar('/admin', methods=['GET', 'POST'])
-def admin() -> Any:
+def admin() -> Response:
     if flask.request.method == 'GET' and flask.session.get('admin'):
         return flask.redirect(flask.url_for('admin_reports_unprocessed'), 302)
 
@@ -54,7 +54,7 @@ def admin() -> Any:
     return flask.render_template('admin.html')
 
 
-def admin_reports_generic(report_getter: Callable[[], Dict[str, Any]]) -> Any:
+def admin_reports_generic(report_getter: Callable[[], Dict[str, Any]]) -> Response:
     if not flask.session.get('admin'):
         return unauthorized()
 
@@ -82,17 +82,17 @@ def admin_reports_generic(report_getter: Callable[[], Dict[str, Any]]) -> Any:
 
 
 @ViewRegistrar('/admin/reports/unprocessed/', methods=['GET', 'POST'])
-def admin_reports_unprocessed() -> Any:
+def admin_reports_unprocessed() -> Response:
     return admin_reports_generic(lambda: get_db().get_unprocessed_reports(limit=config['REPORTS_PER_PAGE']))  # type: ignore
 
 
 @ViewRegistrar('/admin/reports/recent/', methods=['GET', 'POST'])
-def admin_reports_recent() -> Any:
+def admin_reports_recent() -> Response:
     return admin_reports_generic(lambda: get_db().get_recently_updated_reports(limit=config['REPORTS_PER_PAGE']))  # type: ignore
 
 
 @ViewRegistrar('/admin/updates')
-def admin_updates() -> Any:
+def admin_updates() -> Response:
     if not flask.session.get('admin'):
         return unauthorized()
 
@@ -103,7 +103,7 @@ def admin_updates() -> Any:
 
 
 @ViewRegistrar('/admin/redirects', methods=['GET', 'POST'])
-def admin_redirects() -> Any:
+def admin_redirects() -> Response:
     if not flask.session.get('admin'):
         return unauthorized()
 
@@ -159,7 +159,7 @@ def admin_redirects() -> Any:
 
 
 @ViewRegistrar('/admin/name_samples')
-def admin_name_samples() -> Any:
+def admin_name_samples() -> Response:
     if not flask.session.get('admin'):
         return unauthorized()
 
@@ -207,7 +207,7 @@ class CpeVals:
         return ':'.join(['cpe', '2.3', 'a'] + [v for k, v in self._values.items() if k.startswith('cpe_')])
 
 
-def handle_cpe_request() -> Any:
+def handle_cpe_request() -> Optional[Response]:
     """Process POST request related to CPEs.
 
     Does necessary checks and modifications to the database, and
@@ -284,7 +284,7 @@ def handle_cpe_request() -> Any:
 
 
 @ViewRegistrar('/admin/cpes', methods=['GET', 'POST'])
-def admin_cpes() -> Any:
+def admin_cpes() -> Response:
     if not flask.session.get('admin'):
         return unauthorized()
 
@@ -299,7 +299,7 @@ def admin_cpes() -> Any:
 
 
 @ViewRegistrar('/admin/cve_misses', methods=['GET', 'POST'])
-def admin_cve_misses() -> Any:
+def admin_cve_misses() -> Response:
     if not flask.session.get('admin'):
         return unauthorized()
 
@@ -314,7 +314,7 @@ def admin_cve_misses() -> Any:
 
 
 @ViewRegistrar('/admin/omni_cves')
-def admin_omni_cves() -> Any:
+def admin_omni_cves() -> Response:
     if not flask.session.get('admin'):
         return unauthorized()
 

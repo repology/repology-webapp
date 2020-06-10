@@ -16,7 +16,7 @@
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 from dataclasses import dataclass
-from typing import Any, Dict, List
+from typing import Dict, List
 
 import flask
 
@@ -25,7 +25,7 @@ from repologyapp.globals import repometadata
 from repologyapp.math import safe_percent
 from repologyapp.metapackages import packages_to_summary_items
 from repologyapp.package import PackageDataSummarizable
-from repologyapp.view_registry import ViewRegistrar
+from repologyapp.view_registry import Response, ViewRegistrar
 
 
 class Top:
@@ -63,7 +63,7 @@ class Top:
 
 
 @ViewRegistrar('/')
-def index() -> Any:
+def index() -> Response:
     top_by_total = Top()
     top_by_nonunique = Top()
     top_by_newest = Top()

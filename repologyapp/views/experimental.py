@@ -15,18 +15,16 @@
 # You should have received a copy of the GNU General Public License
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Any
-
 import flask
 
 from repologyapp.config import config
 from repologyapp.db import get_db
 from repologyapp.template_functions import url_for_self
-from repologyapp.view_registry import ViewRegistrar
+from repologyapp.view_registry import Response, ViewRegistrar
 
 
 @ViewRegistrar('/experimental/', methods=['GET', 'POST'])
-def experimental() -> Any:
+def experimental() -> Response:
     if flask.request.method == 'POST':
         enabled = flask.request.form.get('experimental') == 'enable'
         flask.session['experimental'] = enabled
@@ -37,7 +35,7 @@ def experimental() -> Any:
 
 
 @ViewRegistrar('/experimental/turnover/maintainers')
-def maintainers_turnover() -> Any:
+def maintainers_turnover() -> Response:
     return flask.render_template(
         'maintainers-turnover.html',
         added=get_db().get_recently_added_maintainers(config['TURNOVER_PER_PAGE']),
@@ -46,5 +44,5 @@ def maintainers_turnover() -> Any:
 
 
 @ViewRegistrar('/experimental/distromap')
-def distromap() -> Any:
+def distromap() -> Response:
     return flask.render_template('distromap.html')
