@@ -74,7 +74,18 @@ SELECT
 		DISTINCT cve_id
 		ORDER BY cve_id
 	) AS cve_ids,
-	EXISTS(SELECT * FROM metapackages WHERE effname = cpe_product) AS has_project
+	(
+		SELECT array_agg(effname) FROM
+		(
+			SELECT effname FROM metapackages WHERE
+				effname = replace(cpe_product, '_', '-')
+			-- XXX: involves a trigram index lookup for each result row, which is too slow
+			--UNION
+			--SELECT effname FROM metapackages WHERE
+			--	effname LIKE '%%:' || replace(cpe_product, '_', '-')
+			--	AND num_repos_nonshadow > 0 -- to use partial index
+		) AS tmp
+	) AS project_candidates
 FROM cves_expanded_unmatched
 GROUP BY
 	cpe_vendor,
