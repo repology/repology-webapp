@@ -68,6 +68,7 @@ _EXTRA_ALLOWED_ARGS = {
 
 _ALLOWED_FAMILIES = {
     'alpine',
+    'centos',
     'debuntu',
     'freebsd',
 }
