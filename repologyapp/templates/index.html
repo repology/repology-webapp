@@ -179,7 +179,7 @@
 							{% if topitem.group == repometadata[topitem.name].desc %}
 							<li><a href="{{ url_for('repository', repo=topitem.name) }}">{{ repometadata[topitem.name].desc }}</a> - {{ format.format(topitem.value) }}</li>
 							{% else %}
-							<li>{{ topitem.group }} (<a href="{{ url_for('repository', repo=topitem.name) }}">{{ repometadata[topitem.name].desc }}</a> - {{ format.format(topitem.value) }})</li>
+							<li>{{ topitem.group }} (<a href="{{ url_for('repository', repo=topitem.name) }}">{{ repometadata[topitem.name].desc }}</a>) - {{ format.format(topitem.value) }}</li>
 							{% endif %}
 						{% endfor %}
 						</ol>
