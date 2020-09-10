@@ -136,21 +136,31 @@ Output is an array of entries of the following format:
 
 <pre>
 {
+    "type": "homepage_dead",
+    "data": {
+        "url": "http://artax.karlin.mff.cuni.cz/~brain/0verkill/",
+        "code": 500
+    },
+    ...
     "repo": "freebsd",
-    "name": "abby",
-    "effname": "abby",
-    "maintainer": "ports@freebsd.org",
-    "problem": "Homepage link \"https://code.google.com/archive/p/abby/\" points to Google Code which was discontinued. The link should be updated (probably along with download URLs). If this link is still alive, it may point to a new project homepage."
+    "name": null,
+    "srcname": "games/0verkill",
+    "binname": "0verkill",
+    "rawversion": "0.16_2",
+    "maintainers": [
+        "mich@freebsd.org"
+    ],
+    "effname": "0verkill",
+    "version": "0.16",
+    ...
 }
 </pre>
 
 <p>Fields are:</p>
 <dl class="dl-horizontal">
-	<dt>repo</dt><dd>repository name</dd>
-	<dt>name</dt><dd>package name as in repository</dd>
-	<dt>effname</dt><dd>repology project name</dd>
-	<dt>maintainer</dt><dd>package maintainer associated with the problem; may be null; note that if there are multiple package maintainers, problem is duplicated for each one</dd>
-	<dt>problem</dt><dd>textual description of the problem</dd>
+	<dt>type</dt><dd>problem type string constant</dd>
+	<dt>data</dt><dd>additional details on the problem in the form of JSON dictionary</dd>
+	<dt>*</dt><dd>unspecified set of internal fields for package which generated this problem. You may use some of them to identify the package, but they may change in the future</dd>
 </dl>
 
 </article>
