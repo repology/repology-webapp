@@ -178,7 +178,7 @@ def index() -> Response:
         'scummvm',
         'sdl2',
         'smartmontools',
-        'sqlite3',
+        'sqlite',
         'squid',
         'subversion',
         'sudo',
