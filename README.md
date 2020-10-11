@@ -13,13 +13,13 @@ which updates the repository information.
 
 ## Dependencies
 
-- [Python](https://www.python.org/) 3.8+
+- [Python](https://www.python.org/) 3.9+
 - Python module [flask](http://flask.pocoo.org/)
 - Python module [libversion](https://pypi.python.org/pypi/libversion) (also requires [libversion](https://github.com/repology/libversion) C library)
 - Python module [pillow](https://pypi.python.org/pypi/Pillow)
 - Python module [psycopg2](http://initd.org/psycopg/)
 - Python module [pytz](https://pypi.python.org/pypi/pytz)
-- [PostgreSQL](https://www.postgresql.org/) 12.0+
+- [PostgreSQL](https://www.postgresql.org/) 13.0+
 - PostgreSQL extension [libversion](https://github.com/repology/postgresql-libversion)
 
 ### For development
