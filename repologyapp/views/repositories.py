@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional
+from typing import Optional, cast
 
 import flask
 
@@ -34,19 +34,19 @@ def repositories_statistics(sorting: Optional[str] = None) -> Response:
     repostats = [repostats_by_name[reponame] for reponame in repometadata.active_names() if reponame in repostats_by_name]
 
     if sorting == 'newest':
-        repostats = sorted(repostats, key=lambda s: s['num_metapackages_newest'], reverse=True)
+        repostats = sorted(repostats, key=lambda s: cast(int, s['num_metapackages_newest']), reverse=True)
     elif sorting == 'pnewest':
         repostats = sorted(repostats, key=lambda s: safe_percent(s['num_metapackages_newest'], s['num_metapackages_comparable']), reverse=True)
     elif sorting == 'outdated':
-        repostats = sorted(repostats, key=lambda s: s['num_metapackages_outdated'], reverse=True)
+        repostats = sorted(repostats, key=lambda s: cast(int, s['num_metapackages_outdated']), reverse=True)
     elif sorting == 'poutdated':
         repostats = sorted(repostats, key=lambda s: safe_percent(s['num_metapackages_outdated'], s['num_metapackages_comparable']), reverse=True)
     elif sorting == 'total':
-        repostats = sorted(repostats, key=lambda s: s['num_metapackages'], reverse=True)
+        repostats = sorted(repostats, key=lambda s: cast(int, s['num_metapackages']), reverse=True)
     elif sorting == 'nonunique':
-        repostats = sorted(repostats, key=lambda s: s['num_metapackages'] - s['num_metapackages_unique'], reverse=True)
+        repostats = sorted(repostats, key=lambda s: cast(int, s['num_metapackages'] - s['num_metapackages_unique']), reverse=True)
     elif sorting == 'vulnerable':
-        repostats = sorted(repostats, key=lambda s: s['num_metapackages_vulnerable'], reverse=True)
+        repostats = sorted(repostats, key=lambda s: cast(int, s['num_metapackages_vulnerable']), reverse=True)
     elif sorting == 'pvulnerable':
         repostats = sorted(repostats, key=lambda s: safe_percent(s['num_metapackages_vulnerable'], s['num_metapackages']), reverse=True)
     else:

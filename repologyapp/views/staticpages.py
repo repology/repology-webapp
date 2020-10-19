@@ -47,7 +47,7 @@ def bots() -> Response:
 
 @ViewRegistrar('/favicon.ico')
 def favicon() -> Response:
-    return flask.current_app.send_static_file('repology.v1.ico')  # type: ignore  # typeshed fix pending https://github.com/python/typeshed/pull/4216
+    return flask.current_app.send_static_file('repology.v1.ico')
 
 
 @ViewRegistrar('/tools')
