@@ -3,4 +3,3 @@ flask
 libversion
 pillow
 psycopg2
-pytz

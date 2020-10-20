@@ -18,10 +18,9 @@
 import datetime
 import random
 import sys
+import zoneinfo
 
 import flask
-
-from pytz import timezone, utc
 
 from repologyapp.config import config
 from repologyapp.globals import repometadata
@@ -68,9 +67,9 @@ app.jinja_env.globals['url_for_self'] = url_for_self
 app.jinja_env.globals['REPOLOGY_HOME'] = config['REPOLOGY_HOME']
 app.jinja_env.globals['repometadata'] = repometadata
 app.jinja_env.globals['config'] = config
-app.jinja_env.globals['tz'] = timezone(config['DEFAULT_TIMEZONE'])
-app.jinja_env.globals['utc'] = utc
-app.jinja_env.globals['now'] = lambda: datetime.datetime.now(utc)
+app.jinja_env.globals['tz'] = zoneinfo.ZoneInfo(config['DEFAULT_TIMEZONE'])
+app.jinja_env.globals['utc'] = zoneinfo.ZoneInfo('UTC')
+app.jinja_env.globals['now'] = lambda: datetime.datetime.now(zoneinfo.ZoneInfo('UTC'))
 app.jinja_env.globals['randrange'] = random.randrange
 app.jinja_env.globals['endpoint_like'] = endpoint_like
 

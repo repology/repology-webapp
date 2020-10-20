@@ -18,7 +18,6 @@ which updates the repository information.
 - Python module [libversion](https://pypi.python.org/pypi/libversion) (also requires [libversion](https://github.com/repology/libversion) C library)
 - Python module [pillow](https://pypi.python.org/pypi/Pillow)
 - Python module [psycopg2](http://initd.org/psycopg/)
-- Python module [pytz](https://pypi.python.org/pypi/pytz)
 - [PostgreSQL](https://www.postgresql.org/) 13.0+
 - PostgreSQL extension [libversion](https://github.com/repology/postgresql-libversion)
 
