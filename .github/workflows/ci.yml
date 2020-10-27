@@ -1,0 +1,59 @@
+name: CI
+on: [ push, pull_request ]
+jobs:
+  build:
+    env:
+      REPOLOGY_CONFIG: repology-test.conf.default
+      POSTGRESQL: 13
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install dependencies
+        run: sudo apt-get install postgresql-server-dev-$POSTGRESQL tidy
+      - name: Install libversion
+        run: |
+          mkdir _libversion
+          cd _libversion
+          wget -qO- https://github.com/repology/libversion/archive/master.tar.gz | tar -xzf- --strip-components 1
+          cmake .
+          make
+          sudo make install
+          sudo ldconfig
+      - name: Install postgresql-libversion
+        run: |
+          mkdir _postgresql-libversion
+          cd _postgresql-libversion
+          wget -qO- https://github.com/repology/postgresql-libversion/archive/master.tar.gz | tar -xzf- --strip-components 1
+          make
+          sudo make install
+      - name: Install python dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+          pip install codecov
+      - name: Prepare database
+        run: |
+          sudo sed -i -e 's|peer|trust|' /etc/postgresql/$POSTGRESQL/main/pg_hba.conf
+          sudo pg_ctlcluster $POSTGRESQL main restart
+          sudo -u postgres psql -c "CREATE DATABASE repology_test;"
+          sudo -u postgres psql -c "CREATE USER repology_test WITH PASSWORD 'repology_test'"
+          sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE repology_test TO repology_test"
+          sudo -u postgres psql -d repology_test -c "CREATE EXTENSION IF NOT EXISTS pg_trgm"
+          sudo -u postgres psql -d repology_test -c "CREATE EXTENSION IF NOT EXISTS libversion"
+          psql -U repology_test < testdata/repology_test.sql
+      - name: Update repology config
+        run: |
+          echo "BADGE_FONT = '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf'" >> $REPOLOGY_CONFIG
+          echo "BADGE_FONT_BOLD = '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf'" >> $REPOLOGY_CONFIG
+      - name: Test all target
+        run: make
+      - name: Check with flake8
+        run: make flake8
+      - name: Check with mypy
+        run: make mypy
+      - name: Run unittests
+        run: coverage run --source=repologyapp --omit="repologyapp/test/*" -m unittest discover
