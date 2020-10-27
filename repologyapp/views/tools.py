@@ -71,6 +71,7 @@ _ALLOWED_FAMILIES = {
     'centos',
     'debuntu',
     'freebsd',
+    'guix',
     'scoop',
 }
 
