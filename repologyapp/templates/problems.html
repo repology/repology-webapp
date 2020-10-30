@@ -54,7 +54,7 @@
 				The link should be updated to <a href="https://metacpan.org/">MetaCPAN</a> (probably along with download URLs).
 				See <a href="https://www.perl.com/article/saying-goodbye-to-search-cpan-org/">https://www.perl.com/article/saying-goodbye-to-search-cpan-org/</a> for details.
 			{% elif problem.type == 'cpe_unreferenced' %}
-				CPE information defined for the package:<div>{{ mcpes.panels(problem.data.cpe) }}</div>was not found neiter among known CVEs nor in NVD CPE dictionary, so it may be invalid.
+				CPE information defined for the package:<div>{{ mcpes.panels(problem.data.cpe) }}</div>was not found neither among known CVEs nor in NVD CPE dictionary, so it may be invalid.
 				{% if problem.data.suggestions %}
 				Suggested CPEs (as per known <a href="{{ url_for('project_cves', name=problem.effname) }}">CVEs</a>):
 				<ul class="list-unstyled">
