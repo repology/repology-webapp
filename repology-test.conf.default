@@ -1,2 +1,3 @@
 DSN = "dbname=repology_test user=repology_test password=repology_test"
 SECRET_KEY = 'repology_test'
+SITEMAP_PROJECTS_MIN_SPREAD = 0

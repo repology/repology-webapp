@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url><loc>{{ url_for('about') }}</loc><changefreq>hourly</changefreq></url>
+<url><loc>{{ url_for('addrepo') }}</loc><changefreq>weekly</changefreq></url>
+<url><loc>{{ url_for('api_v1') }}</loc><changefreq>weekly</changefreq></url>
+<url><loc>{{ url_for('index') }}</loc><changefreq>hourly</changefreq></url>
+<url><loc>{{ url_for('news') }}</loc><changefreq>daily</changefreq></url>
+<url><loc>{{ url_for('repositories_statistics') }}</loc><changefreq>hourly</changefreq></url>
+<url><loc>{{ url_for('trending') }}</loc><changefreq>hourly</changefreq></url>
+</urlset>

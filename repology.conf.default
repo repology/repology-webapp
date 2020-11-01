@@ -70,6 +70,15 @@ CVES_PER_PAGE = 200
 MAX_REPORTS = 20
 
 #
+# Min spread for projects which get into sitemap
+#
+# Note that if you want value < 5, you may need to change the
+# conditional index on metapackages(num_families) correspondingly
+# for performance
+#
+SITEMAP_PROJECTS_MIN_SPREAD = 5
+
+#
 # Address of repology.org to use in HTML links
 #
 REPOLOGY_HOME = 'https://repology.org'
