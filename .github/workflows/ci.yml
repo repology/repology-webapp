@@ -57,3 +57,5 @@ jobs:
         run: make mypy
       - name: Run unittests
         run: coverage run --source=repologyapp --omit="repologyapp/test/*" -m unittest discover
+      - name: Push coverage info
+        run: codecov
