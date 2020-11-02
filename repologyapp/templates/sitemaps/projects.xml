@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 {% for project, has_cves in projects %}
-<url><loc>{{ url_for('project_versions', name=project) }}</loc><changefreq>daily</changefreq></url>
-<url><loc>{{ url_for('project_packages', name=project) }}</loc><changefreq>daily</changefreq></url>
-<url><loc>{{ url_for('project_information', name=project) }}</loc><changefreq>daily</changefreq></url>
+<url><loc>{{ REPOLOGY_HOME }}{{ url_for('project_versions', name=project) }}</loc><changefreq>daily</changefreq></url>
+<url><loc>{{ REPOLOGY_HOME }}{{ url_for('project_packages', name=project) }}</loc><changefreq>daily</changefreq></url>
+<url><loc>{{ REPOLOGY_HOME }}{{ url_for('project_information', name=project) }}</loc><changefreq>daily</changefreq></url>
 {% if has_cves %}
-<url><loc>{{ url_for('project_cves', name=project) }}</loc><changefreq>daily</changefreq></url>
+<url><loc>{{ REPOLOGY_HOME }}{{ url_for('project_cves', name=project) }}</loc><changefreq>daily</changefreq></url>
 {% endif %}
 {% endfor %}
 </urlset>
