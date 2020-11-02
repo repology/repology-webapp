@@ -279,6 +279,7 @@ class TestFlask(unittest.TestCase):
         self.checkurl_xml('/sitemaps/maintainers.xml')
         self.checkurl_xml('/sitemaps/repositories.xml')
         self.checkurl_xml('/sitemaps/projects_0.xml')
+        self.checkurl_404('/sitemaps/projects_1.xml')
 
 
 if __name__ == '__main__':
