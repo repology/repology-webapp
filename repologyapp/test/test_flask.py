@@ -82,8 +82,11 @@ class TestFlask(unittest.TestCase):
     def checkurl_json(self, url: str, status_code: Optional[int] = 200, mimetype: Optional[str] = 'application/json', has: List[str] = [], hasnot: List[str] = []) -> Any:
         return json.loads(self.checkurl(url=url, status_code=status_code, mimetype=mimetype, has=has, hasnot=hasnot))
 
-    def checkurl_svg(self, url: str, status_code: Optional[int] = 200, mimetype: Optional[str] = 'image/svg+xml', has: List[str] = [], hasnot: List[str] = []) -> xml.etree.ElementTree.Element:
+    def checkurl_xml(self, url: str, status_code: Optional[int] = 200, mimetype: Optional[str] = 'application/xml', has: List[str] = [], hasnot: List[str] = []) -> xml.etree.ElementTree.Element:
         return xml.etree.ElementTree.fromstring(self.checkurl(url=url, status_code=status_code, mimetype=mimetype, has=has, hasnot=hasnot))
+
+    def checkurl_svg(self, url: str, status_code: Optional[int] = 200, mimetype: Optional[str] = 'image/svg+xml', has: List[str] = [], hasnot: List[str] = []) -> xml.etree.ElementTree.Element:
+        return self.checkurl_xml(url, status_code, mimetype, has, hasnot)
 
     def checkurl_404(self, url: str) -> str:
         return self.checkurl(url=url, status_code=404, mimetype=None)
@@ -269,6 +272,13 @@ class TestFlask(unittest.TestCase):
         # XXX: empty output for now
         self.checkurl_json('/api/v1/maintainer/amdmi3@freebsd.org/problems')
         self.checkurl_json('/api/v1/repository/freebsd/problems')
+
+    def test_sitemaps(self) -> None:
+        self.checkurl_xml('/sitemaps/index.xml')
+        self.checkurl_xml('/sitemaps/main.xml')
+        self.checkurl_xml('/sitemaps/maintainers.xml')
+        self.checkurl_xml('/sitemaps/repositories.xml')
+        self.checkurl_xml('/sitemaps/projects_0.xml')
 
 
 if __name__ == '__main__':
