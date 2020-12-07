@@ -435,7 +435,6 @@ def project_report(name: str) -> Response:
         reports=reports,
         afk_till=AFKChecker(config['STAFF_AFK']).get_afk_end(),
         reports_disabled=reports_disabled,
-        show_invitation=flask.request.remote_addr in config['INVITED_IPS'],
         need_verignore=need_verignore,
         need_split=need_split,
         need_merge=need_merge,
