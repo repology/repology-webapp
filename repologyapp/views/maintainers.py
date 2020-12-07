@@ -96,7 +96,6 @@ def maintainer(maintainer: str) -> Response:
 
     metapackages = get_db().get_maintainer_metapackages(maintainer, 500)
     similar_maintainers = get_db().get_maintainer_similar_maintainers(maintainer, 50)
-    numproblems = get_db().get_maintainer_problems_count(maintainer)
 
     @dataclass
     class RepositoryInfo:
@@ -131,7 +130,6 @@ def maintainer(maintainer: str) -> Response:
 
     return flask.render_template(
         'maintainer.html',
-        numproblems=numproblems,
         maintainer=maintainer,
         maintainer_info=maintainer_info,
         per_repo_info=per_repo_info,

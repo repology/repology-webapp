@@ -207,12 +207,6 @@
 	</tbody>
 </table>
 
-{% if numproblems %}
-<h2>Problems</h2>
-
-<p>There are <a href="{{ url_for('maintainer_problems', maintainer=maintainer) }}">{{ numproblems }} known problems</a> for packages maintained by <strong>{{ maintainer }}</strong></p>
-{% endif %}
-
 {% if maintainer_info.num_projects_per_category %}
 <h2>Categories</h2>
 
