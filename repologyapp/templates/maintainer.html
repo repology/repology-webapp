@@ -45,7 +45,7 @@
 			<th class="text-center" colspan="2">Outdated</th>
 			<th class="text-center" colspan="2">Problematic</th>
 			<th class="text-center" colspan="2">Potentially vulnerable</th>
-			<th class="text-center">See also</th>
+			<th class="text-center">Other lists</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -123,6 +123,7 @@
 					title="Packages which have related ones (may require merging)">∗</a>
 				<a href="{{ url_for('projects', maintainer=maintainer, inrepo=repoinfo.repo, families=1) }}"
 					title="Unique packages (not present in other repository families)">U</a>
+				<a href="{{ url_for('maintainer_problems', maintainer=maintainer, repo=repoinfo.repo) }}">Problems</a>
 			</td>
 			<td class="text-center">
 				<a href="{{ url_for('maintainer_repo_feed', maintainer=maintainer, repo=repoinfo.repo) }}">html</a>,
