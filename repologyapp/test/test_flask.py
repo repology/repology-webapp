@@ -184,7 +184,8 @@ class TestFlask(unittest.TestCase):
         self.checkurl_html('/maintainer/nonexistent', 404, has=['noindex'])
 
     def test_maintaner_problems(self) -> None:
-        self.checkurl_html('/maintainer/amdmi3@freebsd.org/problems')
+        self.checkurl_301('/maintainer/amdmi3@freebsd.org/problems')
+        self.checkurl_html('/maintainer/amdmi3@freebsd.org/problems-for-repo/freebsd')
 
     def test_repositories(self) -> None:
         self.checkurl_html('/repositories/statistics', has=['FreeBSD'])
