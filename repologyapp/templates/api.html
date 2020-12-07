@@ -129,7 +129,7 @@ and then replace <code>{{ url_for('projects') }}</code> URL prefix with
 <p>Get problems for specific repository or maintainer:</p>
 <pre>
 {{ url_for('api_v1_repository_problems', repo='freebsd') }}
-{{ url_for('api_v1_maintainer_problems', maintainer='ports@freebsd.org')|replace('%40', '@') }}
+{{ url_for('api_v1_maintainer_problems', maintainer='ports@freebsd.org', repo='freebsd')|replace('%40', '@') }}
 </pre>
 
 Output is an array of entries of the following format:

@@ -121,15 +121,15 @@ def api_v1_project(name: str) -> Response:
 @ViewRegistrar('/api/v1/repository/<repo>/problems')
 def api_v1_repository_problems(repo: str) -> Response:
     return (
-        dump_json(get_db().get_repository_problems(repo)),
+        dump_json(get_db().get_problems(repo)),
         {'Content-type': 'application/json'}
     )
 
 
-@ViewRegistrar('/api/v1/maintainer/<maintainer>/problems')
-def api_v1_maintainer_problems(maintainer: str) -> Response:
+@ViewRegistrar('/api/v1/maintainer/<maintainer>/problems-for-repo/<repo>')
+def api_v1_maintainer_problems(maintainer: str, repo: str) -> Response:
     return (
-        dump_json(get_db().get_maintainer_problems(maintainer)),
+        dump_json(get_db().get_problems(repo, maintainer)),
         {'Content-type': 'application/json'}
     )
 

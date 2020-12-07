@@ -271,7 +271,7 @@ class TestFlask(unittest.TestCase):
 
     def test_api_v1_problems(self) -> None:
         # XXX: empty output for now
-        self.checkurl_json('/api/v1/maintainer/amdmi3@freebsd.org/problems')
+        self.checkurl_json('/api/v1/maintainer/amdmi3@freebsd.org/problems-for-repo/freebsd')
         self.checkurl_json('/api/v1/repository/freebsd/problems')
 
     def test_sitemaps(self) -> None:
