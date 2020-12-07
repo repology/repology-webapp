@@ -30,19 +30,20 @@
 <table class="table table-striped table-hover">
 	<thead>
 		<tr>
-			<th class="text-right">Repository</th>
 			<th class="text-center">Project</th>
 			<th class="text-center">Package name</th>
+			{% if not maintainer %}
 			<th class="text-center">Maintainer</th>
+			{% endif %}
 			<th class="text-left">Problem</th>
 		</tr>
 	</thead>
 	<tbody>
 	{% for problem in problems %}
 		<tr>
-			<td class="text-right"><a href="{{ url_for('repository', repo=problem.repo) }}">{{ repometadata[problem.repo].desc }}</a></td>
 			<td class="text-center"><a href="{{ url_for('project_versions', name=problem.effname) }}">{{ problem.effname }}</a></td>
 			<td class="text-center">{{ macros.package_link(problem, problem.visiblename) }}</td>
+			{%- if not maintainer -%}
 			<td class="text-center">
 			{%- if problem.maintainer -%}
 				<a href="{{ url_for('maintainer', maintainer=problem.maintainer) }}">{{ problem.maintainer }}</a>
@@ -50,6 +51,7 @@
 				-
 			{%- endif -%}
 			</td>
+			{%- endif -%}
 			<td class="text-left">
 			{% if problem.type == 'homepage_dead' %}
 				Homepage link <code>{{ problem.data.url }}</code> is <a href="{{ url_for('link', url=problem.data.url) }}">dead</a> (<b class="link-error">{{ mlinks.format_link_status_code(problem.data.code) }}</b>)
