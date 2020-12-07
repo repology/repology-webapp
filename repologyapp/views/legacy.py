@@ -1,4 +1,4 @@
-# Copyright (C) 2016-2019 Dmitry Marakasov <amdmi3@amdmi3.ru>
+# Copyright (C) 2016-2020 Dmitry Marakasov <amdmi3@amdmi3.ru>
 #
 # This file is part of repology
 #
@@ -19,6 +19,7 @@ from typing import Collection, Dict, Optional
 
 import flask
 
+from repologyapp.db import get_db
 from repologyapp.globals import repometadata
 from repologyapp.view_registry import Response, ViewRegistrar
 
@@ -300,6 +301,38 @@ def badge_version_only_for_repo(repo: str, name: str) -> Response:
             name=name,
             header='',
             minversion=flask.request.args.to_dict().get('minversion')
+        ),
+        301
+    )
+
+
+@ViewRegistrar('/maintainer/<maintainer>/problems')
+def maintainer_problems_legacy(maintainer: str) -> Response:
+    # actual problems listing is tied to repository+maintainer pair,
+    # so determine most active repo and redirect to it
+
+    maintainer = maintainer.lower()
+
+    maintainer_info = get_db().get_maintainer_information(maintainer)
+
+    if not maintainer_info:
+        return (flask.render_template('maintainer-404.html', maintainer=maintainer), 404)
+
+    bestrepo = max(
+        (
+            maintainer_info['num_projects_newest_per_repo'][repo],
+            -maintainer_info['num_projects_outdated_per_repo'][repo],
+            repometadata[repo]['num_metapackages_newest'],
+            repo
+        )
+        for repo in maintainer_info['num_projects_newest_per_repo'].keys()
+    )[-1]
+
+    return flask.redirect(
+        flask.url_for(
+            'maintainer_problems',
+            repo=bestrepo,
+            maintainer=maintainer
         ),
         301
     )

@@ -24,6 +24,7 @@ from repologyapp.db import get_db
 from repologyapp.feed_helpers import unicalize_feed_timestamps
 from repologyapp.globals import repometadata
 from repologyapp.view_registry import Response, ViewRegistrar
+from repologyapp.views.problems import problems_generic
 
 
 @ViewRegistrar('/repository/<repo>')
@@ -47,10 +48,11 @@ def repository(repo: str) -> Response:
 
 @ViewRegistrar('/repository/<repo>/problems')
 def repository_problems(repo: str) -> Response:
-    if repo not in repometadata.active_names():
-        flask.abort(404)
-
-    return flask.render_template('repository-problems.html', repo=repo, problems=get_db().get_repository_problems(repo, config['PROBLEMS_PER_PAGE']))
+    return problems_generic(
+        repo=repo,
+        start=flask.request.args.to_dict().get('start'),
+        end=flask.request.args.to_dict().get('end')
+    )
 
 
 @ViewRegistrar('/repository/<repo>/feed')

@@ -3,11 +3,28 @@
 {% import "macros/cpes.html" as mcpes %}
 {% import "macros.html" as macros %}
 
-{% block title %}Problems list - Repology{% endblock %}
-{% block header %}Problems{% endblock %}
+{% block title %}Problems{% if maintainer %} for {{ maintainer}}{% endif %} in {{ repometadata[repo].desc }} - Repology{% endblock %}
+{% block header %}Problems{% if maintainer %} for <strong>{{ maintainer}}</strong>{% endif %} in <strong>{{ repometadata[repo].desc }}</strong>{% endblock %}
 
 {% block content %}
 <div class="container">
+
+<nav>
+        <div class="form-group">
+                <form class="form-inline" action="{{ url_for_self(start=None, end=None) }}" method="GET">
+                        <div class="btn-group">
+                                <a href="{{ url_for_self(start=None, end=None) }}" class="btn btn-default {% if is_first_page %} disabled{% endif %}">&laquo;&laquo;</a>
+                                {% if problems %}
+                                <a href="{{ url_for_self(start=None, end=(problems|first).effname) }}" class="btn btn-default{% if is_first_page %} disabled{% endif %}" rel="prev">&laquo;</a>
+                                <a href="{{ url_for_self(start=(problems|last).effname, end=None) }}" class="btn btn-default{% if is_last_page %} disabled{% endif %}" rel="next">&raquo;</a>
+                                {% endif %}
+                                {% if last %}
+                                <a href="{{ url_for_self(start=None, end=last) }}" class="btn btn-default {% if is_last_page %} disabled{% endif %}">&raquo;&raquo;</a>
+                                {% endif %}
+                        </div>
+                </form>
+        </div>
+</nav>
 
 {% if problems %}
 <table class="table table-striped table-hover">

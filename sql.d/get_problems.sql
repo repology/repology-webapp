@@ -16,20 +16,35 @@
 -- along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 --------------------------------------------------------------------------------
---
 -- @param repo
+-- @param maintainer=None
+-- @param start=None
+-- @param end=None
 -- @param limit=None
 --
 -- @returns array of dicts
---
 --------------------------------------------------------------------------------
-SELECT
-	packages.*,
-	maintainer,
-	"type",
-	data
-FROM problems
-INNER JOIN packages ON packages.id = problems.package_id
-WHERE problems.repo = %(repo)s
-ORDER BY problems.repo, problems.effname, problems.maintainer
-LIMIT %(limit)s;
+WITH unsorted AS (
+	SELECT
+		packages.*,
+		maintainer,
+		"type",
+		data
+	FROM problems
+	INNER JOIN packages ON packages.id = problems.package_id
+	WHERE
+		problems.repo = %(repo)s
+		{% if maintainer %}AND maintainer = %(maintainer)s{% endif %}
+		{% if start %}AND problems.effname >= %(start)s{% endif %}
+		{% if end %}AND problems.effname <= %(end)s{% endif %}
+	ORDER BY
+		{% if end %}
+		problems.effname DESC, problems.maintainer DESC
+		{% else %}
+		problems.effname, problems.maintainer
+		{% endif %}
+	LIMIT %(limit)s
+)
+SELECT *
+FROM unsorted
+ORDER BY effname, maintainer;

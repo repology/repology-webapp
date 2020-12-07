@@ -26,6 +26,7 @@ from repologyapp.db import get_db
 from repologyapp.feed_helpers import unicalize_feed_timestamps
 from repologyapp.globals import repometadata
 from repologyapp.view_registry import Response, ViewRegistrar
+from repologyapp.views.problems import problems_generic
 
 
 @ViewRegistrar('/maintainers/')
@@ -139,17 +140,13 @@ def maintainer(maintainer: str) -> Response:
     )
 
 
-@ViewRegistrar('/maintainer/<maintainer>/problems')
-def maintainer_problems(maintainer: str) -> Response:
-    maintainer = maintainer.lower()
-
-    return flask.render_template(
-        'maintainer-problems.html',
-        maintainer=maintainer,
-        problems=get_db().get_maintainer_problems(
-            maintainer,
-            config['PROBLEMS_PER_PAGE']
-        )
+@ViewRegistrar('/maintainer/<maintainer>/problems-for-repo/<repo>')
+def maintainer_problems(maintainer: str, repo: str) -> Response:
+    return problems_generic(
+        repo=repo,
+        maintainer=maintainer.lower(),
+        start=flask.request.args.to_dict().get('start'),
+        end=flask.request.args.to_dict().get('end')
     )
 
 

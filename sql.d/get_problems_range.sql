@@ -1,4 +1,4 @@
--- Copyright (C) 2016-2018,2020 Dmitry Marakasov <amdmi3@amdmi3.ru>
+-- Copyright (C) 2020 Dmitry Marakasov <amdmi3@amdmi3.ru>
 --
 -- This file is part of repology
 --
@@ -16,20 +16,16 @@
 -- along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 --------------------------------------------------------------------------------
+-- @param repo
+-- @param maintainer=None
 --
--- @param maintainer
--- @param limit=None
---
--- @returns array of dicts
---
+-- @returns single tuple
 --------------------------------------------------------------------------------
 SELECT
-	packages.*,
-	maintainer,
-	"type",
-	data
+	min(effname),
+	max(effname)
 FROM problems
-INNER JOIN packages ON packages.id = problems.package_id
-WHERE problems.maintainer = %(maintainer)s
-ORDER BY problems.repo, problems.effname
-LIMIT %(limit)s;
+WHERE
+	repo = %(repo)s
+	{% if maintainer %}AND maintainer = %(maintainer)s{% endif %}
+;
