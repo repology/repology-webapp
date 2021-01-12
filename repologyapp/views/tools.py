@@ -73,6 +73,7 @@ _ALLOWED_FAMILIES = {
     'debuntu',
     'freebsd',
     'guix',
+    'homebrew',
     'scoop',
 }
 
