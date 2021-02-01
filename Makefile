@@ -25,4 +25,3 @@ flake8:
 
 mypy:
 	${MYPY} repology-app.py repologyapp
-	${MYPY} repologyapp/views
