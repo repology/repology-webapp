@@ -74,6 +74,7 @@ _ALLOWED_FAMILIES = {
     'freebsd',
     'guix',
     'homebrew',
+    'homebrew_casks',
     'scoop',
 }
 
