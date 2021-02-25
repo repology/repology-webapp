@@ -25,6 +25,8 @@
 			<th class="text-center">Categories</th>
 			<th class="text-center">License</th>
 			<th class="text-center">Links</th>
+			<th class="text-center">Patches</th>
+			<th class="text-center">Build logs</th>
 			<th class="text-center">Names</th>
 			<th class="text-center">CPE</th>
 		</tr>
@@ -47,6 +49,8 @@
 				{%- if 0 in link_types or 1 in link_types %}✔
 				{%- else %}<span class="text-danger" title="Repository must provide links to upstream">✘</span>{% endif -%}
 			</td>
+			<td class="text-center">{% if 11 in link_types or 12 in link_types %}✔{% endif %}</td>
+			<td class="text-center">{% if 13 in link_types or 14 in link_types %}✔{% endif %}</td>
 			<td class="text-center">
 				{%- if 'name' in fields %}<abbr title="generic name">n</abbr>{% endif -%}
 				{%- if 'srcname' in fields %}<abbr title="source (package) name">s</abbr>{% endif -%}
