@@ -53,9 +53,7 @@ SELECT
 
 	category,
 	comment,
-	homepage,
 	licenses,
-	downloads,
 	extrafields,
 	links
 {%   endif %}

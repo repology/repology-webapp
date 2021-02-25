@@ -46,13 +46,10 @@ def api_v1_package_to_json(package: PackageDataDetailed) -> Dict[str, Any]:
             #'comment',
             #'homepage',
             'licenses',
-            'downloads'
         ) if getattr(package, field)
     }
 
     # XXX: these tweaks should be implemented in core
-    if package.homepage:
-        output['www'] = [package.homepage]
     if package.comment:
         output['summary'] = package.comment
     if package.category:

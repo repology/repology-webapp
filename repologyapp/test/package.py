@@ -44,9 +44,7 @@ def spawn_package(**custom_args: Any) -> PackageDataDetailed:
         'maintainers': [],
         'category': None,
         'comment': None,
-        'homepage': None,
         'licenses': [],
-        'downloads': [],
 
         'extrafields': {},
 

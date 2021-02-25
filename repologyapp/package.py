@@ -190,9 +190,7 @@ class PackageDataDetailed(PackageDataSummarizable):
 
     category: Optional[str]
     comment: Optional[str]
-    homepage: Optional[str]
     licenses: Optional[List[str]]
-    downloads: Optional[List[str]]
     links: Optional[List[Tuple[int, int]]]
 
     extrafields: Dict[str, str]
