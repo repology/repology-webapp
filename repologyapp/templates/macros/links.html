@@ -52,7 +52,7 @@
 	{%- elif code == 1 %}Upstream download
 	{%- elif code == 2 %}Upstream repository
 	{%- elif code == 3 %}Upstream issue tracker
-	{%- elif code == 4 %}Module page
+	{%- elif code == 4 %}Project page
 	{%- elif code == 5 %}Package page
 	{%- elif code == 6 %}Package download
 	{%- elif code == 7 %}Package repository
@@ -65,7 +65,14 @@
 	{%- elif code == 14 %}Build log (raw)
 	{%- elif code == 15 %}New version checker page
 	{%- elif code == 16 %}Documentation
-	{%- else %}Oher{% endif -%}
+	{%- elif code == 17 %}Changelog
+	{%- elif code == 18 %}Project download
+	{%- elif code == 19 %}Donation
+	{%- elif code == 20 %}Discussion
+	{%- elif code == 21 %}Coverage
+	{%- elif code == 22 %}CI
+	{%- elif code == 23 %}Wiki
+	{%- else %}Other{% endif -%}
 {%- endmacro -%}
 
 {%- macro format_link_type_plural(code) -%}
@@ -73,7 +80,7 @@
 	{%- elif code == 1 %}Upstream download(s)
 	{%- elif code == 2 %}Upstream repositor(ies)
 	{%- elif code == 3 %}Upstream issue tracker(s)
-	{%- elif code == 4 %}Module page(s)
+	{%- elif code == 4 %}Project page(s)
 	{%- elif code == 5 %}Package page(s)
 	{%- elif code == 6 %}Package download(s)
 	{%- elif code == 7 %}Package repositor(ies)
@@ -86,5 +93,12 @@
 	{%- elif code == 14 %}Build log(s) (raw)
 	{%- elif code == 15 %}New version checker page(s)
 	{%- elif code == 16 %}Documentation
-	{%- else %}Oher{% endif -%}
+	{%- elif code == 17 %}Changelog(s)
+	{%- elif code == 18 %}Project download(s)
+	{%- elif code == 19 %}Donation
+	{%- elif code == 20 %}Discussion
+	{%- elif code == 21 %}Coverage
+	{%- elif code == 22 %}CI
+	{%- elif code == 23 %}Wiki
+	{%- else %}Other{% endif -%}
 {%- endmacro -%}
