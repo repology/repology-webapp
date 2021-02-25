@@ -57,7 +57,8 @@ SELECT
 	homepage,
 	licenses,
 	downloads,
-	extrafields
+	extrafields,
+	links
 {%   endif %}
 {%  endif %}
 {% elif fields %}

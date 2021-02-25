@@ -30,7 +30,7 @@ from repologyapp.config import config
 from repologyapp.db import get_db
 from repologyapp.globals import repometadata
 from repologyapp.metapackages import packages_to_summary_items
-from repologyapp.package import PackageDataDetailed, PackageDataMinimal, PackageDataSummarizable, PackageStatus
+from repologyapp.package import LinkType, PackageDataDetailed, PackageDataMinimal, PackageDataSummarizable, PackageStatus
 from repologyapp.packageproc import packageset_aggregate_by_version, packageset_sort_by_name_version, packageset_sort_by_version
 from repologyapp.version import UserVisibleVersionInfo, iter_aggregate_versions
 from repologyapp.view_registry import Response, ViewRegistrar
@@ -163,7 +163,7 @@ def project_packages(name: str) -> Response:
         name=name,
         metapackage=metapackage,
         packages=packages,
-        link_statuses=get_db().get_metapackage_link_statuses(name)
+        links=get_db().get_project_links(name)
     )
 
 
@@ -184,7 +184,7 @@ def project_information(name: str) -> Response:
 
     information: Dict[str, Any] = {}
 
-    def append_info(infokey: str, infoval: str, package: PackageDataDetailed) -> None:
+    def append_info(infokey: str, infoval: Any, package: PackageDataDetailed) -> None:
         if infokey not in information:
             information[infokey] = {}
 
@@ -205,14 +205,15 @@ def project_information(name: str) -> Response:
                 append_info('maintainers', maintainer, package)
         if package.category:
             append_info('categories', package.category, package)
-        if package.homepage:
-            append_info('homepages', package.homepage, package)
-        if package.downloads is not None:
-            for download in package.downloads:
-                append_info('downloads', download, package)
         if package.licenses is not None:
             for license_ in package.licenses:
                 append_info('licenses', license_, package)
+        if package.links is not None:
+            for link_type, link_id in package.links:
+                if link_type == LinkType.UPSTREAM_HOMEPAGE:
+                    append_info('homepages', link_id, package)
+                elif link_type == LinkType.UPSTREAM_DOWNLOAD:
+                    append_info('downloads', link_id, package)
 
     if 'repos' in information:
         # preserve repos order
@@ -223,13 +224,26 @@ def project_information(name: str) -> Response:
 
     versions = packageset_aggregate_by_version(packages, {PackageStatus.LEGACY: PackageStatus.OUTDATED})
 
+    links = get_db().get_project_links(name)
+
+    if 'homepages' in information:
+        information['homepages'] = sorted(
+            information['homepages'].items(),
+            key=lambda l: links[l[0]]['url'].lower()  # type: ignore
+        )
+    if 'downloads' in information:
+        information['downloads'] = sorted(
+            information['downloads'].items(),
+            key=lambda l: links[l[0]]['url'].lower()  # type: ignore
+        )
+
     return flask.render_template(
         'project-information.html',
         name=name,
         metapackage=metapackage,
         information=information,
         versions=versions,
-        link_statuses=get_db().get_metapackage_link_statuses(name)
+        links=links
     )
 
 

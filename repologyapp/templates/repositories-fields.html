@@ -23,9 +23,8 @@
 			<th class="text-center">Summary</th>
 			<th class="text-center">Maintainer</th>
 			<th class="text-center">Categories</th>
-			<th class="text-center">Homepage</th>
 			<th class="text-center">License</th>
-			<th class="text-center">Downloads</th>
+			<th class="text-center">Links</th>
 			<th class="text-center">Names</th>
 			<th class="text-center">CPE</th>
 		</tr>
@@ -37,28 +36,24 @@
 				<a href="{{ url_for('repository', repo=reponame) }}">{{ repometadata[reponame].desc }}</a>
 			</th>
 
-			{% set used = repometadata[reponame].used_package_fields %}
+			{% set fields = repometadata[reponame].used_package_fields %}
+			{% set link_types = repometadata[reponame].used_package_link_types %}
 
-			{% set anyurl = 'homepage' in used or 'downloads' in used %}
-			<td class="text-center">{% if 'comment' in used %}✔{% endif %}</td>
-			<td class="text-center">{% if 'maintainers' in used %}✔{% endif %}</td>
-			<td class="text-center">{% if 'category' in used %}✔{% endif %}</td>
+			<td class="text-center">{% if 'comment' in fields %}✔{% endif %}</td>
+			<td class="text-center">{% if 'maintainers' in fields %}✔{% endif %}</td>
+			<td class="text-center">{% if 'category' in fields %}✔{% endif %}</td>
+			<td class="text-center">{% if 'licenses' in fields %}✔{% endif %}</td>
 			<td class="text-center">
-				{%- if 'homepage' in used %}✔
-				{%- elif not anyurl %}<span class="text-danger" title="Either Homepage or Downloads are required">✘</span>{% endif -%}
-			</td>
-			<td class="text-center">{% if 'licenses' in used %}✔{% endif %}</td>
-			<td class="text-center">
-				{%- if 'downloads' in used %}✔
-				{%- elif not anyurl %}<span class="text-danger" title="Either Homepage or Downloads are required">✘</span>{% endif -%}
+				{%- if 0 in link_types or 1 in link_types %}✔
+				{%- else %}<span class="text-danger" title="Repository must provide links to upstream">✘</span>{% endif -%}
 			</td>
 			<td class="text-center">
-				{%- if 'name' in used %}<abbr title="generic name">n</abbr>{% endif -%}
-				{%- if 'srcname' in used %}<abbr title="source (package) name">s</abbr>{% endif -%}
-				{%- if 'binname' in used %}<abbr title="binary (package) name">b</abbr>{% endif -%}
-				{%- if 'binnames' in used %}<abbr title="binary (package) names taken from source packages">B</abbr>{% endif -%}
+				{%- if 'name' in fields %}<abbr title="generic name">n</abbr>{% endif -%}
+				{%- if 'srcname' in fields %}<abbr title="source (package) name">s</abbr>{% endif -%}
+				{%- if 'binname' in fields %}<abbr title="binary (package) name">b</abbr>{% endif -%}
+				{%- if 'binnames' in fields %}<abbr title="binary (package) names taken from source packages">B</abbr>{% endif -%}
 			</td>
-			<td class="text-center">{% if 'cpe_product' in used or 'cpe_vendor' in used %}✔{% endif %}</td>
+			<td class="text-center">{% if 'cpe_product' in fields or 'cpe_vendor' in fields %}✔{% endif %}</td>
 		</tr>
 	{% endfor %}
 	</tbody>

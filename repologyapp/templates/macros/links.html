@@ -46,3 +46,45 @@
 		(<a href="https://www.ssllabs.com/ssltest/analyze.html?d={{ url|extract_netloc }}" rel="nofollow">check on SSL Labs</a>)
 	{%- endif -%}
 {%- endmacro -%}
+
+{%- macro format_link_type(code) -%}
+	{%- if code == 0 %}Upstream homepage
+	{%- elif code == 1 %}Upstream download
+	{%- elif code == 2 %}Upstream repository
+	{%- elif code == 3 %}Upstream issue tracker
+	{%- elif code == 4 %}Module page
+	{%- elif code == 5 %}Package page
+	{%- elif code == 6 %}Package download
+	{%- elif code == 7 %}Package repository
+	{%- elif code == 8 %}Package issue tracker
+	{%- elif code == 9 %}Package recipe
+	{%- elif code == 10 %}Package recipe (raw)
+	{%- elif code == 11 %}Patch
+	{%- elif code == 12 %}Patch (raw)
+	{%- elif code == 13 %}Build log
+	{%- elif code == 14 %}Build log (raw)
+	{%- elif code == 15 %}New version checker page
+	{%- elif code == 16 %}Documentation
+	{%- else %}Oher{% endif -%}
+{%- endmacro -%}
+
+{%- macro format_link_type_plural(code) -%}
+	{%- if code == 0 %}Upstream homepage(s)
+	{%- elif code == 1 %}Upstream download(s)
+	{%- elif code == 2 %}Upstream repositor(ies)
+	{%- elif code == 3 %}Upstream issue tracker(s)
+	{%- elif code == 4 %}Module page(s)
+	{%- elif code == 5 %}Package page(s)
+	{%- elif code == 6 %}Package download(s)
+	{%- elif code == 7 %}Package repositor(ies)
+	{%- elif code == 8 %}Package issue tracker(s)
+	{%- elif code == 9 %}Package recipe(s)
+	{%- elif code == 10 %}Package recipe(s) (raw)
+	{%- elif code == 11 %}Patch(es)
+	{%- elif code == 12 %}Patch(es) (raw)
+	{%- elif code == 13 %}Build log(s)
+	{%- elif code == 14 %}Build log(s) (raw)
+	{%- elif code == 15 %}New version checker page(s)
+	{%- elif code == 16 %}Documentation
+	{%- else %}Oher{% endif -%}
+{%- endmacro -%}

@@ -70,27 +70,27 @@
 	{%- endif -%}
 {%- endmacro -%}
 
-{%- macro link_status(link, link_statuses, use_archive=False) -%}
-	{%- if link in link_statuses -%}
+{%- macro link_status(link, use_archive=False) -%}
+	{%- if link.ipv4_success is not none or link.ipv6_success is not none -%}
 	<sup class="link-status non-selectable"><a href="{{ url_for('link', url=link) }}" rel="nofollow">
-			{%- if link_statuses[link].ipv4_success is none -%}
-			{%- elif link_statuses[link].ipv4_success and link_statuses[link].ipv4_permanent_redirect_target is not none -%}
+			{%- if link.ipv4_success is none -%}
+			{%- elif link.ipv4_success and link.ipv4_permanent_redirect_target is not none -%}
 			<span class="link-redirect">4</span>
-			{%- elif link_statuses[link].ipv4_success -%}
+			{%- elif link.ipv4_success -%}
 			<span class="link-ok">4</span>
 			{%- else -%}
 			<span class="link-error">4</span>
 			{%- endif -%}
-			{%- if link_statuses[link].ipv6_success is none -%}
-			{%- elif link_statuses[link].ipv6_success and link_statuses[link].ipv6_permanent_redirect_target is not none -%}
+			{%- if link.ipv6_success is none -%}
+			{%- elif link.ipv6_success and link.ipv6_permanent_redirect_target is not none -%}
 			<span class="link-redirect">6</span>
-			{%- elif link_statuses[link].ipv6_success -%}
+			{%- elif link.ipv6_success -%}
 			<span class="link-ok">6</span>
 			{%- else -%}
 			<span class="link-error">6</span>
 			{%- endif -%}
 	</a>
-	{%- if use_archive and link_statuses[link].ipv4_success == False %}<a href="{{ 'https://web.archive.org/web/*/' + link }}">(archive)</a>{% endif -%}
+	{%- if use_archive and link.ipv4_success == False %}<a href="{{ 'https://web.archive.org/web/*/' + link.url }}">(archive)</a>{% endif -%}
 	</sup>
 	{%- endif -%}
 {%- endmacro -%}

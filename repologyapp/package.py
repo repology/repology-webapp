@@ -1,4 +1,4 @@
-# Copyright (C) 2019 Dmitry Marakasov <amdmi3@amdmi3.ru>
+# Copyright (C) 2019-2021 Dmitry Marakasov <amdmi3@amdmi3.ru>
 #
 # This file is part of repology
 #
@@ -16,7 +16,7 @@
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 from dataclasses import dataclass
-from typing import ClassVar, Dict, List, Optional, Protocol, TypeVar
+from typing import ClassVar, Dict, List, Optional, Protocol, Tuple, TypeVar
 
 from libversion import ANY_IS_PATCH, P_IS_PATCH, version_compare
 
@@ -136,6 +136,27 @@ class PackageFlags:
         )
 
 
+class LinkType:
+    UPSTREAM_HOMEPAGE: ClassVar[int] = 0
+    UPSTREAM_DOWNLOAD: ClassVar[int] = 1
+    UPSTREAM_REPOSITORY: ClassVar[int] = 2
+    UPSTREAM_ISSUE_TRACKER: ClassVar[int] = 3
+    MODULE_COLLECTION_PAGE: ClassVar[int] = 4
+    PACKAGE_HOMEPAGE: ClassVar[int] = 5
+    PACKAGE_DOWNLOAD: ClassVar[int] = 6
+    PACKAGE_REPOSITORY: ClassVar[int] = 7
+    PACKAGE_ISSUE_TRACKER: ClassVar[int] = 8
+    PACKAGE_RECIPE: ClassVar[int] = 9
+    PACKAGE_RECIPE_RAW: ClassVar[int] = 10
+    PACKAGE_PATCH: ClassVar[int] = 11
+    PACKAGE_PATCH_RAW: ClassVar[int] = 12
+    PACKAGE_BUILD_LOG: ClassVar[int] = 13
+    PACKAGE_BUILD_LOG_RAW: ClassVar[int] = 14
+    PACKAGE_NEW_VERSION_CHECKER: ClassVar[int] = 15
+    DOCUMENTATION: ClassVar[int] = 16
+    OTHER: ClassVar[int] = 99
+
+
 @dataclass
 class PackageDataMinimal:
     repo: str
@@ -172,6 +193,7 @@ class PackageDataDetailed(PackageDataSummarizable):
     homepage: Optional[str]
     licenses: Optional[List[str]]
     downloads: Optional[List[str]]
+    links: Optional[List[Tuple[int, int]]]
 
     extrafields: Dict[str, str]
 

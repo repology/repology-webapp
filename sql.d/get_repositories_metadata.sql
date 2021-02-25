@@ -35,6 +35,7 @@ SELECT
 	packagelinks,
 
 	COALESCE(used_package_fields, '{}'::text[]) AS used_package_fields,
+	COALESCE(used_package_link_types, '{}'::int[]) AS used_package_link_types,
 
 	state != 'legacy'::repository_state AS active,
 

@@ -1,4 +1,4 @@
--- Copyright (C) 2016-2018 Dmitry Marakasov <amdmi3@amdmi3.ru>
+-- Copyright (C) 2021 Dmitry Marakasov <amdmi3@amdmi3.ru>
 --
 -- This file is part of repology
 --
@@ -16,39 +16,19 @@
 -- along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 --------------------------------------------------------------------------------
---
 -- @param effname
 --
 -- @returns dict of dicts
---
 --------------------------------------------------------------------------------
+WITH link_ids AS (
+	SELECT DISTINCT (json_array_elements(links)->>1)::integer AS id FROM packages WHERE effname = %(effname)s
+)
 SELECT
+	id,
 	url,
 	last_checked,
 	ipv4_success,
 	ipv4_permanent_redirect_target,
 	ipv6_success,
 	ipv6_permanent_redirect_target
-FROM links
-WHERE url in (
-	-- this additional wrap seem to fix query planner somehow
-	-- to use index scan on links instead of seq scan, which
-	-- makes the query 100x faster; XXX: recheck with postgres 10
-	-- or report this?
-	SELECT DISTINCT
-		url
-	FROM (
-		SELECT
-			unnest(downloads) AS url
-		FROM packages
-		WHERE effname = %(effname)s
-		UNION
-		SELECT
-			homepage AS url
-		FROM packages
-		WHERE homepage IS NOT NULL AND effname = %(effname)s
-	) AS tmp
-) AND (
-	ipv4_success IS NOT NULL OR
-	ipv6_success IS NOT NULL
-);
+FROM links INNER JOIN link_ids USING(id);

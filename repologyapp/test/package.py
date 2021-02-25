@@ -50,6 +50,8 @@ def spawn_package(**custom_args: Any) -> PackageDataDetailed:
 
         'extrafields': {},
 
+        'links': [],
+
         'versionclass': 0,
 
         'flags': 0,
