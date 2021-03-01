@@ -30,5 +30,5 @@ FROM project_get_related(
 	(SELECT id FROM metapackages WHERE effname=%(effname)s),
 	%(limit)s
 )
-INNER JOIN metapackages ON (project_id = id)
+INNER JOIN metapackages ON (metapackages.id = related_project_id)
 ORDER BY rank DESC, effname;
