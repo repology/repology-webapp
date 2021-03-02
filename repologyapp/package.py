@@ -161,6 +161,7 @@ class LinkType:
     UPSTREAM_COVERAGE: ClassVar[int] = 21
     UPSTREAM_CI: ClassVar[int] = 22
     UPSTREAM_WIKI: ClassVar[int] = 23
+    PACKAGE_REPOSITORY_DIR: ClassVar[int] = 24
     OTHER: ClassVar[int] = 99
 
 
