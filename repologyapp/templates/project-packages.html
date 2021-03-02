@@ -84,7 +84,9 @@
 						{% endfor %}
 					{% endif %}
 					{% for link in repometadata[package.repo].packagelinks %}
+						{% if link.desc is not none %}
 						<li><a href="{{ link.url|pkg_format(package, escape_mode='url') }}">{{ link.desc }}</a></li>
+						{% endif %}
 					{% endfor %}
 					</ul>
 				</li>
