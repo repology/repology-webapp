@@ -209,11 +209,42 @@ def project_information(name: str) -> Response:
             for license_ in package.licenses:
                 append_info('licenses', license_, package)
         if package.links is not None:
+            maybe_raw_links = defaultdict(list)
             for link_type, link_id in package.links:
-                if link_type == LinkType.UPSTREAM_HOMEPAGE:
+                if link_type in [LinkType.UPSTREAM_HOMEPAGE, LinkType.PROJECT_HOMEPAGE]:
                     append_info('homepages', link_id, package)
-                elif link_type == LinkType.UPSTREAM_DOWNLOAD:
+                elif link_type in [LinkType.UPSTREAM_DOWNLOAD, LinkType.PROJECT_DOWNLOAD]:
                     append_info('downloads', link_id, package)
+                elif link_type == LinkType.UPSTREAM_ISSUE_TRACKER:
+                    append_info('issues', link_id, package)
+                elif link_type == LinkType.UPSTREAM_REPOSITORY:
+                    append_info('repositories', link_id, package)
+                elif link_type == LinkType.UPSTREAM_DOCUMENTATION:
+                    append_info('documentation', link_id, package)
+                elif link_type == LinkType.PACKAGE_HOMEPAGE:
+                    append_info('packages', link_id, package)
+                elif link_type == LinkType.PACKAGE_RECIPE:
+                    maybe_raw_links['recipes'].append(link_id)
+                elif link_type == LinkType.PACKAGE_RECIPE_RAW:
+                    maybe_raw_links['recipes_raw'].append(link_id)
+                elif link_type == LinkType.PACKAGE_PATCH:
+                    maybe_raw_links['patches'].append(link_id)
+                elif link_type == LinkType.PACKAGE_PATCH_RAW:
+                    maybe_raw_links['patches_raw'].append(link_id)
+                elif link_type == LinkType.PACKAGE_BUILD_LOG:
+                    maybe_raw_links['buildlogs'].append(link_id)
+                elif link_type == LinkType.PACKAGE_BUILD_LOG_RAW:
+                    maybe_raw_links['buildlogs_raw'].append(link_id)
+
+            # for links which may have both human-readlabe and raw flavors, we
+            # prefer human-readable ones here
+            for key in ['recipes', 'patches', 'buildlogs']:
+                if key in maybe_raw_links:
+                    for link_id in maybe_raw_links[key]:
+                        append_info(key, link_id, package)
+                elif key + '_raw' in maybe_raw_links:
+                    for link_id in maybe_raw_links[key + '_raw']:
+                        append_info(key, link_id, package)
 
     if 'repos' in information:
         # preserve repos order
@@ -226,16 +257,12 @@ def project_information(name: str) -> Response:
 
     links = get_db().get_project_links(name)
 
-    if 'homepages' in information:
-        information['homepages'] = sorted(
-            information['homepages'].items(),
-            key=lambda l: links[l[0]]['url'].lower()  # type: ignore
-        )
-    if 'downloads' in information:
-        information['downloads'] = sorted(
-            information['downloads'].items(),
-            key=lambda l: links[l[0]]['url'].lower()  # type: ignore
-        )
+    for key in ['homepages', 'downloads', 'issues', 'repositories', 'patches', 'buildlogs', 'documentation', 'recipes']:
+        if key in information:
+            information[key] = sorted(
+                information[key].items(),
+                key=lambda l: links[l[0]]['url'].lower()  # type: ignore
+            )
 
     return flask.render_template(
         'project-information.html',

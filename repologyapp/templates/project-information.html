@@ -96,12 +96,60 @@
 		{% endif %}
 
 		{% if information.homepages %}
-		<section id="Homepages">
-			<h2>Homepages</h2>
+		<section id="Homepage links">
+			<h2>Homepage links</h2>
 			<ul>
 			{% for link_id, families in information.homepages %}
 			{% set link = links[link_id] %}
 				<li><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link, True) }}{% if families|length > 1 %} <b>({{ families|length }})</b>{% endif %}</li>
+			{% endfor %}
+			</ul>
+		</section>
+		{% endif %}
+
+		{% if information.issues %}
+		<section id="Issue tracker links">
+			<h2>Issue tracker links</h2>
+			<ul>
+			{% for link_id, families in information.issues %}
+			{% set link = links[link_id] %}
+				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if families|length > 1 %} <b>({{ families|length }})</b>{% endif %}</li>
+			{% endfor %}
+			</ul>
+		</section>
+		{% endif %}
+
+		{% if information.repositories %}
+		<section id="Repository links">
+			<h2>Repository links</h2>
+			<ul>
+			{% for link_id, families in information.repositories %}
+			{% set link = links[link_id] %}
+				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if families|length > 1 %} <b>({{ families|length }})</b>{% endif %}</li>
+			{% endfor %}
+			</ul>
+		</section>
+		{% endif %}
+
+		{% if information.documentation %}
+		<section id="Documentation links">
+			<h2>Documentation links</h2>
+			<ul>
+			{% for link_id, families in information.documentation %}
+			{% set link = links[link_id] %}
+				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if families|length > 1 %} <b>({{ families|length }})</b>{% endif %}</li>
+			{% endfor %}
+			</ul>
+		</section>
+		{% endif %}
+
+		{% if information.recipes %}
+		<section id="Package recipes">
+			<h2>Package recipes</h2>
+			<ul>
+			{% for link_id, families in information.recipes %}
+			{% set link = links[link_id] %}
+				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if families|length > 1 %} <b>({{ families|length }})</b>{% endif %}</li>
 			{% endfor %}
 			</ul>
 		</section>
@@ -112,6 +160,30 @@
 			<h2>Downloads</h2>
 			<ul>
 			{% for link_id, families in information.downloads %}
+			{% set link = links[link_id] %}
+				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if families|length > 1 %} <b>({{ families|length }})</b>{% endif %}</li>
+			{% endfor %}
+			</ul>
+		</section>
+		{% endif %}
+
+		{% if information.patches %}
+		<section id="Patches">
+			<h2>Patches</h2>
+			<ul>
+			{% for link_id, families in information.patches %}
+			{% set link = links[link_id] %}
+				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if families|length > 1 %} <b>({{ families|length }})</b>{% endif %}</li>
+			{% endfor %}
+			</ul>
+		</section>
+		{% endif %}
+
+		{% if information.buildlogs %}
+		<section id="Build logs">
+			<h2>Build logs</h2>
+			<ul>
+			{% for link_id, families in information.buildlogs %}
 			{% set link = links[link_id] %}
 				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if families|length > 1 %} <b>({{ families|length }})</b>{% endif %}</li>
 			{% endfor %}
