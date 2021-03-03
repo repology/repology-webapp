@@ -26,10 +26,30 @@
 --------------------------------------------------------------------------------
 WITH unsorted AS (
 	SELECT
-		packages.*,
+		packages.*,  -- XXX: remove this after #1129
 		maintainer,
 		"type",
-		data
+		data,
+		(
+			SELECT url
+			FROM links
+			WHERE id IN (
+				SELECT
+					link_id
+				FROM (
+					SELECT
+						(json_array_elements(links)->>0)::integer AS link_type,
+						(json_array_elements(links)->>1)::integer AS link_id
+				) AS expanded_links
+				WHERE
+					link_type IN (
+						5, -- PACKAGE_HOMEPAGE
+						24, -- PACKAGE_REPOSITORY_DIR
+						7 -- PACKAGE_REPOSITORY
+					)
+			) AND coalesce(ipv4_success, true)
+			LIMIT 1
+		) AS url
 	FROM problems
 	INNER JOIN packages ON packages.id = problems.package_id
 	WHERE

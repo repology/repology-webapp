@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 {% import "macros/links.html" as mlinks %}
 {% import "macros/cpes.html" as mcpes %}
-{% import "macros.html" as macros %}
 
 {% block title %}Problems{% if maintainer %} for {{ maintainer}}{% endif %} in {{ repometadata[repo].desc }} - Repology{% endblock %}
 {% block header %}Problems{% if maintainer %} for <strong>{{ maintainer}}</strong>{% endif %} in <strong>{{ repometadata[repo].desc }}</strong>{% endblock %}
@@ -42,7 +41,17 @@
 	{% for problem in problems %}
 		<tr>
 			<td class="text-center"><a href="{{ url_for('project_versions', name=problem.effname) }}">{{ problem.effname }}</a></td>
-			<td class="text-center">{{ macros.package_link(problem, problem.visiblename) }}</td>
+			<td class="text-center">
+				{%- if problem.url is not none %}
+				<a href="{{ problem.url }}">{{ problem.visiblename }}</a>
+				{%- if session.admin %} (new){% endif -%}
+				{%- elif repometadata[problem.repo].packagelinks -%}
+				<a href="{{ repometadata[problem.repo].packagelinks[0].url|pkg_format(problem, escape_mode='url') }}">{{ problem.visiblename }}</a>
+				{%- if session.admin %} (old){% endif -%}
+				{%- else -%}
+				{{ problem.visiblename }}
+				{%- endif -%}
+			</td>
 			{%- if not maintainer -%}
 			<td class="text-center">
 			{%- if problem.maintainer -%}
