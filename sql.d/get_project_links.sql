@@ -21,7 +21,9 @@
 -- @returns dict of dicts
 --------------------------------------------------------------------------------
 WITH link_ids AS (
-	SELECT DISTINCT (json_array_elements(links)->>1)::integer AS id FROM packages WHERE effname = %(effname)s
+	SELECT DISTINCT (json_array_elements(links)->>1)::integer AS id
+	FROM packages
+	WHERE effname = %(effname)s
 )
 SELECT
 	id,
