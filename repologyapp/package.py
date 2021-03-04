@@ -203,6 +203,8 @@ class PackageDataDetailed(PackageDataSummarizable):
 
     extrafields: Dict[str, str]
 
+    url: Optional[str] = None
+
 
 AnyPackageDataMinimal = TypeVar('AnyPackageDataMinimal', bound=PackageDataMinimal)
 AnyPackageDataSummarizable = TypeVar('AnyPackageDataSummarizable', bound=PackageDataSummarizable)

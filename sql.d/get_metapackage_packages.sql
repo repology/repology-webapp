@@ -22,6 +22,7 @@
 -- @param minimal=False
 -- @param summarizable=False
 -- @param detailed=False
+-- @param url=False
 -- @param repo=None
 --
 -- @returns array of dicts
@@ -57,6 +58,28 @@ SELECT
 	licenses,
 	extrafields,
 	links
+{%   endif %}
+{%   if url %},
+	(
+		SELECT url
+		FROM links
+		WHERE id IN (
+			SELECT
+				link_id
+			FROM (
+				SELECT
+					(json_array_elements(links)->>0)::integer AS link_type,
+					(json_array_elements(links)->>1)::integer AS link_id
+			) AS expanded_links
+			WHERE
+				link_type IN (
+					5, -- PACKAGE_HOMEPAGE
+					24, -- PACKAGE_REPOSITORY_DIR
+					7 -- PACKAGE_REPOSITORY
+				)
+		) AND coalesce(ipv4_success, true)
+		LIMIT 1
+	) AS url
 {%   endif %}
 {%  endif %}
 {% elif fields %}

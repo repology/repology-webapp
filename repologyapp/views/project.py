@@ -92,7 +92,7 @@ def project_versions(name: str) -> Response:
 
     packages = [
         PackageDataDetailed(**item)
-        for item in get_db().get_metapackage_packages(name, detailed=True)
+        for item in get_db().get_metapackage_packages(name, detailed=True, url=True)
     ]
 
     packages_by_repo: Dict[str, List[PackageDataDetailed]] = defaultdict(list)
