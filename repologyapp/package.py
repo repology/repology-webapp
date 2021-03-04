@@ -162,6 +162,8 @@ class LinkType:
     UPSTREAM_CI: ClassVar[int] = 22
     UPSTREAM_WIKI: ClassVar[int] = 23
     PACKAGE_REPOSITORY_DIR: ClassVar[int] = 24
+    PACKAGE_STATISTICS: ClassVar[int] = 25
+    PACKAGE_BUILD_STATUS: ClassVar[int] = 26
     OTHER: ClassVar[int] = 99
 
 
