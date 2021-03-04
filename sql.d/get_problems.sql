@@ -47,7 +47,7 @@ WITH unsorted AS (
 						24, -- PACKAGE_REPOSITORY_DIR
 						7 -- PACKAGE_REPOSITORY
 					)
-			) AND coalesce(ipv4_success, true)
+			) --AND coalesce(ipv4_success, true)  -- XXX: better display link status
 			LIMIT 1
 		) AS url
 	FROM problems
