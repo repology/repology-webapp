@@ -144,7 +144,7 @@ class LinkType:
     PROJECT_HOMEPAGE: ClassVar[int] = 4
     PACKAGE_HOMEPAGE: ClassVar[int] = 5
     PACKAGE_DOWNLOAD: ClassVar[int] = 6
-    PACKAGE_REPOSITORY: ClassVar[int] = 7
+    PACKAGE_SOURCES: ClassVar[int] = 7
     PACKAGE_ISSUE_TRACKER: ClassVar[int] = 8
     PACKAGE_RECIPE: ClassVar[int] = 9
     PACKAGE_RECIPE_RAW: ClassVar[int] = 10
@@ -161,7 +161,6 @@ class LinkType:
     UPSTREAM_COVERAGE: ClassVar[int] = 21
     UPSTREAM_CI: ClassVar[int] = 22
     UPSTREAM_WIKI: ClassVar[int] = 23
-    PACKAGE_REPOSITORY_DIR: ClassVar[int] = 24
     PACKAGE_STATISTICS: ClassVar[int] = 25
     PACKAGE_BUILD_STATUS: ClassVar[int] = 26
     OTHER: ClassVar[int] = 99
