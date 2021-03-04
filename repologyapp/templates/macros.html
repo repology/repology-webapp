@@ -62,14 +62,6 @@
 	{%- endwith -%}
 {%- endmacro -%}
 
-{%- macro package_link(package, text) -%}
-	{%- if repometadata[package.repo].packagelinks -%}
-		<a href="{{ repometadata[package.repo].packagelinks[0].url|pkg_format(package, escape_mode='url') }}">{{ text }}</a>
-	{%- else -%}
-		{{ text }}
-	{%- endif -%}
-{%- endmacro -%}
-
 {%- macro link_status(link, use_archive=False) -%}
 	{%- if link.ipv4_success is not none or link.ipv6_success is not none -%}
 	<sup class="link-status non-selectable"><a href="{{ url_for('link', url=link) }}" rel="nofollow">
