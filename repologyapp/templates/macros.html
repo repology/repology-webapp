@@ -64,7 +64,7 @@
 
 {%- macro link_status(link, use_archive=False) -%}
 	{%- if link.ipv4_success is not none or link.ipv6_success is not none -%}
-	<sup class="link-status non-selectable"><a href="{{ url_for('link', url=link) }}" rel="nofollow">
+	<sup class="link-status non-selectable"><a href="{{ url_for('link', url=link.url) }}" rel="nofollow">
 			{%- if link.ipv4_success is none -%}
 			{%- elif link.ipv4_success and link.ipv4_permanent_redirect_target is not none -%}
 			<span class="link-redirect">4</span>
