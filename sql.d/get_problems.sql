@@ -44,8 +44,9 @@ WITH unsorted AS (
 				WHERE
 					link_type IN (
 						5, -- PACKAGE_HOMEPAGE
-						24, -- PACKAGE_REPOSITORY_DIR
-						7 -- PACKAGE_REPOSITORY
+						7, -- PACKAGE_SOURCES
+						9, -- PACKAGE_RECIPE
+						10 -- PACKAGE_RECIPE_RAW
 					)
 			) --AND coalesce(ipv4_success, true)  -- XXX: better display link status
 			LIMIT 1

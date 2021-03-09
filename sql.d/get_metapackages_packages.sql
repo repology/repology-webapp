@@ -54,7 +54,6 @@ SELECT
 	category,
 	comment,
 	licenses,
-	extrafields,
 	links
 {%   endif %}
 {%  endif %}

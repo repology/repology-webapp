@@ -74,19 +74,12 @@
 					</ul>
 				</li>
 			{% endif %}
-			{% if package.links or repometadata[package.repo].packagelinks %}
+			{% if package.links  %}
 				<li class="list-group-item"><b>Links(s):</b>
 					<ul class="list-package-details">
-					{% if package.links %}
-						{% for link_type, link_id in package.links|sort %}
-							{% set link = links[link_id] %}
-							<li><a href="{{ link.url }}">{{ mlinks.format_link_type(link_type) }}</a>{{ macros.link_status(link) }}</li>
-						{% endfor %}
-					{% endif %}
-					{% for link in repometadata[package.repo].packagelinks %}
-						{% if link.desc is not none %}
-						<li><a href="{{ link.url|pkg_format(package, escape_mode='url') }}">{{ link.desc }}</a></li>
-						{% endif %}
+					{% for link_type, link_id in package.links %}
+						{% set link = links[link_id] %}
+						<li><a href="{{ link.url }}">{{ mlinks.format_link_type(link_type) }}</a>{{ macros.link_status(link) }}</li>
 					{% endfor %}
 					</ul>
 				</li>

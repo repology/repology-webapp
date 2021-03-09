@@ -46,8 +46,6 @@ def spawn_package(**custom_args: Any) -> PackageDataDetailed:
         'comment': None,
         'licenses': [],
 
-        'extrafields': {},
-
         'links': [],
 
         'versionclass': 0,

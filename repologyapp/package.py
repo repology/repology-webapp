@@ -16,7 +16,7 @@
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 from dataclasses import dataclass
-from typing import ClassVar, Dict, List, Optional, Protocol, Tuple, TypeVar
+from typing import ClassVar, List, Optional, Protocol, Tuple, TypeVar
 
 from libversion import ANY_IS_PATCH, P_IS_PATCH, version_compare
 
@@ -201,8 +201,6 @@ class PackageDataDetailed(PackageDataSummarizable):
     comment: Optional[str]
     licenses: Optional[List[str]]
     links: Optional[List[Tuple[int, int]]]
-
-    extrafields: Dict[str, str]
 
     url: Optional[str] = None
 

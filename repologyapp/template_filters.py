@@ -18,11 +18,10 @@
 from typing import Iterable, List, Optional
 from urllib.parse import urlparse
 
-from repologyapp.package import PackageDataDetailed, PackageStatus
-from repologyapp.packageformatter import PackageFormatter
+from repologyapp.package import PackageStatus
 
 
-__all__ = ['maintainer_to_links', 'maintainers_to_group_mailto', 'pkg_format', 'css_for_versionclass']
+__all__ = ['maintainer_to_links', 'maintainers_to_group_mailto', 'css_for_versionclass']
 
 
 def maintainer_to_links(maintainer: str) -> List[str]:
@@ -59,10 +58,6 @@ def maintainers_to_group_mailto(maintainers: Iterable[str], subject: Optional[st
         return None
 
     return 'mailto:' + ','.join(sorted(emails)) + ('?subject=' + subject if subject else '')
-
-
-def pkg_format(value: str, pkg: PackageDataDetailed, escape_mode: Optional[str] = None) -> str:
-    return PackageFormatter(escape_mode=escape_mode).format(value, pkg, escape_mode=escape_mode)
 
 
 def css_for_versionclass(value: int) -> str:

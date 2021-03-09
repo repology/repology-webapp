@@ -44,10 +44,6 @@
 			<td class="text-center">
 				{%- if problem.url is not none %}
 				<a href="{{ problem.url }}">{{ problem.visiblename }}</a>
-				{%- if session.admin %} (new){% endif -%}
-				{%- elif repometadata[problem.repo].packagelinks -%}
-				<a href="{{ repometadata[problem.repo].packagelinks[0].url|pkg_format(problem, escape_mode='url') }}">{{ problem.visiblename }}</a>
-				{%- if session.admin %} (old){% endif -%}
 				{%- else -%}
 				{{ problem.visiblename }}
 				{%- endif -%}
