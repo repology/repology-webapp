@@ -32,32 +32,38 @@ class MetapackagesFilterInfo:
         argtype: Any
         advanced: bool
         action: Callable[[MetapackageRequest, Any], None]
+        sanitize: Callable[[Any], Any] = lambda value: value
 
     _fields: Dict[str, _FieldDescriptor] = {
         'search': _FieldDescriptor(
             str,
             False,
-            lambda request, value: request.require_name_substring(value.strip().lower()),
+            lambda request, value: request.require_name_substring(value),
+            lambda value: value.strip().lower(),
         ),
         'maintainer': _FieldDescriptor(
             str,
             True,
-            lambda request, value: request.require_maintainer(value.strip().lower()),
+            lambda request, value: request.require_maintainer(value),
+            lambda value: value.strip().lower(),
         ),
         'category': _FieldDescriptor(
             str,
             True,
-            lambda request, value: request.require_category(value.strip()),  # case sensitive (yet)
+            lambda request, value: request.require_category(value),
+            lambda value: value.strip(),  # case sensitive (yet)
         ),
         'inrepo': _FieldDescriptor(
             str,
             True,
-            lambda request, value: request.require_in_repo(value.strip().lower()),
+            lambda request, value: request.require_in_repo(value),
+            lambda value: value.strip().lower(),
         ),
         'notinrepo': _FieldDescriptor(
             str,
             True,
-            lambda request, value: request.require_not_in_repo(value.strip().lower()),
+            lambda request, value: request.require_not_in_repo(value),
+            lambda value: value.strip().lower(),
         ),
         'repos': _FieldDescriptor(
             str,
@@ -121,7 +127,7 @@ class MetapackagesFilterInfo:
                 elif fielddesc.argtype is int and flask_args[fieldname].isdecimal():
                     self._args[fieldname] = int(flask_args[fieldname])
                 elif fielddesc.argtype is str and flask_args[fieldname]:
-                    self._args[fieldname] = flask_args[fieldname]
+                    self._args[fieldname] = fielddesc.sanitize(flask_args[fieldname])  # type: ignore
 
     def get_dict(self) -> Dict[str, Any]:
         return self._args
