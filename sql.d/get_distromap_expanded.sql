@@ -24,9 +24,9 @@
 --
 --------------------------------------------------------------------------------
 SELECT
-	frompkgs.name AS fromname,
-	topkgs.name AS toname
+	frompkgs.srcname AS fromname,
+	topkgs.srcname AS toname
 FROM packages frompkgs
 INNER JOIN packages topkgs USING (effname)
-WHERE frompkgs.repo=%(fromrepo)s AND topkgs.repo=%(torepo)s AND frompkgs.name != topkgs.name
+WHERE frompkgs.repo=%(fromrepo)s AND topkgs.repo=%(torepo)s AND frompkgs.srcname != topkgs.srcname
 ORDER BY fromname;

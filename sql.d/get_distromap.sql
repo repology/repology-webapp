@@ -24,11 +24,11 @@
 --
 --------------------------------------------------------------------------------
 SELECT
-	array_agg(DISTINCT frompkgs.name ORDER BY frompkgs.name) AS fromnames,
-	array_agg(DISTINCT topkgs.name ORDER BY topkgs.name) AS tonames
+	array_agg(DISTINCT frompkgs.srcname ORDER BY frompkgs.srcname) AS fromnames,
+	array_agg(DISTINCT topkgs.srcname ORDER BY topkgs.srcname) AS tonames
 FROM packages frompkgs
 INNER JOIN packages topkgs USING (effname)
 WHERE frompkgs.repo=%(fromrepo)s AND topkgs.repo=%(torepo)s
 GROUP BY effname
-HAVING array_agg(DISTINCT frompkgs.name ORDER BY frompkgs.name) != array_agg(DISTINCT topkgs.name ORDER BY topkgs.name)
+HAVING array_agg(DISTINCT frompkgs.srcname ORDER BY frompkgs.srcname) != array_agg(DISTINCT topkgs.srcname ORDER BY topkgs.srcname)
 ORDER BY fromnames;
