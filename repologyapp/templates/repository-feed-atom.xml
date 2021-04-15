@@ -16,7 +16,7 @@ tag:repology.org,2020-02-27:repository:{{ repo }}
 	<entry>
 		<id>{{ feed_id() }}:{{ entry.id }}</id>
 		<updated>{{ entry.ts.astimezone(tz).isoformat('T', 'seconds') }}</updated>
-		<link href="{{ url_for('project_versions', name=entry.effname) }}#{{ repo }}" />
+		<link href="{{ url_for('project_versions', name=entry.effname, _external=True) }}#{{ repo }}" />
 		{% if entry.type == 'added' %}
 		<title>{{ entry.effname }} is now tracked</title>
 		<content>Package for {{ entry.effname }} was added to {{ repometadata[repo].desc }}</content>
