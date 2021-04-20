@@ -27,6 +27,7 @@ SELECT
 	need_verignore,
 	need_split,
 	need_merge,
+	need_vuln,
 	comment,
 	reply,
 	accepted

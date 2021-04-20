@@ -20,6 +20,7 @@
 -- @param need_verignore
 -- @param need_split
 -- @param need_merge
+-- @param need_vuln
 -- @param comment
 --------------------------------------------------------------------------------
 INSERT INTO reports (
@@ -27,11 +28,13 @@ INSERT INTO reports (
 	need_verignore,
 	need_split,
 	need_merge,
+	need_vuln,
 	comment
 ) VALUES (
 	%(effname)s,
 	%(need_verignore)s,
 	%(need_split)s,
 	%(need_merge)s,
+	%(need_vuln)s,
 	%(comment)s
 );

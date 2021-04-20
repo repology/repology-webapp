@@ -433,6 +433,7 @@ def project_report(name: str) -> Response:
     need_verignore = False
     need_split = False
     need_merge = False
+    need_vuln = False
     comment = None
     errors = []
 
@@ -446,12 +447,13 @@ def project_report(name: str) -> Response:
         need_verignore = 'need_verignore' in flask.request.form
         need_split = 'need_split' in flask.request.form
         need_merge = 'need_merge' in flask.request.form
+        need_vuln = 'need_vuln' in flask.request.form
         comment = flask.request.form.get('comment', '').strip().replace('\r', '') or None
 
         if comment and len(comment) > 10240:
             errors.append('Could not add report: comment is too long')
 
-        if not need_verignore and not need_split and not need_merge and not comment:
+        if not need_verignore and not need_split and not need_merge and not need_vuln and not comment:
             errors.append('Could not add report: please fill out the form')
 
         if comment and '<a href' in comment:
@@ -463,6 +465,7 @@ def project_report(name: str) -> Response:
                 need_verignore,
                 need_split,
                 need_merge,
+                need_vuln,
                 comment
             )
 
@@ -479,6 +482,7 @@ def project_report(name: str) -> Response:
         need_verignore=need_verignore,
         need_split=need_split,
         need_merge=need_merge,
+        need_vuln=need_vuln,
         comment=comment,
         messages=[('danger', error) for error in errors]
     )

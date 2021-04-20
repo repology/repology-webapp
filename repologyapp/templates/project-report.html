@@ -45,6 +45,9 @@
 	{% if report.need_merge %}
 		<li class="list-group-item"><b>The project needs other projects merged into it</b></li>
 	{% endif %}
+	{% if report.need_vuln %}
+		<li class="list-group-item"><b>The project needs vulnerability info updated</b></li>
+	{% endif %}
 	{% if report.comment %}
 	<li class="list-group-item break-word"><b>Comment:</b>
 	{% for line in report.comment.split('\n') -%}
@@ -105,6 +108,25 @@
 			<p>Will <b>not</b> merge:</p>
 			<ul>
 				<li>Modules (e.g. python) without consistent prefix (e.g. <code>python-</code> or <code>python3-</code>) (common problem for Slackbuilds and Debian source packages).</li>
+			</ul>
+		</div>
+	</div>
+	<div class="form-group">
+		<label><input type="checkbox" name="need_vuln"{% if need_vuln %} checked{% endif %}> Needs vulnerability information update</label>
+		<div class="help-block">
+			<p>
+			{% if has_cves %}
+			Check if there are known older CVEs (vulnerabilities) which are not listed in <a href="{{ url_for("project_cves", name=name) }}">CVEs</a> section for this project.
+			{% else %}
+			Check if there are known older CVEs (vulnerabilities) for this project.
+			{% endif %}
+			Note that there's expected lag of CVE information propagation so there's no need to report very recent CVEs. The idea is to fill missing <a href="https://en.wikipedia.org/wiki/Common_Platform_Enumeration">CPE</a> bindings which allow matching both past and future vulnerabilities to projects.
+			</p>
+
+			<p>Will <b>not</b> accept:</p>
+			<ul>
+				<li>Reports for recent CVEs which have not been analyzed by <a href="https://nvd.nist.gov/">NVD</a> yet (so please check NVD first).</li>
+				<li>Reports for incorrect version ranges - please <a href="https://nvd.nist.gov/info">report</a> these to NVD.</li>
 			</ul>
 		</div>
 	</div>
