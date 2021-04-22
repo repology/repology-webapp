@@ -22,7 +22,7 @@ community.</p>
 
 <h4>repology-fetcher</h4>
 
-<p>Identifies itself as <code>repology-fetcher/0 (+{{ REPOLOGY_HOME }}/bots)</code></p>
+<p>Identifies itself as <code>repology-fetcher/0 (+{{ url_for('bots', _external=True) }})</code></p>
 
 <p>This process regularly retrieves information from software repositories. The
 preferred way is to get a single file which describes all the available packages,
@@ -48,7 +48,7 @@ useful data for Repology.</p>
 
 <h4>repology-linkchecker</h4>
 
-<p>Identifies itself as <code>repology-linkchecker/1 (+{{ REPOLOGY_HOME }}/bots)</code></p>
+<p>Identifies itself as <code>repology-linkchecker/1 (+{{ url_for('bots', _external=True) }})</code></p>
 
 <p>This process pokes links retrieved from package metadata to check that they
 are alive. Dead links and links which involve redirects are reported to package
@@ -68,7 +68,7 @@ consecutive requests to a single hostname, to ensure no excess site load is gene
 
 <h4>repology-vulnupdater</h4>
 
-<p>Identifies itself as <code>repology-vulnupdater/1 (+{{ REPOLOGY_HOME }}/bots)</code></p>
+<p>Identifies itself as <code>repology-vulnupdater/1 (+{{ url_for('bots', _external=True) }})</code></p>
 
 <p>This process maintains up to date information on software security vulnerabilities
 in Repology by periodically fetching <a href="https://nvd.nist.gov/vuln/data-feeds#JSON_FEED">NVD JSON feeds</a>.
