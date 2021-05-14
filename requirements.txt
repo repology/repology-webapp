@@ -1,5 +1,5 @@
 Jinja2
-flask
+flask>=1,<2
 libversion
 pillow
 psycopg2
