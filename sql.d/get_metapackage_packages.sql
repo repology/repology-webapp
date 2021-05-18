@@ -62,7 +62,7 @@ SELECT
 	(
 		SELECT url
 		FROM links
-		WHERE id IN (
+		WHERE id = (
 			SELECT
 				link_id
 			FROM (
@@ -72,13 +72,15 @@ SELECT
 			) AS expanded_links
 			WHERE
 				link_type IN (
-					5, -- PACKAGE_HOMEPAGE
-					7, -- PACKAGE_REPOSITORY
-					9, -- PACKAGE_RECIPE
-					10 -- PACKAGE_RECIPE_RAW
+					4,  -- PROJECT_HOMEPAGE
+					5,  -- PACKAGE_HOMEPAGE
+					7,  -- PACKAGE_REPOSITORY
+					9,  -- PACKAGE_RECIPE
+					10  -- PACKAGE_RECIPE_RAW
 				)
+			ORDER BY link_type, link_id  -- provide some stability (but note that there's no preference mechanism)
+			LIMIT 1
 		) --AND coalesce(ipv4_success, true)  -- XXX: better display link status
-		LIMIT 1
 	) AS url
 {%   endif %}
 {%  endif %}
