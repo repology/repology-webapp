@@ -14,10 +14,10 @@
 		{% if report.accepted is none %}not processed yet{% elif report.accepted %}accepted{% else %}rejected{% endif %}
 	</div>
 	<div class="panel-body"><b>Flags:</b>
-		{% if report.need_verignore %}<b>ignore</b>{% endif %}
-		{% if report.need_split %}<b>split</b>{% endif %}
-		{% if report.need_merge %}<b>merge</b>{% endif %}
-		{% if report.need_vuln %}<b>vuln</b>{% endif %}
+		{% if report.need_verignore %}<b>ignore</b>,{% endif %}
+		{% if report.need_split %}<b>split</b>,{% endif %}
+		{% if report.need_merge %}<b>merge</b>,{% endif %}
+		{% if report.need_vuln %}<b>vuln</b>,{% endif %}
 		{% if report.comment %}
 		<p><b>Comment:</b>
 			{% for line in report.comment.split('\n') -%}
