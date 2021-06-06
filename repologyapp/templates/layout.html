@@ -21,7 +21,7 @@
 {% if now().month == 6 and now().day == 6 and ':' not in request.environ.REMOTE_ADDR and request.endpoint != 'index' %}
 <div class="site-alert-outer">
 	<div class="container site-alert-inner">
-		<img src="https://www.worldipv6launch.org/wp-content/themes/ipv6/downloads/World_IPv6_launch_logo.svg" alt="IPv6 logo" height="64">
+		<img src="{{ url_for("static", filename="ipv6.v1.svg") }}" alt="IPv6 logo" height="64">
 		<p>You are connected to Repology using legacy IPv4 protocol.
 		Due to <a href="https://en.wikipedia.org/wiki/IPv6#IPv4_address_exhaustion">IPv4 address exhaustion</a>
 		it may become too expensive or impossible for Repology to support IPv4 in the nearest future.
