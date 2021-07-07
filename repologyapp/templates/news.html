@@ -7,6 +7,21 @@
 <div class="container">
 
 <article>
+	<h3 id="2021-06-30">2021-06-30</h3>
+	<ul>
+		<li>Added <a href="{{ url_for('repository', repo='sclo') }}">Software Collections</a> repository.</li>
+		<li>
+			<p>RPM version parsing improved:</p>
+			<ul>
+				<li>Prerelease suffixes (<code>alphaX</code>, <code>betaX</code>, <code>rcX</code> etc.) are now parsed from RPM <code>release</code> field and appended to the <code>version</code>. This fixes a lot of false new versions from RPM repos.</li>
+				<li>Versions from RPM repos are now ignored when <code>release</code> field suggest a snapshot (starts with zero, contains dates or git commits).</li>
+				<li>All RPM parsers now use unified logic.</li>
+			</ul>
+		</li>
+	</ul>
+</article>
+
+<article>
 	<h3 id="2021-05-25">2021-05-25</h3>
 	<ul>
 		<li>Added <a href="{{ url_for('repository', repo='melpa_stable') }}">MELPA Stable</a> repository.</li>
