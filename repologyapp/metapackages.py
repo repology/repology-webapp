@@ -127,7 +127,7 @@ class MetapackagesFilterInfo:
                 elif fielddesc.argtype is int and flask_args[fieldname].isdecimal():
                     self._args[fieldname] = int(flask_args[fieldname])
                 elif fielddesc.argtype is str and flask_args[fieldname]:
-                    self._args[fieldname] = fielddesc.sanitize(flask_args[fieldname])  # type: ignore
+                    self._args[fieldname] = fielddesc.sanitize(flask_args[fieldname])
 
     def get_dict(self) -> Dict[str, Any]:
         return self._args
@@ -136,7 +136,7 @@ class MetapackagesFilterInfo:
         request = MetapackageRequest()
         for fieldname, fielddesc in MetapackagesFilterInfo._fields.items():
             if fieldname in self._args:
-                fielddesc.action(request, self._args[fieldname])  # type: ignore
+                fielddesc.action(request, self._args[fieldname])
 
         return request
 
