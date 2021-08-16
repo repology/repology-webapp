@@ -21,6 +21,7 @@ from typing import Any, Callable, Dict, List, Optional
 import flask
 
 import psycopg2
+import psycopg2.errors
 
 from repologyapp.config import config
 from repologyapp.db import get_db
@@ -129,7 +130,7 @@ def admin_redirects() -> Response:
                         else:
                             get_db().add_project_manual_redirect(project, redirect)
                         flask.flash('Incoming redirect added', 'success')
-                    except psycopg2.errors.UniqueViolation:
+                    except psycopg2.errors.UniqueViolation:  # type: ignore  # broken typing stubs for psycopg2
                         flask.flash('Redirect already exists', 'danger')
             elif flask.request.form.get('action') == 'remove':
                 get_db().remove_project_manual_redirect(
@@ -144,7 +145,7 @@ def admin_redirects() -> Response:
                         flask.request.form.get('newname')
                     )
                     flask.flash('Redirect inverted', 'success')
-                except psycopg2.errors.UniqueViolation:
+                except psycopg2.errors.UniqueViolation:  # type: ignore  # broken typing stubs for psycopg2
                     flask.flash('Inverted redirect already exists', 'danger')
 
             return flask.redirect(flask.url_for('admin_redirects', project=project), 302)
