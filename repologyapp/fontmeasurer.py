@@ -31,7 +31,7 @@ class _CacheEntry:
 
 
 class FontMeasurer:
-    _font: PIL.ImageFont
+    _font: PIL.ImageFont.FreeTypeFont
     _cache: Dict[str, _CacheEntry]
     _maxcachesize: int
     _generation: int
