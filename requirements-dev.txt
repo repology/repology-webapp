@@ -5,3 +5,7 @@ git+git://github.com/AMDmi3/flake8-import-order.git@zoneinfo-as-stdlib#egg=flake
 flake8-quotes
 mypy>=0.800
 pytidylib
+types-Flask
+types-Jinja2
+types-Pillow
+types-psycopg2
