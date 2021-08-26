@@ -29,7 +29,7 @@ from typing import Any, List, Optional
 from repologyapp import app
 
 
-TIDY_OPTIONS = {'drop-empty-elements': False}
+TIDY_OPTIONS = {'drop-empty-elements': False, 'doctype': 'html5'}
 
 
 html_validation = True
