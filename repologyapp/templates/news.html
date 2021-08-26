@@ -7,6 +7,14 @@
 <div class="container">
 
 <article>
+	<h3 id="2021-08-26">2021-08-26</h3>
+	<ul>
+		<li>Added versioned Debian repositories <a href="{{ url_for('repository', repo='debian_8') }}">8</a>, <a href="{{ url_for('repository', repo='debian_9') }}">9</a>, <a href="{{ url_for('repository', repo='debian_10') }}">10</a>, <a href="{{ url_for('repository', repo='debian_11') }}">11</a>, <a href="{{ url_for('repository', repo='debian_12') }}">12</a> as well as corresponding backports, where available. "Debian Stable" and "Debian Testing" repositories are now deprecated and will be removed in 2 months. History and events of new repositories will start from scratch, as migration deemed to be too difficult.</li>
+		<li>Added <a href="{{ url_for('repository', repo='noir') }}">NOIR Linux</a> repository.</li>
+	</ul>
+</article>
+
+<article>
 	<h3 id="2021-08-18">2021-08-18</h3>
 	<ul>
 		<li>Added <a href="{{ url_for('repository', repo='spack') }}">Spack</a> repository.</li>
