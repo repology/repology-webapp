@@ -15,11 +15,11 @@
 # You should have received a copy of the GNU General Public License
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
+import json
 from dataclasses import dataclass
 from datetime import timedelta
 from enum import Enum
 from typing import List
-import json
 
 import flask
 
@@ -33,6 +33,7 @@ from repologyapp.view_registry import Response, ViewRegistrar
 class EndpointType(Enum):
     HTML = 1
     JSON = 2
+
 
 @dataclass
 class AllowedTargetPage:
