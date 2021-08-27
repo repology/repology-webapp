@@ -17,7 +17,9 @@
 
 from dataclasses import dataclass
 from datetime import timedelta
+from enum import Enum
 from typing import List
+import json
 
 import flask
 
@@ -28,11 +30,16 @@ from repologyapp.template_functions import url_for_self
 from repologyapp.view_registry import Response, ViewRegistrar
 
 
+class EndpointType(Enum):
+    HTML = 1
+    JSON = 2
+
 @dataclass
 class AllowedTargetPage:
     endpoint: str
     desc: str
     args: List[str]
+    type_: EndpointType = EndpointType.HTML
 
 
 _ALLOWED_TARGET_PAGES = [
@@ -54,7 +61,7 @@ _ALLOWED_TARGET_PAGES = [
     # passing parameters for redirect target, such as a namespace (repo=...&target:repo=...)
     AllowedTargetPage('badge_version_for_repo', 'Tiny badge with version for this repository — /badge/version-for-repo/<repo>/<name>.svg', ['name', 'repo']),
 
-    AllowedTargetPage('api_v1_project', 'API v1 project information — /api/v1/project/<name>', ['name']),
+    AllowedTargetPage('api_v1_project', 'API v1 project information — /api/v1/project/<name>', ['name'], EndpointType.JSON),
 ]
 
 
@@ -112,10 +119,27 @@ def tool_project_by() -> Response:
             if not targets:
                 return (flask.render_template('project-by-failed.html', reason='no_package'), 404)
             elif noautoresolve and len(targets) > 1:
-                return flask.render_template(
-                    'project-by-ambiguity.html',
-                    targets=targets,
-                )
+                if target_page.type_ == EndpointType.JSON:
+                    return (
+                        json.dumps(
+                            {
+                                '_comment': 'Ambiguous redirect, multiple target projects are possible',
+                                'targets': {
+                                    project: url for project, url in targets
+                                }
+                            }
+                        ),
+                        300,
+                        {'Content-type': 'application/json'},
+                    )
+                else:
+                    return (
+                        flask.render_template(
+                            'project-by-ambiguity.html',
+                            targets=targets,
+                        ),
+                        300
+                    )
             else:
                 return flask.redirect(targets[0][1], 302)
         else:
