@@ -19,7 +19,7 @@ import re
 from collections import defaultdict
 from functools import cmp_to_key
 from itertools import zip_longest
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import flask
 
@@ -31,6 +31,19 @@ from repologyapp.globals import repometadata
 from repologyapp.package import PackageDataMinimal, PackageStatus
 from repologyapp.packageproc import packageset_to_best, packageset_to_best_by_repo
 from repologyapp.view_registry import Response, ViewRegistrar
+
+
+class RepositoryFilter:
+    _exclude_sources: set[str]
+
+    def __init__(self, args: dict[str, Any]) -> None:
+        self._exclude_sources = set(args.get('exclude_sources', '').split(','))
+
+    def check(self, reponame: str) -> bool:
+        if repometadata[reponame]['type'] in self._exclude_sources:
+            return False
+
+        return True
 
 
 @ViewRegistrar('/badge/vertical-allrepos/<name>.svg')
@@ -48,9 +61,14 @@ def badge_vertical_allrepos(name: str) -> Response:
     header = args.get('header')
     minversion = args.get('minversion')
 
+    repo_filter = RepositoryFilter(args)
+
     cells = []
 
     for reponame in repometadata.active_names():
+        if not repo_filter.check(reponame):
+            continue
+
         if reponame in best_pkg_by_repo:
             version = best_pkg_by_repo[reponame].version
             versionclass = best_pkg_by_repo[reponame].versionclass
@@ -171,6 +189,8 @@ def badge_versions_matrix() -> Response:
 
     require_all = args.get('require_all', False)
 
+    repo_filter = RepositoryFilter(args)
+
     # get and process packages
     packages = [
         PackageDataMinimal(**item)
@@ -197,11 +217,14 @@ def badge_versions_matrix() -> Response:
     for name in required_projects.keys():
         cells[0].append(BadgeCell(name))
 
-    for repo in repometadata.sorted_active_names(repos):
-        row = [BadgeCell(repometadata[repo]['desc'], align='r')]
+    for reponame in repometadata.sorted_active_names(repos):
+        if not repo_filter.check(reponame):
+            continue
+
+        row = [BadgeCell(repometadata[reponame]['desc'], align='r')]
 
         for effname, restriction in required_projects.items():
-            if effname not in best_packages_by_project or repo not in best_packages_by_project[effname]:
+            if effname not in best_packages_by_project or reponame not in best_packages_by_project[effname]:
                 # project not found in repo
                 row.append(BadgeCell('-'))
 
@@ -210,7 +233,7 @@ def badge_versions_matrix() -> Response:
                 else:
                     continue
 
-            package = best_packages_by_project[effname][repo]
+            package = best_packages_by_project[effname][reponame]
             unsatisfying = False
 
             if restriction is not None:
