@@ -102,7 +102,7 @@
 
 <p>Most badges may be tweaked by specifying additional parameters in the URL.</p>
 
-<h3>header</h3>
+<h3><code>header</code></h3>
 
 <p>Works for all badges. Changes the header/caption of the badge. Specify empty header to remove it completely.</p>
 
@@ -124,7 +124,7 @@
 	</tr>
 </table>
 
-<h3>minversion</h3>
+<h3><code>minversion</code></h3>
 
 <p>Specify "minimal acceptable version" - any versions lesser than it will be marked with crimson color. Useful to mark unacceptable versions based on arbitrary criteria, for instance unsupported dependency versions.</p>
 
@@ -141,7 +141,7 @@
 	</tr>
 </table>
 
-<h3>allow_ignored</h3>
+<h3><code>allow_ignored</code></h3>
 
 <p>By default, when picking the version to show on badge, all <span class="version version-rolling">rolling</span>, <span class="version version-noscheme">noscheme</span>, <span class="version version-incorrect">incorrect</span>, <span class="version version-untrusted">untrusted</span>, <span class="version version-ignored">ignored</span> versions are skipped (so, for instance, rolling <code>9999</code> versions in Gentoo do not hide real stable versions). When <code>allow_ignored</code> parameter is specified (with some non-empty value), the greatest version is always picked regardless of status.</p>
 
