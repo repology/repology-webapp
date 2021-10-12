@@ -228,7 +228,7 @@ class TestFlask(unittest.TestCase):
 
     def test_tools(self) -> None:
         self.checkurl_html('/tools/project-by')
-        self.checkurl_html('/tools/project-by?repo=debian_unstable&name_type=srcname&target_page=project_versions')
+        self.checkurl_html('/tools/project-by?repo=freebsd&name_type=srcname&target_page=project_versions')
 
         self.checkurl_html('/tools/trending')
 
