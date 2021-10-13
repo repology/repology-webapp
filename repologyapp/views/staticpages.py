@@ -35,11 +35,6 @@ def docs_about() -> Response:
     return flask.render_template('docs/about.html')
 
 
-@ViewRegistrar('/docs/addrepo')
-def docs_addrepo() -> Response:
-    return flask.render_template('docs/addrepo.html')
-
-
 @ViewRegistrar('/docs/bots')
 def docs_bots() -> Response:
     return flask.render_template('docs/bots.html')

@@ -98,7 +98,6 @@ class TestFlask(unittest.TestCase):
         self.checkurl_html('/news', has=['Added', 'repository'])  # assume we always have "Added xxx repository" news there
         self.checkurl_html('/docs')
         self.checkurl_html('/docs/about')
-        self.checkurl_html('/docs/addrepo')
         self.checkurl_html('/docs/bots')
         self.checkurl_html('/docs/not_supported')
         self.checkurl_html('/docs/requirements')

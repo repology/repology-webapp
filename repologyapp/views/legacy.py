@@ -336,3 +336,8 @@ def maintainer_problems_legacy(maintainer: str) -> Response:
         ),
         301
     )
+
+
+@ViewRegistrar('/docs/addrepo')
+def docs_addrepo() -> Response:
+    return flask.redirect(flask.url_for('docs_requrements'), 301)
