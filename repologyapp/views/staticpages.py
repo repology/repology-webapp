@@ -25,29 +25,29 @@ def news() -> Response:
     return flask.render_template('news.html')
 
 
-@ViewRegistrar('/about')
-def about() -> Response:
-    return flask.render_template('about.html')
-
-
 @ViewRegistrar('/docs')
 def docs() -> Response:
-    return flask.render_template('docs.html')
+    return flask.render_template('docs/docs.html')
 
 
-@ViewRegistrar('/addrepo')
-def addrepo() -> Response:
-    return flask.render_template('addrepo.html')
+@ViewRegistrar('/docs/about')
+def docs_about() -> Response:
+    return flask.render_template('docs/about.html')
+
+
+@ViewRegistrar('/docs/addrepo')
+def docs_addrepo() -> Response:
+    return flask.render_template('docs/addrepo.html')
+
+
+@ViewRegistrar('/docs/bots')
+def docs_bots() -> Response:
+    return flask.render_template('docs/bots.html')
 
 
 @ViewRegistrar('/docs/requirements')
 def docs_requirements() -> Response:
     return flask.render_template('docs/requirements.html')
-
-
-@ViewRegistrar('/bots')
-def bots() -> Response:
-    return flask.render_template('bots.html')
 
 
 @ViewRegistrar('/favicon.ico')

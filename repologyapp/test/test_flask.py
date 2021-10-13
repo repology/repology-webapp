@@ -96,7 +96,11 @@ class TestFlask(unittest.TestCase):
 
     def test_static_pages(self) -> None:
         self.checkurl_html('/news', has=['Added', 'repository'])  # assume we always have "Added xxx repository" news there
-        self.checkurl_html('/about', has=['maintainers'])
+        self.checkurl_html('/docs')
+        self.checkurl_html('/docs/about')
+        self.checkurl_html('/docs/addrepo')
+        self.checkurl_html('/docs/bots')
+        self.checkurl_html('/docs/requirements')
         self.checkurl_html('/api', has=['/api/v1/projects/firefox'])
 
     def test_titlepage(self) -> None:
