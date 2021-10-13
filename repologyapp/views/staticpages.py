@@ -27,7 +27,7 @@ def news() -> Response:
 
 @ViewRegistrar('/docs')
 def docs() -> Response:
-    return flask.render_template('docs/docs.html')
+    return flask.render_template('docs/index.html')
 
 
 @ViewRegistrar('/docs/about')
