@@ -1,0 +1,190 @@
+{% extends "layout.html" %}
+
+{% block title %}Not supported repositories - Repology{% endblock %}
+{% block header %}Not supported repositories{% endblock %}
+
+{% block content %}
+<div class="container">
+
+<p>This is (an incomplete) list of repositories not added to Repology
+after a request, or removed from Repology due to not meeting our
+<a href="{{ url_for('docs_requirements') }}">requirements</a> (e.g.
+not being compatible). We'll be glad to add them as soon as they
+fix the mentioned issues and publish package data in an usable
+format.</p>
+
+<ul class="list-unstyled">
+	<li>
+		<h3>4M Linux</h3>
+		<p>No usable data.</p>
+		<ul>
+			<li><a href="https://github.com/repology/repology-updater/issues/266">Issue</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>Buildroot</h3>
+		<p>Requires complex parser (Makefiles).</p>
+		<ul>
+			<li><a href="https://git.busybox.net/buildroot/tree/package">Repository</a></li>
+			<li><a href="https://git.busybox.net/buildroot/tree/package/alsamixergui/alsamixergui.mk">Recipe example</a></li>
+			<li><a href="https://github.com/repology/repology-updater/issues/1081">Issue</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>Clear Linux</h3>
+		<p>No compatible package names.</p>
+		<ul>
+			<li><a href="https://github.com/repology/repology-updater/issues/989">Issue</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>Collective Knowledge</h3>
+		<p>No usable data.</p>
+		<ul>
+			<li><a href="https://github.com/repology/repology-updater/issues/714">Issue</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>conda</h3>
+		<p>No upstream URLs, modules are not prefixed.</p>
+		<ul>
+			<li><a href="https://github.com/repology/repology-updater/issues/518">Issue</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>CTAN</h3>
+		<p>No suitable way to fetch data.</p>
+		<ul>
+			<li><a href="https://github.com/repology/repology-updater/issues/886">Issue</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>Cydia</h3>
+		<p>No way to fetch just the needed data.</p>
+		<ul>
+			<li><a href="https://github.com/repology/repology-updater/issues/605">Issue</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>EasyBuild</h3>
+		<p>No usable data.</p>
+		<ul>
+			<li><a href="https://github.com/repology/repology-updater/issues/705">Issue</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>Fink</h3>
+		<p>No usable data.</p>
+		<ul>
+			<li><a href="https://github.com/repology/repology-updater/issues/243">Issue</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>flathub</h3>
+		<p>No usable data. Also Repology does not support self-contained blobs like flatpaks, which require versions of all bundled components to be considered.</p>
+		<ul>
+			<li><a href="https://github.com/repology/repology-updater/issues/363">Issue</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>Hunter</h3>
+		<p>Requires complex parser (CMake), does not provide upstream URLs.</p>
+		<ul>
+			<li><a href="https://github.com/repology/repology-updater/pull/1184">Pull</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>KISS</h3>
+		<p>Delisted after data format change. New format involves variable substitutions and requires a complex parser.</p>
+		<ul>
+			<li><a href="https://github.com/repology/repology-updater/issues/1166">Issue</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>Lunar Linux</h3>
+		<p>No usable data.</p>
+		<ul>
+			<li><a href="https://github.com/repology/repology-updater/issues/785">Issue</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>Meson WrapDB</h3>
+		<p>No suitable way to fetch data.</p>
+		<ul>
+			<li><a href="https://github.com/repology/repology-updater/issues/1138">Issue</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>OpenCSW</h3>
+		<p>No compatible package names.</p>
+		<ul>
+			<li><a href="https://github.com/repology/repology-updater/issues/367">Issue</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>pkgsrc-wip</h3>
+		<p>No usable data.</p>
+		<ul>
+			<li><a href="https://github.com/repology/repology-updater/issues/810">Issue</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>poky</h3>
+		<p>Requres complex parser (shell).</p>
+		<ul>
+			<li><a href="https://github.com/repology/repology-updater/issues/603">Issue</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>Puppy Linux</h3>
+		<p>No usable data.</p>
+		<ul>
+			<li><a href="https://github.com/repology/repology-updater/issues/324">Issue</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>snapcraft</h3>
+		<p>API requires authorization, no usable data. Also Repology does not support self-contained blobs like snaps, which require versions of all bundled components to be considered.</p>
+		<ul>
+			<li><a href="https://github.com/repology/repology-updater/issues/627">Issue</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>Source Mage</h3>
+		<p>No upstream URLs, modules are not prefixed.</p>
+		<ul>
+			<li><a href="https://github.com/repology/repology-updater/issues/364">Issue</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>Spack</h3>
+		<p>No usable data.</p>
+		<ul>
+			<li><a href="https://github.com/repology/repology-updater/issues/706">Issue</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>SWORD</h3>
+		<p>Requires parsing HTML.</p>
+		<ul>
+			<li><a href="https://github.com/repology/repology-updater/issues/1076">Issue</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>SystemRescueCD</h3>
+		<p>No compatible package names (basenames), no upstream URLs, requires parsing HTML.</p>
+		<ul>
+			<li><a href="https://github.com/repology/repology-updater/issues/1031">Issue</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>Tiny Core</h3>
+		<p>Incompatible package names and versions.</p>
+		<ul>
+			<li><a href="https://github.com/repology/repology-updater/issues/784">Issue</a></li>
+		</ul>
+	</li>
+</ul>
+
+</div> {#- container #}
+{% endblock %}

@@ -100,6 +100,7 @@ class TestFlask(unittest.TestCase):
         self.checkurl_html('/docs/about')
         self.checkurl_html('/docs/addrepo')
         self.checkurl_html('/docs/bots')
+        self.checkurl_html('/docs/not_supported')
         self.checkurl_html('/docs/requirements')
         self.checkurl_html('/api', has=['/api/v1/projects/firefox'])
 

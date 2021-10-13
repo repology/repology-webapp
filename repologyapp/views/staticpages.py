@@ -45,6 +45,11 @@ def docs_bots() -> Response:
     return flask.render_template('docs/bots.html')
 
 
+@ViewRegistrar('/docs/not_supported')
+def docs_not_supported() -> Response:
+    return flask.render_template('docs/not_supported.html')
+
+
 @ViewRegistrar('/docs/requirements')
 def docs_requirements() -> Response:
     return flask.render_template('docs/requirements.html')
