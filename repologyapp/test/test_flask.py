@@ -103,6 +103,10 @@ class TestFlask(unittest.TestCase):
         self.checkurl_html('/docs/requirements')
         self.checkurl_html('/api', has=['/api/v1/projects/firefox'])
 
+        self.checkurl_301('/about')
+        self.checkurl_301('/addrepo')
+        self.checkurl_301('/docs/addrepo')
+
     def test_titlepage(self) -> None:
         self.checkurl('/', has=['FreeBSD', 'virtualbox'])
 
