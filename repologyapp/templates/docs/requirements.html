@@ -1,0 +1,201 @@
+{% extends "layout.html" %}
+
+{% block title %}Requirements for new repositories{% endblock %}
+{% block header %}Requirements for new repositories{% endblock %}
+
+{% block content %}
+<div class="container">
+
+<article>
+
+<section>
+
+<p><em>Note that these requirements have evolved along with Repology,
+and some repositories already supported by Repology may not comply
+to them. This may not be used as an excuse for new repositories not
+to comply, and may be a base for delisting or pessimization of
+existing repositories.</em></p>
+
+</section>
+
+<section>
+
+<h2>Rationale</h2>
+
+<p>As time passes, Repology requires more and more time to maintain,
+keeping increasing number of supported repositories successfully
+updating, ensuring that increasing number of packages are being
+properly grouped into corresponding projects, and preventing
+increasing number of these projects from being affected by incorrect
+data from some repositories.
+</p>
+
+<p>To keep providing reliable information on packaging statuses
+and latest versions, and free our resources for improving Repology
+instead of processing incorrect data reports and adding rules, we
+gradually raise requirements to repositories to provide consistent
+data in an easy to process way.
+</p>
+
+<p>Apart from keeping Repology up and running, we strive to unite
+packaging communities, and these requirements serve this purpose
+no less, allowing more unified tools to appear, being able to use
+consistent package data.</p>
+
+</section>
+
+<section>
+
+<h2>Data format</h2>
+
+<p>We expect package data to be in a machine readable format, which
+does not require complex parsing code, not mentioning execution of
+third party code.</p>
+
+<p>Acceptable formats:</p>
+<ul>
+	<li>Commonly used data interchange formats, such as <strong class="text-success">JSON</strong> (preferred), <strong class="text-success">XML</strong>, <strong class="text-success">YAML</strong>, <strong class="text-success">Protobuf</strong>, <strong class="text-success">CSV</strong>/<strong class="text-success">DSV</strong>.</li>
+	<li><strong class="text-success">Plain text key/value</strong>-like formats such as Debian Sources.xz.</li>
+</ul>
+
+<p>Formats which are not acceptable include raw <strong class="text-danger">shell</strong> (PKGBUILDs,
+ebuilds) or <strong class="text-danger">build system</strong> (CMake) <strong class="text-danger">scripts</strong>. For instance, these may
+contain variable substitutions which require full-fledged execution
+to be parsed reliably. HTML is also not acceptable as it's intended
+for humans and is prone to layout change which breaks parsing.
+</p>
+
+</section>
+
+<section>
+
+<h2>Availability</h2>
+
+<p>We expect to be able to fetch package data in a fast, easy, reliable, and
+consistent way. <strong class="text-success">Single file</strong> is preferred, <strong class="text-success">tarball</strong> or <strong class="text-success">git repository</strong>
+with a bunch of small files is acceptable, however it must not contain
+any weighty unusable data such as software sources.
+</p>
+
+<p>The approach where Repology has to do a HTTP <strong class="text-danger">request per each
+package</strong>, or <strong class="text-danger">paginate</strong> through an API is not acceptable. This involves
+a lot of HTTP requests which implies slow fetching, multiplicatively
+increases chance of unsuccessfull fetch, and provides inconsistent
+data from different points in time.
+</p>
+
+<p>Not publicly available sources which require registration or
+private access tokens are absolutely not supported.
+</p>
+
+</section>
+
+<section>
+
+<h2>Completeness</h2>
+
+<p>We require the following package information to be available:</p>
+
+<ul>
+	<li>Package <strong>name</strong> in a compatible format (see below).</li>
+	<li>Package <strong>version</strong> (although exception may be made for repositories providing all packages from VCS <code>master</code> branch).</li>
+	<li>Some kind of <strong>upstream URL</strong> such as homepage or download. We rely on that to split unrelated, but similarly named projects.</li>
+	<li>Package <strong>recipe URL</strong> (e.g. valid link to Makefile/.spec/PKGBUILD/ebuild/...). This is required for anyone to be able to check where package data comes from and verify its correctness. It does not need to be explicitly provided in the data if it can be constructed from other data fields (as in filling in package name and version in a link template <code>http://example.com/specs/{name}/{version}.spec</code>).</li>
+</ul>
+
+<p>The following information is optional, but desirable:</p>
+
+<ul>
+	<li><strong>Maintainer</strong>(s), if applicable (used in <a href="{{ url_for('maintainers') }}">maintainer search</a>, to generate per-maintainer statistics and feeds, in project filtering). Note that it's also possible to configure default maintainer for a repository.</li>
+	<li>One-line <strong>summary</strong> (shown on project information page). Multiline descriptions are currently not supported.</li>
+	<li><strong>License</strong> (shown on project information page).</li>
+	<li><strong>CPE</strong> information (used to report bad or missing CPE information back to repositories).</li>
+	<li><strong>Homepage</strong> and <strong>download URLs</strong> (used to match related projects, shown on project information page, broken links are reported back to repositories).</li>
+	<li><strong>Categories</strong> or <strong>tags</strong> (used in project filtering).</li>
+	<li>Alternative package <strong>names or identifiers</strong> (used for various purposes such as tracking packages across renames and creating human readable project names). In particular, list of binary package names for a source package.</li>
+</ul>
+
+<p>The following links are also very desirable:</p>
+
+<ul>
+	<li>Links to <strong>patches</strong>.</li>
+	<li>Links to package <strong>build logs</strong> and <strong>build status</strong> pages.</li>
+	<li>Links to <strong>bug tracker issues</strong> for a package.</li>
+	<li>Links to package related <strong>statistics</strong> (such as <a href="https://popcon.debian.org/">Debian Popularity Contest</a>).</li>
+	<li>Links to package <strong>documentation</strong> (such as related wiki pages).</li>
+</ul>
+
+<p>These are currently only shown on project information pages, but wider support is planned, e.g. providing dedicated pages with all build logs, statuses, patches or issues for upstreams convenience. Like with links to recipes, there's no need to explicitly provide these URLs if they can be constructed from other package data.</p>
+
+<p>The following information is not currently used, but will be in the future:</p>
+
+<ul>
+	<li>Architecture.</li>
+	<li>Dependencies.</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>Consistency and quality</h2>
+
+<p>We need data (mainly names and versions) to be in a compatible
+form in order to be able to match packages and compare versions
+from different repositories.
+</p>
+
+<p>Requirements on package <strong>names</strong>:</p>
+
+<ul>
+	<li>Should be <strong>short project names</strong> as used in URLs, distfiles, repository and obviously package names, such as <code>firefox</code>, <code>clementine</code>, or <code>gnome-games</code>. It should not be some obscure (<code>org.gnome.games</code>) or human readable (<code>Firefox Web Browser</code>) custom format.  </li>
+	<li>If a repository commonly provides multiple packages for a single project (for example, there may be packages named <code>libogg0</code>, <code>libogg-dev</code>, <code>libogg-dbg</code>, <code>libogg-doc</code> for <em>libogg</em> project) <strong>common name</strong> (<code>libogg</code> in this case) should be available for all the packages. Some repositories may call it <em>basename</em> or <em>source package name</em>.</li>
+	<li>Likewise, of a repository commonly uses prefixes or suffixes for package names (such as <code>-git</code> or <code>-devel</code> when packaging development versions, or <code>-compat</code> for legacy versions), it should be easy to <strong>strip these prefixes or suffixes</strong> off.</li>
+	<li>
+		<p>If a repository packages programming language (Perl/Python/Ruby/PHP/Node.js/Haskell/R/Rust etc.) modules, these should be appropriately and consistently <strong>prefixed (suffixed)</strong> to distinguish them from each other and from other projects both within a single repository and across different repositories. Packages are also expected to be <strong>named the exactly same way</strong> they are in official module repositories (such as Rubygems or PyPI).</p>
+		<p>For example, python modules may have <code>python-&lt;PyPI name&gt;</code>, <code>py39-&lt;PyPI name&gt;</code> or <code>lib&lt;PyPI name&gt;-python</code> naming pattern, and a module named <code>python-twitter</code> may have to be packaged as e.g. <code>python-python-twitter</code> (otherwise it will clash with <code>python-twitter</code>, a package for <code>twitter</code> module).</p>
+	</li>
+</ul>
+
+<p>For repositories failing to comply with these requirements
+Repology may be unable to merge some packages into their designated
+projects (which, in turn, prevents it from reporting new versions
+and vulnerabilities), or, which is worse, would merge packages into
+unrelated projects.
+</p>
+
+<p>Requirements on package <strong>versions</strong>:</p>
+
+<ul>
+	<li><strong class="text-danger">No trimming</strong> of version components is allowed. E.g. <code>1.2.3alpha4</code> must not be shortened to <code>1.2.3</code>.</li>
+	<li>No <strong class="text-danger">incompatible changes</strong> to version scheme. E.g. <code>1.2.3alpha4</code>, <code>2.04</code>, <code>1.4.0-rc5</code>, <code>1.20.30</code> must not be conveyed as e.g. <code>1.2.3.a.4</code>, <code>2.04000000</code>, <code>1.4.0.5</code>, and <code>1.2030</code> correspondingly. Still, some modifications are allowed, for instance it's OK to change version component separators (<code>1-2_3</code> equals <code>1.2.3</code>) or trim trailing zero components (<code>1.2</code> equals <code>1.2.0</code>). See <a href="https://github.com/repology/libversion">libversion documentation</a> for details.</li>
+	<li>It should be possible to strip repository-specific extra version components (such as package <strong class="text-warning">epoch and revisions</strong>). For instance, <code>1:2.3.4_5</code> is OK as long as semicolon separates an epoch and underscore separates a revision, so these can be stripped to get upstream version <code>2.3.4</code>, while with something like <code>2.3.4+dfsg1~alpha1+1-2.3</code> it would be impossible and Repology will have to ignore such version.</li>
+	<li>No unrelated appendages, such as version or name of another product (<code>zfs 0.7.12-4.18.20</code>, where <code>4.18.20</code> is version of kernel, not related to version of zfs), or branch name (<code>wine 3.14-staging</code>).</li>
+	<li>Obviously, <strong class="text-danger">no fake versions</strong>, e.g. versions which were not officially released by upstream. Note that a mere mention of "next" version by upstream (in changelog or build system script) does not make it official. A git tag or a release announcement does.</li>
+	<li>
+		<p><strong class="text-warning">Snapshot</strong> versions are generally allowed, but impose additional requirements:</p>
+		<ul>
+			<li>Are required to have consistent scheme across a repository (so we can reliably match them with a single pattern and process specially).</li>
+			<li>Must be distinguishable from official versions (so no official versions are falsely matched by the named pattern).</li>
+			<li>Must use version relative to the latest official release, that is if a latest upstream release was <code>1.2</code>, a snapshot may have a version like <code>1.2.20210101</code>, but not <code>1.3.20210101</code> (based on non-existing version) or <code>20210101</code> (incompatible scheme).</li>
+		</ul>
+		<p>Snapshots cannot be compared with each other meaningfully as there's common compatible version format for them (but <a href="https://github.com/repology/repology-updater/issues/345">we'd like repositories to adopt one</a>), but complying to these requirements allows Repology to handle them gracefully, which includes</p>
+		<ul>
+			<li>Not treating them as fake versions.</li>
+			<li>Not incorrectly considering them outdated.</li>
+			<li>Being able to report when a snapshot is outdated by a new official release.</li>
+		</ul>
+	</li>
+</ul>
+
+<p>Repositories failing to comply with these requirements may have
+package statuses reported incorrectly or, which is worse, may make
+Repology report incorrect statuses to other repositories.
+</p>
+
+</section>
+
+</article>
+
+</div>
+{% endblock %}

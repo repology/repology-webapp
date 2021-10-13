@@ -40,6 +40,11 @@ def addrepo() -> Response:
     return flask.render_template('addrepo.html')
 
 
+@ViewRegistrar('/docs/requirements')
+def docs_requirements() -> Response:
+    return flask.render_template('docs/requirements.html')
+
+
 @ViewRegistrar('/bots')
 def bots() -> Response:
     return flask.render_template('bots.html')
