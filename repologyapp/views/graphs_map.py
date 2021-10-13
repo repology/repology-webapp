@@ -19,6 +19,8 @@ import math
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, Tuple
 
+import flask
+
 from repologyapp.db import get_db
 from repologyapp.globals import repometadata
 from repologyapp.view_registry import Response, ViewRegistrar
@@ -41,13 +43,14 @@ class _MapPoint:
     color: str
 
 
-def map_repo_generic(getx: Callable[[Dict[str, Any]], float],
+def _map_repo_generic(getx: Callable[[Dict[str, Any]], float],
                      gety: Callable[[Dict[str, Any]], float],
                      namex: str = 'X',
                      namey: str = 'Y',
                      unitx: str = '',
-                     unity: str = '') -> Response:
-
+                     unity: str = '',
+                     xlimit: int | None = None,
+                     ylimit: int | None = None) -> Response:
     points = [
         _MapPoint(
             x=getx(repo),
@@ -64,6 +67,11 @@ def map_repo_generic(getx: Callable[[Dict[str, Any]], float],
     min_y = 0
     max_x = _clever_ceil(max(map(lambda p: p.x, points))) if points else 1
     max_y = _clever_ceil(max(map(lambda p: p.y, points))) if points else 1
+
+    if xlimit is not None:
+        max_x = min(max_x, xlimit)
+    if ylimit is not None:
+        max_y = min(max_y, ylimit)
 
     doc = XmlDocument('svg', xmlns='http://www.w3.org/2000/svg', width=width, height=height)
 
@@ -141,33 +149,60 @@ def map_repo_generic(getx: Callable[[Dict[str, Any]], float],
     )
 
 
+def _parse_limits() -> tuple[int | None, int | None]:
+    args = flask.request.args.to_dict()
+
+    def get_arg(key: str) -> int | None:
+        if key in args:
+            try:
+                return int(args[key])
+            except (TypeError, ValueError):
+                pass
+
+        return None
+
+    return get_arg('xlimit'), get_arg('ylimit')
+
+
 @ViewRegistrar('/graph/map_repo_size_fresh.svg')
 def graph_map_repo_size_fresh() -> Response:
-    return map_repo_generic(
+    xlimit, ylimit = _parse_limits()
+
+    return _map_repo_generic(
         # XXX: to fix following type ignores, repometadata should be converted into dataclass
         getx=lambda repo: repo['num_metapackages'],  # type: ignore
         gety=lambda repo: repo['num_metapackages_newest'],  # type: ignore
         namex='Number of packages in repository',
-        namey='Number of fresh packages in repository'
+        namey='Number of fresh packages in repository',
+        xlimit=xlimit,
+        ylimit=ylimit,
     )
 
 
 @ViewRegistrar('/graph/map_repo_size_fresh_nonunique.svg')
 def graph_map_repo_size_fresh_nonunique() -> Response:
-    return map_repo_generic(
+    xlimit, ylimit = _parse_limits()
+
+    return _map_repo_generic(
         getx=lambda repo: repo['num_metapackages_newest'] + repo['num_metapackages_outdated'],  # type: ignore
         gety=lambda repo: repo['num_metapackages_newest'],  # type: ignore
         namex='Number of non-unique packages in repository',
-        namey='Number of fresh packages in repository'
+        namey='Number of fresh packages in repository',
+        xlimit=xlimit,
+        ylimit=ylimit,
     )
 
 
 @ViewRegistrar('/graph/map_repo_size_freshness.svg')
 def graph_map_repo_size_freshness() -> Response:
-    return map_repo_generic(
+    xlimit, ylimit = _parse_limits()
+
+    return _map_repo_generic(
         getx=lambda repo: repo['num_metapackages'],  # type: ignore
         gety=lambda repo: 100.0 * repo['num_metapackages_newest'] / repo['num_metapackages'] if repo['num_metapackages'] else 0.0,  # type: ignore
         namex='Number of packages in repository',
         namey='Percentage of fresh packages',
-        unity='%'
+        unity='%',
+        xlimit=xlimit,
+        ylimit=ylimit,
     )

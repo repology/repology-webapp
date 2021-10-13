@@ -142,6 +142,10 @@ class TestFlask(unittest.TestCase):
         self.checkurl_svg('/graph/total/problems.svg')
 
         self.checkurl_svg('/graph/map_repo_size_fresh.svg')
+        self.checkurl_svg('/graph/map_repo_size_fresh_nonunique.svg')
+        self.checkurl_svg('/graph/map_repo_size_freshness.svg')
+
+        self.checkurl_svg('/graph/map_repo_size_fresh.svg?xlimit=500&ylimit=500')
 
         self.checkurl_svg('/graph/repo/freebsd/projects_total.svg')
         self.checkurl_svg('/graph/repo/freebsd/projects_newest.svg')
