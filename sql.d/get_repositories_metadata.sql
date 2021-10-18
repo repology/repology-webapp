@@ -21,23 +21,15 @@
 --
 --------------------------------------------------------------------------------
 SELECT
-	name,
+	state != 'legacy'::repository_state AS active,
 
-	sortname,
-	"type",
+	name,
 	"desc",
-	statsgroup,
-	singular,
-	family,
-	color,
-	shadow,
-	repolinks,
-	packagelinks,
+
+	metadata,
 
 	COALESCE(used_package_fields, '{}'::text[]) AS used_package_fields,
 	COALESCE(used_package_link_types, '{}'::int[]) AS used_package_link_types,
-
-	state != 'legacy'::repository_state AS active,
 
 	num_metapackages,
 	num_metapackages_newest

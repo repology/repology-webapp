@@ -26,6 +26,13 @@ __all__ = [
 ]
 
 
+def _convert_metadata(metadata: dict[str, Any]) -> dict[str, Any]:
+    res = metadata['metadata'] if metadata['metadata'] is not None else {}
+    for key in ['name', 'desc', 'used_package_fields', 'used_package_link_types', 'active', 'num_metapackages', 'num_metapackages_newest']:
+        res[key] = metadata[key]
+    return res
+
+
 class RepositoryMetadata:
     AUTOREFRESH_PERIOD: ClassVar[datetime.timedelta] = datetime.timedelta(seconds=300)
 
@@ -39,7 +46,7 @@ class RepositoryMetadata:
         self._update_time = None
 
     def update(self) -> None:
-        self._repos = get_db().get_repositories_metadata()  # already sorted by sortname
+        self._repos = [_convert_metadata(metadata) for metadata in get_db().get_repositories_metadata()]  # already sorted by sortname
         self._by_name = {repo['name']: repo for repo in self._repos}
         self._update_time = datetime.datetime.now()
 
