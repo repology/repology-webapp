@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
+import datetime
 import re
 from collections import defaultdict
 from functools import cmp_to_key
@@ -35,13 +36,19 @@ from repologyapp.view_registry import Response, ViewRegistrar
 
 class RepositoryFilter:
     _exclude_sources: set[str]
+    _exclude_unsupported: bool
 
     def __init__(self, args: dict[str, Any]) -> None:
         self._exclude_sources = set(args.get('exclude_sources', '').split(','))
+        self._exclude_unsupported = bool(args.get('exclude_unsupported', False))
 
     def check(self, reponame: str) -> bool:
         if repometadata[reponame]['type'] in self._exclude_sources:
             return False
+
+        if (valid_till := repometadata[reponame].get('valid_till')) is not None and self._exclude_unsupported:
+            if datetime.date.today() > datetime.date(*map(int, valid_till.split('-'))):
+                return False
 
         return True
 
