@@ -16,7 +16,7 @@
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
-from typing import Any, ClassVar, Dict, Iterable, List, Optional
+from typing import Any, ClassVar, Dict, Iterable, List, Optional, cast
 
 from repologyapp.db import get_db
 
@@ -27,7 +27,7 @@ __all__ = [
 
 
 def _convert_metadata(metadata: dict[str, Any]) -> dict[str, Any]:
-    res = metadata['metadata'] if metadata['metadata'] is not None else {}
+    res = cast(dict[str, Any], metadata['metadata']) if metadata['metadata'] is not None else {}
     for key in ['name', 'desc', 'used_package_fields', 'used_package_link_types', 'active', 'num_metapackages', 'num_metapackages_newest']:
         res[key] = metadata[key]
     return res
