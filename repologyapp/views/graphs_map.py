@@ -44,13 +44,13 @@ class _MapPoint:
 
 
 def _map_repo_generic(getx: Callable[[Dict[str, Any]], float],
-                     gety: Callable[[Dict[str, Any]], float],
-                     namex: str = 'X',
-                     namey: str = 'Y',
-                     unitx: str = '',
-                     unity: str = '',
-                     xlimit: int | None = None,
-                     ylimit: int | None = None) -> Response:
+                      gety: Callable[[Dict[str, Any]], float],
+                      namex: str = 'X',
+                      namey: str = 'Y',
+                      unitx: str = '',
+                      unity: str = '',
+                      xlimit: int | None = None,
+                      ylimit: int | None = None) -> Response:
     points = [
         _MapPoint(
             x=getx(repo),
