@@ -122,7 +122,7 @@ def badge_tiny_repos(name: str) -> Response:
 
 @ViewRegistrar('/badge/version-for-repo/<repo>/<name>.svg')
 def badge_version_for_repo(repo: str, name: str) -> Response:
-    if repo not in repometadata.all_names():
+    if repo not in repometadata.active_names():
         flask.abort(404)
 
     args = flask.request.args.to_dict()
