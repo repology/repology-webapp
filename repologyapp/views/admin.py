@@ -130,7 +130,7 @@ def admin_redirects() -> Response:
                         else:
                             get_db().add_project_manual_redirect(project, redirect)
                         flask.flash('Incoming redirect added', 'success')
-                    except psycopg2.errors.UniqueViolation:  # type: ignore  # broken typing stubs for psycopg2
+                    except psycopg2.errors.UniqueViolation:
                         flask.flash('Redirect already exists', 'danger')
             elif flask.request.form.get('action') == 'remove':
                 get_db().remove_project_manual_redirect(
@@ -145,7 +145,7 @@ def admin_redirects() -> Response:
                         flask.request.form.get('newname')
                     )
                     flask.flash('Redirect inverted', 'success')
-                except psycopg2.errors.UniqueViolation:  # type: ignore  # broken typing stubs for psycopg2
+                except psycopg2.errors.UniqueViolation:
                     flask.flash('Inverted redirect already exists', 'danger')
 
             return flask.redirect(flask.url_for('admin_redirects', project=project), 302)
