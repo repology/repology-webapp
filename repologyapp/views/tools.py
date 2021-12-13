@@ -84,6 +84,7 @@ _ALLOWED_FAMILIES = {
     'homebrew',
     'homebrew_casks',
     'scoop',
+    'sisyphus',
 }
 
 
