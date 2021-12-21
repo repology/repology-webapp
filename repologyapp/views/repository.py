@@ -65,7 +65,7 @@ def repository_feed(repo: str) -> Response:
         history=unicalize_feed_timestamps(
             get_db().get_repository_feed(
                 repo=repo,
-                limit=config['HISTORY_PER_PAGE']
+                limit=config['HTML_FEED_MAX_ENTRIES']
             )
         ),
         autorefresh=autorefresh
@@ -81,8 +81,9 @@ def repository_feed_atom(repo: str) -> Response:
             history=unicalize_feed_timestamps(
                 get_db().get_repository_feed(
                     repo=repo,
-                    timespan=datetime.timedelta(weeks=4),
-                    limit=config['HISTORY_PER_PAGE']
+                    limit=config['ATOM_FEED_MAX_ENTRIES'],
+                    max_age=datetime.timedelta(days=config['ATOM_FEED_MAX_AGE_DAYS']),
+                    min_count=config['ATOM_FEED_MIN_ENTRIES']
                 )
             )
         ),

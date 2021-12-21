@@ -65,6 +65,14 @@ TRENDING_PER_PAGE = 25
 CVES_PER_PAGE = 200
 
 #
+# Feed limitations
+#
+HTML_FEED_MAX_ENTRIES = 500
+ATOM_FEED_MAX_ENTRIES = 500
+ATOM_FEED_MAX_AGE_DAYS = 31
+ATOM_FEED_MIN_ENTRIES = 1  # no less than this when dropping entries by age
+
+#
 # Max reports for metapackage
 #
 MAX_REPORTS = 20

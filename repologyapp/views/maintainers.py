@@ -160,7 +160,7 @@ def maintainer_repo_feed(maintainer: str, repo: str) -> Response:
             get_db().get_maintainer_feed(
                 maintainer=maintainer,
                 repo=repo,
-                limit=config['HISTORY_PER_PAGE']
+                limit=config['HTML_FEED_MAX_ENTRIES']
             )
         ),
         autorefresh=autorefresh
@@ -178,8 +178,9 @@ def maintainer_repo_feed_atom(maintainer: str, repo: str) -> Response:
                 get_db().get_maintainer_feed(
                     maintainer=maintainer,
                     repo=repo,
-                    timespan=datetime.timedelta(weeks=4),
-                    limit=config['HISTORY_PER_PAGE']
+                    limit=config['ATOM_FEED_MAX_ENTRIES'],
+                    max_age=datetime.timedelta(days=config['ATOM_FEED_MAX_AGE_DAYS']),
+                    min_count=config['ATOM_FEED_MIN_ENTRIES']
                 )
             )
         ),
