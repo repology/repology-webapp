@@ -88,6 +88,9 @@ class TestFlask(unittest.TestCase):
     def checkurl_svg(self, url: str, status_code: Optional[int] = 200, mimetype: Optional[str] = 'image/svg+xml', has: List[str] = [], hasnot: List[str] = []) -> xml.etree.ElementTree.Element:
         return self.checkurl_xml(url, status_code, mimetype, has, hasnot)
 
+    def checkurl_atom(self, url: str, status_code: Optional[int] = 200, mimetype: Optional[str] = 'application/atom+xml', has: List[str] = [], hasnot: List[str] = []) -> xml.etree.ElementTree.Element:
+        return xml.etree.ElementTree.fromstring(self.checkurl(url=url, status_code=status_code, mimetype=mimetype, has=has, hasnot=hasnot))
+
     def checkurl_404(self, url: str) -> str:
         return self.checkurl(url=url, status_code=404, mimetype=None)
 
@@ -201,6 +204,10 @@ class TestFlask(unittest.TestCase):
         self.checkurl_301('/maintainer/amdmi3@freebsd.org/problems')
         self.checkurl_html('/maintainer/amdmi3@freebsd.org/problems-for-repo/freebsd')
 
+    def test_maintainer_feeds(self) -> None:
+        self.checkurl_html('/maintainer/amdmi3@freebsd.org/feed-for-repo/freebsd')
+        self.checkurl_atom('/maintainer/amdmi3@freebsd.org/feed-for-repo/freebsd/atom')
+
     def test_repositories(self) -> None:
         self.checkurl_html('/repositories/statistics', has=['FreeBSD'])
         self.checkurl_html('/repositories/statistics/newest', has=['FreeBSD'])
@@ -219,6 +226,10 @@ class TestFlask(unittest.TestCase):
 
     def test_repository_problems(self) -> None:
         self.checkurl_html('/repository/freebsd/problems', has=['FreeBSD'])
+
+    def test_repository_feeds(self) -> None:
+        self.checkurl_html('/repository/freebsd/feed')
+        self.checkurl_atom('/repository/freebsd/feed/atom')
 
     def test_projects(self) -> None:
         self.checkurl_html('/projects/', has=['kiconvtool', '0.97', 'chromium-bsu', '0.9.15.1'])
