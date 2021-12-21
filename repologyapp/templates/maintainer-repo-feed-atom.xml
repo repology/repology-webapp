@@ -45,11 +45,5 @@ tag:repology.org,2018-04-25:maintainer-repo:{{ maintainer }}:{{ repo }}
 	</entry>
 {% else %}
 	<updated>2000-01-01T00:00:00Z</updated>
-	<entry>
-		<updated>2000-01-01T00:00:00Z</updated>
-		<id>{{ feed_id() }}:-1</id>
-		<title>No events yet</title>
-		<content>No events in this feed yet</content>
-	</entry>
 {% endfor %}
 </feed>
