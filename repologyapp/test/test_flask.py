@@ -196,11 +196,11 @@ class TestFlask(unittest.TestCase):
         self.checkurl_html('/maintainers/a/', has=['amdmi3@freebsd.org'])
         self.checkurl_html('/maintainers/?search=%20AMDmi3%20', has=['amdmi3@freebsd.org'])
 
-    def test_maintaner(self) -> None:
+    def test_maintainer(self) -> None:
         self.checkurl_html('/maintainer/amdmi3@freebsd.org', has=['mailto:amdmi3@freebsd.org', 'kiconvtool'])
         self.checkurl_html('/maintainer/nonexistent', 404, has=['noindex'])
 
-    def test_maintaner_problems(self) -> None:
+    def test_maintainer_problems(self) -> None:
         self.checkurl_301('/maintainer/amdmi3@freebsd.org/problems')
         self.checkurl_html('/maintainer/amdmi3@freebsd.org/problems-for-repo/freebsd')
 
