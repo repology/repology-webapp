@@ -80,6 +80,7 @@ _ALLOWED_FAMILIES = {
     'centos',
     'debuntu',
     'freebsd',
+    'gentoo',
     'guix',
     'homebrew',
     'homebrew_casks',
