@@ -39,7 +39,7 @@ WITH expanded_matches AS (
 SELECT
 	published,
 	cve_id,
-	array_agg(effname) AS effnames
+	array_agg(DISTINCT effname ORDER BY effname) AS effnames
 FROM expanded_matches INNER JOIN manual_cpes ON
 	expanded_matches.cpe_product = manual_cpes.cpe_product AND
 	expanded_matches.cpe_vendor = manual_cpes.cpe_vendor AND
