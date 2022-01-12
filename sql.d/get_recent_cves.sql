@@ -39,6 +39,7 @@ WITH expanded_matches AS (
 SELECT
 	published,
 	cve_id,
+	manual_cpes.added_ts > now() - interval '7 day' AS recent,
 	array_agg(DISTINCT effname ORDER BY effname) AS effnames
 FROM expanded_matches INNER JOIN manual_cpes ON
 	expanded_matches.cpe_product = manual_cpes.cpe_product AND
@@ -49,6 +50,6 @@ FROM expanded_matches INNER JOIN manual_cpes ON
 	coalesce(nullif(expanded_matches.cpe_target_sw, '*') = nullif(manual_cpes.cpe_target_sw, '*'), TRUE) AND
 	coalesce(nullif(expanded_matches.cpe_target_hw, '*') = nullif(manual_cpes.cpe_target_hw, '*'), TRUE) AND
 	coalesce(nullif(expanded_matches.cpe_other, '*') = nullif(manual_cpes.cpe_other, '*'), TRUE)
-GROUP BY cve_id, published
+GROUP BY cve_id, published, recent
 ORDER BY published DESC, cve_id DESC
 LIMIT %(limit)s;
