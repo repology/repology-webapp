@@ -1,0 +1,42 @@
+{% extends "base/security.html" %}
+{% import "macros.html" as _macros %}
+{% import "macros/cpes.html" as _cpes %}
+{% import "macros/autorefresh.html" as _autorefresh with context %}
+
+{% block title %}Recent CPE bindings - Repology{% endblock %}
+{% block header %}Recent CPE bindings{% endblock %}
+
+{% block content %}
+<div class="container">
+
+<p>This is a list of recently added <a href="https://en.wikipedia.org/wiki/Common_Platform_Enumeration">CPE</a> bindings which allow matching Repology projects to <a href="https://nvd.nist.gov/">NVD</a> entries. These bindings are regularly added manually based on new and updated CVEs in NVD. After a binding is added, all past and future vulnerabilities with matching CPE are recognized for a given Repology project. You may see vulnerabilities for a given project under <b>CVEs</b> tab (only present when there are matching vulnerabilities), and missing bindings may be reported via <b>Report</b> tab.</p>
+
+{{ _autorefresh.toggler() }}
+
+{% if cpes %}
+<p><b>{{ cpes|length }}</b> binding(s) on this page, latest first</p>
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th class="minimal-column text-center">Added{{ _macros.timezone_abbr() }}</th>
+			<th class="minimal-column">Project</th>
+			<th>CPE</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for cpe in cpes %}
+		<tr>
+			<td class="minimal-column">{{ _macros.format_absolute_time(cpe.added_ts) }}</td>
+			<td class="minimal-column"><a href="{{ url_for('project_versions', name=cpe.effname) }}">{{ cpe.effname }}</a></td>
+			<td>{{ _cpes.panels(cpe) }}</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+{% else %}
+<div class="alert alert-warning" role="alert">Nothing here yet</div>
+{% endif %}
+
+</div>
+{% endblock %}

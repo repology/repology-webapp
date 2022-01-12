@@ -256,6 +256,10 @@ class TestFlask(unittest.TestCase):
 
         self.checkurl_html('/tools/trending')
 
+    def test_security(self) -> None:
+        self.checkurl_html('/security/recent-cves')
+        self.checkurl_html('/security/recent-cpes')
+
     def test_experimental(self) -> None:
         self.checkurl_html('/experimental/')
         self.checkurl_html('/experimental/turnover/maintainers')

@@ -1,0 +1,45 @@
+{% extends "base/security.html" %}
+{% import "macros.html" as _macros %}
+{% import "macros/autorefresh.html" as _autorefresh with context %}
+
+{% block title %}Recently CVEs - Repology{% endblock %}
+{% block header %}Recently CVEs{% endblock %}
+
+{% block content %}
+<div class="container">
+
+<p>This is a list of recently published (in <a href="https://nvd.nist.gov/">NVD</a>) vulnerabilities linked to Repology projects.</p>
+
+{{ _autorefresh.toggler() }}
+
+{% if cves %}
+<p><b>{{ cves|length }}</b> CVE(s) on this page, latest first</p>
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th class="minimal-column">CVE</th>
+			<th class="minimal-column">Published{{ _macros.timezone_abbr() }}</th>
+			<th>Project(s)</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for cve in cves %}
+		<tr>
+			<td class="minimal-column"><a href="https://nvd.nist.gov/vuln/detail/{{ cve.cve_id }}">{{ cve.cve_id }}</a></td>
+			<td class="minimal-column">{{ _macros.format_absolute_time(cve.published) }}</td>
+			<td>
+			{% for effname in cve.effnames %}
+				<a href="{{ url_for('project_versions', name=effname) }}">{{ effname }}</a>
+			{% endfor %}
+			</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+{% else %}
+<div class="alert alert-warning" role="alert">Nothing here yet</div>
+{% endif %}
+
+</div>
+{% endblock %}

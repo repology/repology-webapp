@@ -73,6 +73,13 @@ ATOM_FEED_MAX_AGE_DAYS = 31
 ATOM_FEED_MIN_ENTRIES = 1  # no less than this when dropping entries by age
 
 #
+# Security feeds limitations
+#
+RECENT_CVES_MAX_AGE_DAYS = 31
+RECENT_CVES_MAX_COUNT = 200
+RECENT_CPES_MAX_COUNT = 200
+
+#
 # Max reports for metapackage
 #
 MAX_REPORTS = 20
