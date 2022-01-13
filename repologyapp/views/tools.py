@@ -23,6 +23,7 @@ from typing import List
 
 import flask
 
+from repologyapp.cache import cache
 from repologyapp.config import config
 from repologyapp.db import get_db
 from repologyapp.globals import repometadata
@@ -161,6 +162,19 @@ def tool_project_by() -> Response:
 def trending() -> Response:
     return flask.render_template(
         'projects-trending.html',
-        trending=get_db().get_trending_projects(timedelta(days=31), config['TRENDING_PER_PAGE']),
-        declining=get_db().get_trending_projects(timedelta(days=91), config['TRENDING_PER_PAGE'], negative=True),
+        trending=cache(
+            'trending-positive',
+            lambda: get_db().get_trending_projects(  # type: ignore  # https://github.com/python/mypy/issues/9590
+                timedelta(days=31),
+                config['TRENDING_PER_PAGE']
+            )
+        ),
+        declining=cache(
+            'trending-negative',
+            lambda: get_db().get_trending_projects(  # type: ignore  # https://github.com/python/mypy/issues/9590
+                timedelta(days=91),
+                config['TRENDING_PER_PAGE'],
+                negative=True
+            )
+        ),
     )

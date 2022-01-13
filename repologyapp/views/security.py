@@ -19,6 +19,7 @@ import datetime
 
 import flask
 
+from repologyapp.cache import cache
 from repologyapp.config import config
 from repologyapp.db import get_db
 from repologyapp.view_registry import Response, ViewRegistrar
@@ -28,9 +29,12 @@ from repologyapp.view_registry import Response, ViewRegistrar
 def security_recent_cves() -> Response:
     return flask.render_template(
         'security/recent-cves.html',
-        cves=get_db().get_recent_cves(
-            max_age=datetime.timedelta(days=config['RECENT_CVES_MAX_AGE_DAYS']),
-            limit=config['RECENT_CVES_MAX_COUNT']
+        cves=cache(
+            'recent-cves',
+            lambda: get_db().get_recent_cves(  # type: ignore  # https://github.com/python/mypy/issues/9590
+                max_age=datetime.timedelta(days=config['RECENT_CVES_MAX_AGE_DAYS']),
+                limit=config['RECENT_CVES_MAX_COUNT']
+            )
         )
     )
 

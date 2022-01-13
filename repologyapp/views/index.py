@@ -20,6 +20,7 @@ from typing import Dict, List
 
 import flask
 
+from repologyapp.cache import cache
 from repologyapp.db import get_db
 from repologyapp.globals import repometadata
 from repologyapp.math import safe_percent
@@ -202,11 +203,16 @@ def index() -> Response:
         'zsh',
     ]
 
-    metapackages = get_db().get_metapackages(important_packages)
-
-    metapackagedata = packages_to_summary_items(
-        PackageDataSummarizable(**item)
-        for item in get_db().get_metapackages_packages(important_packages, summarizable=True)
+    # put into a single cache entry to avoid desync
+    metapackages, metapackagedata = cache(
+        'index-packages',
+        lambda: (
+            get_db().get_metapackages(important_packages),
+            packages_to_summary_items(
+                PackageDataSummarizable(**item)
+                for item in get_db().get_metapackages_packages(important_packages, summarizable=True)
+            )
+        )
     )
 
     top_size = 10
