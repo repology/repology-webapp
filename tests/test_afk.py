@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-#
 # Copyright (C) 2016 Dmitry Marakasov <amdmi3@amdmi3.ru>
 #
 # This file is part of repology
@@ -17,45 +15,42 @@
 # You should have received a copy of the GNU General Public License
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
-import unittest
 from datetime import date
 
 from repologyapp.afk import AFKChecker
 
 
-class TestAFK(unittest.TestCase):
-    def test_empty(self) -> None:
-        afk = AFKChecker()
+def test_empty():
+    afk = AFKChecker()
 
-        self.assertEqual(afk.get_afk_end(), None)
-        self.assertEqual(afk.get_afk_end(date(2017, 1, 1)), None)
-
-    def test_day(self) -> None:
-        afk = AFKChecker(['2017-01-02'])
-
-        self.assertEqual(afk.get_afk_end(date(2017, 1, 1)), None)
-        self.assertEqual(afk.get_afk_end(date(2017, 1, 2)), date(2017, 1, 2))
-        self.assertEqual(afk.get_afk_end(date(2017, 1, 3)), None)
-
-    def test_range(self) -> None:
-        afk = AFKChecker(['2017-01-02 2017-01-04'])
-
-        self.assertEqual(afk.get_afk_end(date(2017, 1, 1)), None)
-        self.assertEqual(afk.get_afk_end(date(2017, 1, 2)), date(2017, 1, 4))
-        self.assertEqual(afk.get_afk_end(date(2017, 1, 3)), date(2017, 1, 4))
-        self.assertEqual(afk.get_afk_end(date(2017, 1, 4)), date(2017, 1, 4))
-        self.assertEqual(afk.get_afk_end(date(2017, 1, 5)), None)
-
-    def test_multi(self) -> None:
-        afk = AFKChecker(['2017-01-02', '2017-01-04 2017-01-05'])
-
-        self.assertEqual(afk.get_afk_end(date(2017, 1, 1)), None)
-        self.assertEqual(afk.get_afk_end(date(2017, 1, 2)), date(2017, 1, 2))
-        self.assertEqual(afk.get_afk_end(date(2017, 1, 3)), None)
-        self.assertEqual(afk.get_afk_end(date(2017, 1, 4)), date(2017, 1, 5))
-        self.assertEqual(afk.get_afk_end(date(2017, 1, 5)), date(2017, 1, 5))
-        self.assertEqual(afk.get_afk_end(date(2017, 1, 6)), None)
+    assert afk.get_afk_end() is None
+    assert afk.get_afk_end(date(2017, 1, 1)) is None
 
 
-if __name__ == '__main__':
-    unittest.main()
+def test_day():
+    afk = AFKChecker(['2017-01-02'])
+
+    assert afk.get_afk_end(date(2017, 1, 1)) is None
+    assert afk.get_afk_end(date(2017, 1, 2)) == date(2017, 1, 2)
+    assert afk.get_afk_end(date(2017, 1, 3)) is None
+
+
+def test_range():
+    afk = AFKChecker(['2017-01-02 2017-01-04'])
+
+    assert afk.get_afk_end(date(2017, 1, 1)) is None
+    assert afk.get_afk_end(date(2017, 1, 2)) == date(2017, 1, 4)
+    assert afk.get_afk_end(date(2017, 1, 3)) == date(2017, 1, 4)
+    assert afk.get_afk_end(date(2017, 1, 4)) == date(2017, 1, 4)
+    assert afk.get_afk_end(date(2017, 1, 5)) is None
+
+
+def test_multi():
+    afk = AFKChecker(['2017-01-02', '2017-01-04 2017-01-05'])
+
+    assert afk.get_afk_end(date(2017, 1, 1)) is None
+    assert afk.get_afk_end(date(2017, 1, 2)) == date(2017, 1, 2)
+    assert afk.get_afk_end(date(2017, 1, 3)) is None
+    assert afk.get_afk_end(date(2017, 1, 4)) == date(2017, 1, 5)
+    assert afk.get_afk_end(date(2017, 1, 5)) == date(2017, 1, 5)
+    assert afk.get_afk_end(date(2017, 1, 6)) is None
