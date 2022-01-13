@@ -58,14 +58,18 @@ except RuntimeError:
 
 
 # HTTP request check helpers (which also return content)
-def checkurl(url: str, status_code: Optional[int] = 200, mimetype: Optional[str] = 'text/html', has: List[str] = [], hasnot: List[str] = []) -> str:
+def checkurl_data(url: str, status_code: Optional[int] = 200, mimetype: Optional[str] = None) -> bytes:
     __tracebackhide__ = True
     reply = test_client.get(url)
     if status_code is not None:
         assert reply.status_code == status_code
     if mimetype is not None:
         assert reply.mimetype == mimetype
-    text = reply.data.decode('utf-8')
+    return reply.data
+
+
+def checkurl_text(url: str, status_code: Optional[int] = 200, mimetype: Optional[str] = 'text/plain', has: List[str] = [], hasnot: List[str] = []) -> str:
+    text = checkurl_data(url, status_code, mimetype).decode('utf-8')
     assert(isinstance(text, str))
     for pattern in has:
         assert pattern in text
@@ -76,7 +80,7 @@ def checkurl(url: str, status_code: Optional[int] = 200, mimetype: Optional[str]
 
 def checkurl_html(url: str, status_code: Optional[int] = 200, mimetype: Optional[str] = 'text/html', has: List[str] = [], hasnot: List[str] = []) -> str:
     __tracebackhide__ = True
-    document = checkurl(url, status_code, mimetype, has, hasnot)
+    document = checkurl_text(url, status_code, mimetype, has, hasnot)
     if html_validation:
         for line in tidy_document(document, options=TIDY_OPTIONS)[1].split('\n'):
             if not line:
@@ -90,14 +94,14 @@ def checkurl_html(url: str, status_code: Optional[int] = 200, mimetype: Optional
 def checkurl_json(url: str, status_code: Optional[int] = 200, mimetype: Optional[str] = 'application/json', has: List[str] = [], hasnot: List[str] = []) -> Any:
     __tracebackhide__ = True
     return json.loads(
-        checkurl(url, status_code, mimetype, has, hasnot)
+        checkurl_text(url, status_code, mimetype, has, hasnot)
     )
 
 
 def checkurl_xml(url: str, status_code: Optional[int] = 200, mimetype: Optional[str] = 'application/xml', has: List[str] = [], hasnot: List[str] = []) -> xml.etree.ElementTree.Element:
     __tracebackhide__ = True
     return xml.etree.ElementTree.fromstring(
-        checkurl(url, status_code, mimetype, has, hasnot)
+        checkurl_text(url, status_code, mimetype, has, hasnot)
     )
 
 
@@ -111,25 +115,36 @@ def checkurl_atom(url: str, status_code: Optional[int] = 200, mimetype: Optional
     return checkurl_xml(url, status_code, mimetype, has, hasnot)
 
 
-def checkurl_404(url: str) -> str:
-    __tracebackhide__ = True
-    return checkurl(url, 404, None)
-
-
 def checkurl_301(url: str) -> str:
     __tracebackhide__ = True
-    return checkurl(url, 301, None)
+    return checkurl_data(url, 301)
+
+
+def checkurl_302(url: str) -> str:
+    __tracebackhide__ = True
+    return checkurl_data(url, 302)
+
+
+def checkurl_403(url: str) -> str:
+    __tracebackhide__ = True
+    return checkurl_data(url, 403)
+
+
+def checkurl_404(url: str) -> str:
+    __tracebackhide__ = True
+    return checkurl_data(url, 404)
 
 
 # real tests start from here
 def test_static_pages():
-    checkurl_html('/news', has=['Added', 'repository'])  # assume we always have "Added xxx repository" news there
+    checkurl_html('/api', has=['/api/v1/projects/firefox'])
     checkurl_html('/docs')
     checkurl_html('/docs/about')
     checkurl_html('/docs/bots')
     checkurl_html('/docs/not_supported')
     checkurl_html('/docs/requirements')
-    checkurl_html('/api', has=['/api/v1/projects/firefox'])
+    checkurl_data('/favicon.ico', mimetype='image/vnd.microsoft.icon')
+    checkurl_html('/news', has=['Added', 'repository'])  # assume we always have "Added xxx repository" news there
 
 
 def test_static_pages_legacy():
@@ -242,7 +257,7 @@ def test_maintainer():
 
 @requires_database
 def test_maintainer_problems():
-    checkurl_301('/maintainer/amdmi3@freebsd.org/problems')
+    checkurl_301('/maintainer/amdmi3@freebsd.org/problems')  # legacy
     checkurl_html('/maintainer/amdmi3@freebsd.org/problems-for-repo/freebsd')
 
 
@@ -264,11 +279,13 @@ def test_repositories():
 @requires_database
 def test_log():
     checkurl_html('/log/1', has=['successful'])
+    checkurl_404('/log/9999')
 
 
 @requires_database
 def test_link():
     checkurl_html('/link/http://chromium-bsu.sourceforge.net/', has=['chromium-bsu.sourceforge.net'])
+    checkurl_404('/link/http://non-existing-link')
 
 
 @requires_database
@@ -314,9 +331,20 @@ def test_tools_static():
 
 
 @requires_database
-def test_tools():
+def test_tools_project_by():
     checkurl_html('/tools/project-by?repo=freebsd&name_type=srcname&target_page=project_versions')
+    checkurl_404('/tools/project-by?repo=freebsd&name_type=srcname&target_page=project_versions&name=nonexisting-package')
+    checkurl_302('/tools/project-by?repo=freebsd&name_type=srcname&target_page=project_versions&name=sysutils/kiconvtool')
+    checkurl_404('/tools/project-by?repo=nonexisting-repo&name_type=srcname&target_page=project_versions')
 
+    # XXX: need testdata for disallowed repo
+    #checkurl_403('/tools/project-by?repo=wikidata&name_type=srcname&target_page=project_versions')
+
+    # XXX: need more testdata for multiple choices
+
+
+@requires_database
+def test_tools_trending():
     checkurl_html('/tools/trending')
 
 
