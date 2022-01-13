@@ -19,10 +19,10 @@ test::
 
 test-with-dump::
 	psql -U repology_test < testdata/repology_test.sql
-	env REPOLOGY_CONFIG=./repology-test.conf.default python3 -m unittest discover
+	env REPOLOGY_CONFIG=./repology-test.conf.default ${PYTEST} ${PYTEST_ARGS} -v -rs
 
 flake8:
-	${FLAKE8} --count *.py repologyapp
+	${FLAKE8} *.py repologyapp tests
 
 mypy:
 	${MYPY} repology-app.py repologyapp
