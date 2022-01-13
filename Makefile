@@ -1,5 +1,6 @@
 FLAKE8?=	flake8
 MYPY?=		mypy
+PYTEST?=	pytest
 
 STATICDIR=	repologyapp/static
 
@@ -14,7 +15,7 @@ clean:
 lint:: test flake8 mypy
 
 test::
-	python3 -m unittest discover
+	${PYTEST} ${PYTEST_ARGS} -v -rs
 
 test-with-dump::
 	psql -U repology_test < testdata/repology_test.sql

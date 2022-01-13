@@ -60,7 +60,9 @@ jobs:
         run: make flake8
       - name: Check with mypy
         run: make mypy
-      - name: Run unittests
-        run: coverage run --source=repologyapp --omit="repologyapp/test/*" -m unittest discover
+      - name: Run unit tests
+        run: make test
+        env:
+          PYTEST_ARGS: --cov-report=xml --cov=repologyapp
       - name: Push coverage info
         run: codecov
