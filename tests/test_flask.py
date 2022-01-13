@@ -30,7 +30,9 @@ import pytest
 
 # setup test client
 if 'REPOLOGY_CONFIG' not in os.environ:
-    pytestmark = pytest.mark.skip('flask tests require database filled with test data; please prepare the database and configuration file (see repology-test.conf.default for reference) and pass it via REPOLOGY_CONFIG environment variable')
+    requires_database = pytest.mark.skip('flask tests require database filled with test data; please prepare the database and configuration file (see repology-test.conf.default for reference) and pass it via REPOLOGY_CONFIG environment variable')
+else:
+    requires_database = lambda _: _
 
 test_client = app.test_client()
 
@@ -124,15 +126,19 @@ def test_static_pages():
     checkurl_html('/docs/requirements')
     checkurl_html('/api', has=['/api/v1/projects/firefox'])
 
+
+def test_static_pages_legacy():
     checkurl_301('/about')
     checkurl_301('/addrepo')
     checkurl_301('/docs/addrepo')
 
 
+@requires_database
 def test_titlepage():
     checkurl_html('/', has=['FreeBSD', 'virtualbox'])
 
 
+@requires_database
 def test_badges():
     checkurl_svg('/badge/vertical-allrepos/kiconvtool.svg', has=['<svg', 'FreeBSD'])
     checkurl_svg('/badge/vertical-allrepos/kiconvtool.svg?header=FooBar', has=['<svg', 'FreeBSD', 'FooBar'])
@@ -161,6 +167,7 @@ def test_badges():
     checkurl_svg('/badge/versions-matrix.svg?projects=kiconvtool&header=HEADER', has=['<svg', 'FreeBSD', '>0.97<', 'HEADER'])
 
 
+@requires_database
 def test_graphs():
     checkurl_svg('/graph/total/projects.svg')
     checkurl_svg('/graph/total/maintainers.svg')
@@ -187,6 +194,7 @@ def test_graphs():
     checkurl_svg('/graph/repo/freebsd/problems.svg')
 
 
+@requires_database
 def test_project():
     checkurl_html('/project/kiconvtool/versions', has=['FreeBSD', '0.97', 'amdmi3'])
     checkurl_html('/project/nonexistent/versions', has=['Unknown project'], status_code=404)
@@ -215,26 +223,31 @@ def test_project():
     checkurl_html('/project/kiconvtool/history')
 
 
+@requires_database
 def test_maintaners():
     checkurl_html('/maintainers/a/', has=['amdmi3@freebsd.org'])
     checkurl_html('/maintainers/?search=%20AMDmi3%20', has=['amdmi3@freebsd.org'])
 
 
+@requires_database
 def test_maintainer():
     checkurl_html('/maintainer/amdmi3@freebsd.org', has=['mailto:amdmi3@freebsd.org', 'kiconvtool'])
     checkurl_html('/maintainer/nonexistent', 404, has=['noindex'])
 
 
+@requires_database
 def test_maintainer_problems():
     checkurl_301('/maintainer/amdmi3@freebsd.org/problems')
     checkurl_html('/maintainer/amdmi3@freebsd.org/problems-for-repo/freebsd')
 
 
+@requires_database
 def test_maintainer_feeds():
     checkurl_html('/maintainer/amdmi3@freebsd.org/feed-for-repo/freebsd')
     checkurl_atom('/maintainer/amdmi3@freebsd.org/feed-for-repo/freebsd/atom')
 
 
+@requires_database
 def test_repositories():
     checkurl_html('/repositories/statistics', has=['FreeBSD'])
     checkurl_html('/repositories/statistics/newest', has=['FreeBSD'])
@@ -243,27 +256,33 @@ def test_repositories():
     checkurl_html('/repositories/updates', has=['FreeBSD'])
 
 
+@requires_database
 def test_log():
     checkurl_html('/log/1', has=['successful'])
 
 
+@requires_database
 def test_link():
     checkurl_html('/link/http://chromium-bsu.sourceforge.net/', has=['chromium-bsu.sourceforge.net'])
 
 
+@requires_database
 def test_repository():
     checkurl_html('/repository/freebsd', has=['FreeBSD'])
 
 
+@requires_database
 def test_repository_problems():
     checkurl_html('/repository/freebsd/problems', has=['FreeBSD'])
 
 
+@requires_database
 def test_repository_feeds():
     checkurl_html('/repository/freebsd/feed')
     checkurl_atom('/repository/freebsd/feed/atom')
 
 
+@requires_database
 def test_projects():
     checkurl_html('/projects/', has=['kiconvtool', '0.97', 'chromium-bsu', '0.9.15.1'])
 
@@ -284,24 +303,35 @@ def test_projects():
     checkurl_html('/projects/zzzzzz/', has=['kiconvtool'])
 
 
-def test_tools():
+def test_tools_static():
+    checkurl_html('/tools')
     checkurl_html('/tools/project-by')
+
+
+@requires_database
+def test_tools():
     checkurl_html('/tools/project-by?repo=freebsd&name_type=srcname&target_page=project_versions')
 
     checkurl_html('/tools/trending')
 
 
+@requires_database
 def test_security():
     checkurl_html('/security/recent-cves')
     checkurl_html('/security/recent-cpes')
 
 
-def test_experimental():
+def test_experimental_static():
     checkurl_html('/experimental/')
+
+
+@requires_database
+def test_experimental():
     checkurl_html('/experimental/turnover/maintainers')
     checkurl_html('/experimental/distromap')
 
 
+@requires_database
 def test_api_v1_project():
     assert checkurl_json('/api/v1/project/kiconvtool') == \
         [
@@ -321,6 +351,7 @@ def test_api_v1_project():
     assert checkurl_json('/api/v1/project/nonexistent') == []
 
 
+@requires_database
 def test_api_v1_projects():
     checkurl_json('/api/v1/projects/', has=['kiconvtool', '0.97', 'chromium-bsu', '0.9.15.1'])
 
@@ -334,12 +365,14 @@ def test_api_v1_projects():
     checkurl_json('/api/v1/projects/?maintainer=amdmi3@freebsd.org', has=['kiconvtool'], hasnot=['kforth', 'teamviewer'])
 
 
+@requires_database
 def test_api_v1_problems():
     # XXX: empty output for now
     checkurl_json('/api/v1/maintainer/amdmi3@freebsd.org/problems-for-repo/freebsd')
     checkurl_json('/api/v1/repository/freebsd/problems')
 
 
+@requires_database
 def test_sitemaps():
     checkurl_xml('/sitemaps/index.xml')
     checkurl_xml('/sitemaps/main.xml')
