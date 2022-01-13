@@ -23,20 +23,23 @@ import sys
 import xml.etree.ElementTree
 from typing import Any, List, Optional
 
-from repologyapp import app
-
 import pytest
+
+from repologyapp import app
 
 
 # setup test client
 if 'REPOLOGY_CONFIG' not in os.environ:
     requires_database = pytest.mark.skip('flask tests require database filled with test data; please prepare the database and configuration file (see repology-test.conf.default for reference) and pass it via REPOLOGY_CONFIG environment variable')
 else:
-    requires_database = lambda _: _
+    def requires_database(test):
+        return test
+    #requires_database = lambda _: _
 
 test_client = app.test_client()
 
 
+# setup tidy
 TIDY_OPTIONS = {'drop-empty-elements': False, 'doctype': 'html5'}
 
 
@@ -54,6 +57,7 @@ except RuntimeError:
     html_validation = False
 
 
+# HTTP request check helpers (which also return content)
 def checkurl(url: str, status_code: Optional[int] = 200, mimetype: Optional[str] = 'text/html', has: List[str] = [], hasnot: List[str] = []) -> str:
     __tracebackhide__ = True
     reply = test_client.get(url)
@@ -117,6 +121,7 @@ def checkurl_301(url: str) -> str:
     return checkurl(url, 301, None)
 
 
+# real tests start from here
 def test_static_pages():
     checkurl_html('/news', has=['Added', 'repository'])  # assume we always have "Added xxx repository" news there
     checkurl_html('/docs')
@@ -333,21 +338,20 @@ def test_experimental():
 
 @requires_database
 def test_api_v1_project():
-    assert checkurl_json('/api/v1/project/kiconvtool') == \
-        [
-            {
-                'repo': 'freebsd',
-                'srcname': 'sysutils/kiconvtool',
-                'binname': 'kiconvtool',
-                'visiblename': 'sysutils/kiconvtool',
-                'version': '0.97',
-                'origversion': '0.97_1',
-                'status': 'unique',
-                'categories': ['sysutils'],
-                'summary': 'Tool to preload kernel iconv charset tables',
-                'maintainers': ['amdmi3@freebsd.org'],
-            }
-        ]
+    assert checkurl_json('/api/v1/project/kiconvtool') == [
+        {
+            'repo': 'freebsd',
+            'srcname': 'sysutils/kiconvtool',
+            'binname': 'kiconvtool',
+            'visiblename': 'sysutils/kiconvtool',
+            'version': '0.97',
+            'origversion': '0.97_1',
+            'status': 'unique',
+            'categories': ['sysutils'],
+            'summary': 'Tool to preload kernel iconv charset tables',
+            'maintainers': ['amdmi3@freebsd.org'],
+        }
+    ]
     assert checkurl_json('/api/v1/project/nonexistent') == []
 
 

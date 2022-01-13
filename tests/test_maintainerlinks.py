@@ -42,5 +42,5 @@ def test_alt():
 def test_group():
     assert maintainers_to_group_mailto(['some@notemail', 'amdmi3@freebsd.org', 'amdmi3@amdmi3.ru']) == 'mailto:amdmi3@amdmi3.ru,amdmi3@freebsd.org'
     assert maintainers_to_group_mailto(['some@notemail', 'amdmi3@freebsd.org', 'amdmi3@amdmi3.ru'], 'Hello, world!') == 'mailto:amdmi3@amdmi3.ru,amdmi3@freebsd.org?subject=Hello, world!'
-    assert maintainers_to_group_mailto(['some@notemail'], 'Hello, world!') == None
-    assert maintainers_to_group_mailto(['some@notemail']) == None
+    assert maintainers_to_group_mailto(['some@notemail'], 'Hello, world!') is None
+    assert maintainers_to_group_mailto(['some@notemail']) is None
