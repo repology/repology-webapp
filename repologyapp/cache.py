@@ -31,17 +31,20 @@ T = TypeVar('T')
 
 
 def cache(label: str, retriever: Callable[[], T], duration: float = 60) -> T:
-    if request and request.headers.get('x-repology-cache-disable'):
-        return retriever()
+    global _cache
+
+    should_bypass = request and request.headers.get('x-repology-cache-disable')
 
     now = time.monotonic()
-    cached: tuple[T, float] | None = _cache.get(label)
 
-    if cached is not None:
-        data, timestamp = cached
+    if not should_bypass:
+        cached: tuple[T, float] | None = _cache.get(label)
 
-        if timestamp > now - duration:
-            return data
+        if cached is not None:
+            data, timestamp = cached
+
+            if timestamp > now - duration:
+                return data
 
     data = retriever()
     _cache[label] = (data, now)
