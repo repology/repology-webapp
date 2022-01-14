@@ -212,7 +212,8 @@ def index() -> Response:
                 PackageDataSummarizable(**item)
                 for item in get_db().get_metapackages_packages(important_packages, summarizable=True)
             )
-        )
+        ),
+        duration=600.0
     )
 
     top_size = 10
