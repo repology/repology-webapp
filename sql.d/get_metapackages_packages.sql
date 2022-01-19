@@ -47,6 +47,7 @@ SELECT
 	srcname,
 	binname,
 	trackname,
+	projectname_seed,
 
 	origversion,
 	rawversion,

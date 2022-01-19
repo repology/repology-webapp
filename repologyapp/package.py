@@ -193,6 +193,7 @@ class PackageDataDetailed(PackageDataSummarizable):
     srcname: Optional[str]
     binname: Optional[str]
     trackname: Optional[str]
+    projectname_seed: Optional[str]
 
     origversion: str
     rawversion: str

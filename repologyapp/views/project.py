@@ -194,7 +194,7 @@ def project_information(name: str) -> Response:
         information[infokey][infoval].add(package.family)
 
     for package in packages:
-        append_info('names', package.visiblename, package)
+        append_info('names', package.projectname_seed, package)
         append_info('versions', package.version, package)
         append_info('repos', package.repo, package)
 
