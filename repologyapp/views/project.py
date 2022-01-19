@@ -179,7 +179,7 @@ def project_information(name: str) -> Response:
             PackageDataDetailed(**item)
             for item in get_db().get_metapackage_packages(name, detailed=True)
         ),
-        key=lambda package: package.repo + package.visiblename + package.version
+        key=lambda package: (package.repo, package.visiblename, package.version)
     )
 
     information: Dict[str, Any] = {}
