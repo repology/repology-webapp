@@ -128,13 +128,19 @@ def _map_repo_generic(getx: Callable[[Dict[str, Any]], float],
             int(height - offset_bottom - point.y / max_y * (height - offset_top - offset_bottom)) + 0.5
         )
 
-    with doc.tag('g', ('font-family', 'DejaVu Sans,Verdana,Geneva,sans-serif'), ('font-size', 11), ('text-anchor', 'start')):
-        for point in points:
-            if point.text:
-                x, y = point_coords(point)
-                with doc.tag('text', ('stroke-linecap', 'round'), ('stroke-width', 3), fill='#f0f0f0', stroke='#f0f0f0', x=x + 5, y=y + 3):
+    for point in points:
+        if point.text:
+            x, y = point_coords(point)
+            if x / width < 0.9:
+                text_anchor = 'start'
+                x_offset = 5
+            else:
+                text_anchor = 'end'
+                x_offset = -5
+            with doc.tag('g', ('font-family', 'DejaVu Sans,Verdana,Geneva,sans-serif'), ('font-size', 11), ('text-anchor', text_anchor)):
+                with doc.tag('text', ('stroke-linecap', 'round'), ('stroke-width', 3), fill='#f0f0f0', stroke='#f0f0f0', x=x + x_offset, y=y + 3):
                     doc.text(point.text)
-                with doc.tag('text', fill='#000000', x=x + 5, y=y + 3):
+                with doc.tag('text', fill='#000000', x=x + x_offset, y=y + 3):
                     doc.text(point.text)
 
     # data points (points)
