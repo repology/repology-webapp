@@ -178,3 +178,17 @@ def trending() -> Response:
             )
         ),
     )
+
+
+@ViewRegistrar('/tools/important_updates')
+def important_updates() -> Response:
+    return flask.render_template(
+        'tools/important-updates.html',
+        updates=cache(
+            'recent-updates-1d-100',
+            lambda: get_db().get_important_updates(  # type: ignore  # https://github.com/python/mypy/issues/9590
+                timedelta(days=1),
+                100
+            )
+        )
+    )

@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% import "macros.html" as macros %}
+
+{% block title %}Important updates - Repology{% endblock %}
+{% block header %}Important updates{% endblock %}
+
+{% block content %}
+<div class="container">
+
+<p>These are 100 updates of the most widely spread projects in the latest 24 hours.</p>
+<p>Note that version rollbacks are also included, so this is not yet production ready.</p>
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th class="text-center text-nowrap minimal-column">Ago</th>
+			<th class="text-nowrap minimal-column">Project</th>
+			<th>Version(s)</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for update in updates %}
+		<tr>
+			<td class="text-nowrap minimal-column">
+				{{- macros.format_time_interval(update.age) -}}
+			</td>
+			<td class="text-nowrap minimal-column">
+				<a href="{{ url_for('project_versions', name=update.effname) }}">{{ update.effname }}</a>
+			</td>
+			<td>
+				{%- for version in update.versions -%}
+				<span class="version version-big version-newest">{{version }}</span>
+				{%- endfor -%}
+			</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+
+</div> {#- container #}
+{% endblock %}

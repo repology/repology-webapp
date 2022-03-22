@@ -349,6 +349,11 @@ def test_tools_trending():
 
 
 @requires_database
+def test_tools_important_updates():
+    checkurl_html('/tools/important_updates')
+
+
+@requires_database
 def test_security():
     checkurl_html('/security/recent-cves')
     checkurl_html('/security/recent-cpes')
