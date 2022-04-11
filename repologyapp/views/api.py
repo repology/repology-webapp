@@ -16,6 +16,7 @@
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 import json
+from datetime import timedelta
 from typing import Any, Dict, Optional
 
 import flask
@@ -156,6 +157,19 @@ def api_experimental_distromap() -> Response:
             return (text, {'Content-type': 'text/plain'})
 
     return (dump_json(distromap), {'Content-type': 'application/json'})
+
+
+@ViewRegistrar('/api/experimental/updates')
+def api_experimental_updates() -> Response:
+    return (
+        dump_json(
+            get_db().get_latest_updates(
+                timedelta(days=1),
+                None
+            )
+        ),
+        {'Content-type': 'application/json'}
+    )
 
 
 #@ViewRegistrar('/api/v1/history/repository/<repo>')

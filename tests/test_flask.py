@@ -410,6 +410,11 @@ def test_api_v1_problems():
 
 
 @requires_database
+def test_api_experimental_updates():
+    checkurl_json('/api/experimental/updates')
+
+
+@requires_database
 def test_sitemaps():
     checkurl_xml('/sitemaps/index.xml')
     checkurl_xml('/sitemaps/main.xml')
