@@ -1,7 +1,7 @@
 flake8
 flake8-builtins!=1.1.0
 #flake8-import-order
-git+git://github.com/AMDmi3/flake8-import-order.git@zoneinfo-as-stdlib#egg=flake8-import-order
+git+https://github.com/AMDmi3/flake8-import-order.git@zoneinfo-as-stdlib#egg=flake8-import-order
 flake8-quotes
 mypy>=0.800
 pytest
