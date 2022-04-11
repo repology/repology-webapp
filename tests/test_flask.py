@@ -69,6 +69,7 @@ def checkurl_data(url: str, status_code: Optional[int] = 200, mimetype: Optional
 
 
 def checkurl_text(url: str, status_code: Optional[int] = 200, mimetype: Optional[str] = 'text/plain', has: List[str] = [], hasnot: List[str] = []) -> str:
+    __tracebackhide__ = True
     text = checkurl_data(url, status_code, mimetype).decode('utf-8')
     assert(isinstance(text, str))
     for pattern in has:
