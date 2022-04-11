@@ -13,24 +13,26 @@
 <table class="table table-striped">
 	<thead>
 		<tr>
-			<th class="text-center text-nowrap minimal-column">Ago</th>
 			<th class="text-nowrap minimal-column">Project</th>
+			<th class="text-center text-nowrap minimal-column">Spread</th>
 			<th>Version(s)</th>
+			<th class="text-center text-nowrap minimal-column">Ago</th>
 		</tr>
 	</thead>
 	<tbody>
 	{% for update in updates %}
 		<tr>
 			<td class="text-nowrap minimal-column">
-				{{- macros.format_time_interval(update.age) -}}
-			</td>
-			<td class="text-nowrap minimal-column">
 				<a href="{{ url_for('project_versions', name=update.effname) }}">{{ update.effname }}</a>
 			</td>
+			<td class="text-center text-nowrap minimal-column"><b>{{ update.spread }}</b></td>
 			<td>
 				{%- for version in update.versions -%}
 				<span class="version version-big version-newest">{{version }}</span>
 				{%- endfor -%}
+			</td>
+			<td class="text-nowrap minimal-column">
+				{{- macros.format_time_interval(update.age) -}}
 			</td>
 		</tr>
 	{% endfor %}

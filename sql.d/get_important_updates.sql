@@ -56,4 +56,4 @@ SELECT
 	*,
 	now() - ts AS age
 FROM unicalized_recent_events_top
-ORDER BY ts DESC, effname;
+ORDER BY spread DESC, ts DESC, effname;
