@@ -411,6 +411,15 @@ def test_api_v1_problems():
 
 
 @requires_database
+def test_api_experimental_distromap():
+    checkurl_json('/api/experimental/distromap?fromrepo=freebsd&torepo=gentoo')
+    checkurl_json('/api/experimental/distromap?fromrepo=freebsd&torepo=gentoo&expand=1')
+
+    checkurl_text('/api/experimental/distromap?fromrepo=freebsd&torepo=gentoo&format=plaintext')
+    checkurl_text('/api/experimental/distromap?fromrepo=freebsd&torepo=gentoo&expand=1&format=plaintext')
+
+
+@requires_database
 def test_api_experimental_updates():
     checkurl_json('/api/experimental/updates')
 
