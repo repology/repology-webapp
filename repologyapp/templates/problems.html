@@ -103,7 +103,7 @@
 			{% elif problem.type == 'download_permanent_https_redirect' %}
 				Download link <code>{{ problem.data.url }}</code> is a permanent redirect to its HTTPS counterpart <code>{{ problem.data.target }}</code> and should be updated.
 			{% else %}
-				Unformatted problem of type {{ problem.type }}, data=<code>{{ problem.data }}</code>. The template should be updated, please report this.
+				Unformatted problem of type <code>{{ problem.type }}</code>, data=<code>{{ problem.data }}</code>. The template should be updated, please report this.
 			{% endif %}
 			</td>
 		</tr>
