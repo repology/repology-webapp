@@ -80,6 +80,7 @@ _ALLOWED_FAMILIES = {
     'alpine',
     'centos',
     'debuntu',
+    'fedora',
     'freebsd',
     'gentoo',
     'guix',
