@@ -97,6 +97,11 @@
 				{% endfor %}
 				</ul>
 				{% endif %}
+			{% elif problem.type == 'download_dead' %}
+				Download link <code>{{ problem.data.url }}</code> is <a href="{{ url_for('link', url=problem.data.url) }}">dead</a> (<b class="link-error">{{ mlinks.format_link_status_code(problem.data.code) }}</b>)
+				for more than a month and should be replaced by alive link.
+			{% elif problem.type == 'download_permanent_https_redirect' %}
+				Download link <code>{{ problem.data.url }}</code> is a permanent redirect to its HTTPS counterpart <code>{{ problem.data.target }}</code> and should be updated.
 			{% else %}
 				Unformatted problem of type {{ problem.type }}, data=<code>{{ problem.data }}</code>. The template should be updated, please report this.
 			{% endif %}
