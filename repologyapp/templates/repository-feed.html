@@ -14,7 +14,7 @@
 {% block content %}
 <div class="container">
 
-<p>This feed in also available in <a href="{{ url_for('repository_feed_atom', repo=repo) }}">atom<img src="{{ url_for('static', filename='feed.v1.svg') }}" width="16" height="16" alt="Atom feed"></a> format</p>
+<p>This feed is also available in <a href="{{ url_for('repository_feed_atom', repo=repo) }}">atom<img src="{{ url_for('static', filename='feed.v1.svg') }}" width="16" height="16" alt="Atom feed"></a> format</p>
 
 {{ _autorefresh.toggler() }}
 
