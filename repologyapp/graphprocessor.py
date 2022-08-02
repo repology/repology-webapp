@@ -35,7 +35,7 @@ class GraphProcessor:
     def add_point(self, time: datetime.timedelta, value: float) -> None:
         # minor optimization of merging straight lines
         if len(self._points) >= 2 and value == self._points[-1][1] and value == self._points[-2][1]:
-            del(self._points[-1])
+            del self._points[-1]
 
         self._minval = value if self._minval is None else min(value, self._minval)
         self._maxval = value if self._maxval is None else max(value, self._maxval)
