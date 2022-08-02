@@ -129,7 +129,7 @@ def run_single_query(database: Database, method: str, kwargs: Any, options: argp
         explain_query = getattr(database, 'explain_' + method)
         print(explain_query(**kwargs), file=sys.stderr)
 
-    assert(mindelta is not None)
+    assert mindelta is not None
     return mindelta
 
 
