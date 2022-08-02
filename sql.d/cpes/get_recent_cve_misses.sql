@@ -81,7 +81,15 @@ SELECT
 				effname = replace(lower(cpe_product), '_', '-')
 			UNION
 			SELECT effname FROM metapackages WHERE
-				effname = replace(lower(cpe_target_sw), 'node.js', 'node') || ':' || replace(lower(cpe_product), '_', '-')  -- node.js -> node; also ruby, rust
+				effname = replace(
+					replace(
+						lower(cpe_target_sw),
+						'node.js',
+						'node'
+					),
+					'pypi',
+					'python'
+				) || ':' || replace(lower(cpe_product), '_', '-')
 			-- XXX: involves a trigram index lookup for each result row, which is too slow
 			--UNION
 			--SELECT effname FROM metapackages WHERE
