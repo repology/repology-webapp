@@ -459,6 +459,9 @@ def project_report(name: str) -> Response:
         if comment and '<a href' in comment:
             errors.append('Spammers not welcome, HTML not allowed')
 
+        if need_verignore and need_split and need_merge and need_vuln and not comment:
+            errors.append('Spammers not welcome')
+
         if not errors:
             get_db().add_report(
                 name,
