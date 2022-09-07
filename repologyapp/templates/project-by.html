@@ -37,7 +37,7 @@ supported. To add support for additional repository, please fill a request
 		<div class="col-sm-8">
 			<select class="form-control" id="repo" name="repo">
 			{% for reponame in repometadata.active_names() %}
-			{% if repometadata[reponame].family in allowed_families %}
+			{% if repometadata[reponame].family not in disallowed_families %}
 				<option value="{{ reponame }}"{% if reponame == request.args.repo %} selected{% endif %}>{{ repometadata[reponame].desc }}</option>
 			{% endif %}
 			{% endfor %}

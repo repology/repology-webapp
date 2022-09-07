@@ -75,21 +75,45 @@ _EXTRA_ALLOWED_ARGS = {
 }
 
 
-_ALLOWED_FAMILIES = {
-    'adelie',
-    'alpine',
-    'arch',
-    'centos',
-    'chocolatey',
-    'debuntu',
-    'fedora',
-    'freebsd',
-    'gentoo',
-    'guix',
-    'homebrew',
-    'homebrew_casks',
-    'scoop',
-    'sisyphus',
+# These are repository families for which it's not yet decided
+# which of name/srcname/binname fields should be used and how.
+# For these project-by tool is disallowed (to avoid massive link
+# breakage on name field handling changes, but we can process
+# any of these repo on request, decide on name field handling
+# and allow corresponding family in project-by.
+_DISALLOWED_FAMILIES = {
+    'baulk',
+    'buckaroo',
+    'carbs',
+    'cpan',
+    'cran',
+    'crates_io',
+    'crux',
+    'distri',
+    'distrowatch',
+    'elpa',
+    'freshcode',
+    'gobolinux',
+    'hackage',
+    'hpux',
+    'justinstall',
+    'kiss',
+    'libregamewiki',
+    'luarocks',
+    'nix',
+    'noir',
+    'npackd',
+    'os4depot',
+    'pypi',
+    'ravenports',
+    'reactos',
+    'rubygames',
+    'slackware',
+    'spack',
+    't2',
+    'termux',
+    'vcpkg',
+    'wikidata',
 }
 
 
@@ -112,7 +136,7 @@ def tool_project_by() -> Response:
     if repo and name_type and target_page:
         if repo not in repometadata.active_names():
             return (flask.render_template('project-by-failed.html', reason='no_repo'), 404)
-        elif not repometadata[repo]['family'] in _ALLOWED_FAMILIES:
+        elif repometadata[repo]['family'] in _DISALLOWED_FAMILIES:
             return (flask.render_template('project-by-failed.html', reason='disallowed_repo'), 403)
         elif name:
             targets = []
@@ -157,7 +181,7 @@ def tool_project_by() -> Response:
         'project-by.html',
         allowed_target_pages=_ALLOWED_TARGET_PAGES,
         template_url=template_url,
-        allowed_families=_ALLOWED_FAMILIES,
+        disallowed_families=_DISALLOWED_FAMILIES,
     )
 
 
