@@ -78,6 +78,7 @@ _EXTRA_ALLOWED_ARGS = {
 _ALLOWED_FAMILIES = {
     'adelie',
     'alpine',
+    'arch',
     'centos',
     'debuntu',
     'fedora',
