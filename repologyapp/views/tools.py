@@ -90,15 +90,12 @@ _DISALLOWED_FAMILIES = {
     'crates_io',
     'crux',
     'distri',
-    'distrowatch',
     'elpa',
-    'freshcode',
     'gobolinux',
     'hackage',
     'hpux',
     'justinstall',
     'kiss',
-    'libregamewiki',
     'luarocks',
     'nix',
     'noir',
@@ -113,7 +110,6 @@ _DISALLOWED_FAMILIES = {
     't2',
     'termux',
     'vcpkg',
-    'wikidata',
 }
 
 
