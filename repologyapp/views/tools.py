@@ -82,34 +82,9 @@ _EXTRA_ALLOWED_ARGS = {
 # any of these repo on request, decide on name field handling
 # and allow corresponding family in project-by.
 _DISALLOWED_FAMILIES = {
-    'baulk',
-    'buckaroo',
-    'carbs',
-    'cpan',
-    'cran',
-    'crates_io',
-    'crux',
-    'distri',
-    'elpa',
-    'gobolinux',
-    'hackage',
-    'hpux',
-    'justinstall',
-    'kiss',
-    'luarocks',
     'nix',
-    'noir',
-    'npackd',
-    'os4depot',
-    'pypi',
     'ravenports',
-    'reactos',
-    'rubygames',
     'slackware',
-    'spack',
-    't2',
-    'termux',
-    'vcpkg',
 }
 
 
