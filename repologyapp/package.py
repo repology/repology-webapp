@@ -163,6 +163,7 @@ class LinkType:
     UPSTREAM_WIKI: ClassVar[int] = 23
     PACKAGE_STATISTICS: ClassVar[int] = 25
     PACKAGE_BUILD_STATUS: ClassVar[int] = 26
+    PACKAGE_BUILD_LOGS: ClassVar[int] = 27
     OTHER: ClassVar[int] = 99
 
 

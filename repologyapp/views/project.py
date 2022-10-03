@@ -231,7 +231,7 @@ def project_information(name: str) -> Response:
                     maybe_raw_links['patches'].append(link_id)
                 elif link_type == LinkType.PACKAGE_PATCH_RAW:
                     maybe_raw_links['patches_raw'].append(link_id)
-                elif link_type == LinkType.PACKAGE_BUILD_LOG:
+                elif link_type == LinkType.PACKAGE_BUILD_LOG or link_type == LinkType.PACKAGE_BUILD_LOGS:
                     maybe_raw_links['buildlogs'].append(link_id)
                 elif link_type == LinkType.PACKAGE_BUILD_LOG_RAW:
                     maybe_raw_links['buildlogs_raw'].append(link_id)
