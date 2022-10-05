@@ -57,10 +57,10 @@ class ViewRegistrant():
     def __init__(self, f: Union['ViewRegistrant', _ViewFunc], route: str, options: Dict[str, Any]) -> None:
         if isinstance(f, ViewRegistrant):
             # allow nesting
-            self._f = f._f  # type: ignore
+            self._f = f._f
             self._next = f
         else:
-            self._f = f  # type: ignore
+            self._f = f
             self._next = None
 
         self._route = route
