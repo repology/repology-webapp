@@ -260,3 +260,62 @@ def badge_versions_matrix() -> Response:
             cells.append(row)
 
     return render_generic_badge(cells, header=header)
+
+
+@ViewRegistrar('/badge/repository-big/<repo>.svg')
+def badge_repository_big(repo: str) -> Response:
+    if repo not in repometadata.active_names():
+        flask.abort(404)
+
+    args = flask.request.args.to_dict()
+    header = args.get('header') or 'Repository status'
+
+    data = get_db().get_repository_information(repo)
+
+    total = data['num_metapackages']
+    comparable = data['num_metapackages_comparable']
+
+    if total == 0:
+        cells = [
+            [
+                BadgeCell('Projects total', align='r'),
+                BadgeCell(total),
+            ]
+        ]
+    else:
+        cells = [
+            [
+                BadgeCell('Projects total', align='r'),
+                BadgeCell(total),
+                BadgeCell(),
+            ],
+            [
+                BadgeCell('Up to date', align='r'),
+                BadgeCell(data['num_metapackages_newest'], color=badge_color(PackageStatus.NEWEST)),
+                BadgeCell('{:.2f}%'.format(100.0 * data['num_metapackages_newest'] / comparable) if comparable else '-', color=badge_color(PackageStatus.NEWEST)),
+            ],
+            [
+                BadgeCell('Outdated', align='r'),
+                BadgeCell(data['num_metapackages_outdated'], color=badge_color(PackageStatus.OUTDATED)),
+                BadgeCell('{:.2f}%'.format(100.0 * data['num_metapackages_outdated'] / comparable) if comparable else '-', color=badge_color(PackageStatus.OUTDATED)),
+            ],
+            [
+                BadgeCell('Vulnerable', align='r'),
+                BadgeCell(data['num_metapackages_vulnerable'], color='#e00000'),
+                BadgeCell('{:.2f}%'.format(100.0 * data['num_metapackages_vulnerable'] / total), color='#e00000'),
+            ],
+            [
+                BadgeCell('Bad versions', align='r'),
+                BadgeCell(data['num_metapackages_problematic'], color='#9f9f9f'),
+                BadgeCell('{:.2f}%'.format(100.0 * data['num_metapackages_problematic'] / total), color='#9f9f9f'),
+            ],
+        ]
+
+        if data['num_maintainers']:
+            cells.append([
+                BadgeCell('Maintainers', align='r'),
+                BadgeCell(data['num_maintainers']),
+                BadgeCell(),
+            ])
+
+    return render_generic_badge(cells, header=header)

@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from repologyapp.globals import get_text_width
 from repologyapp.package import PackageStatus
@@ -38,7 +38,7 @@ class BadgeCell:
     align: str
 
     def __init__(self,
-                 text: str = '',
+                 text: Any = '',  # convertible to string
                  color: Optional[str] = None,
                  width: Optional[int] = None,
                  truncate: Optional[int] = None,
@@ -46,7 +46,7 @@ class BadgeCell:
                  collapsible: bool = False,
                  align: str = 'c',
                  minwidth: int = 0) -> None:
-        self.text = text if truncate is None else _truncate(text, truncate)
+        self.text = str(text) if truncate is None else _truncate(str(text), truncate)
         self.width = max(
             (get_text_width(self.text, 11) if width is None else width) + padding,
             minwidth
