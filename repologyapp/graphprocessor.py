@@ -21,9 +21,9 @@ from typing import List, Optional, Tuple
 
 
 class GraphProcessor:
-    _minval: Optional[float]
-    _maxval: Optional[float]
-    _points: List[Tuple[datetime.timedelta, float]]
+    _minval: Optional[int | float]
+    _maxval: Optional[int | float]
+    _points: List[Tuple[datetime.timedelta, int | float]]
     _float: bool
 
     def __init__(self) -> None:
@@ -32,7 +32,7 @@ class GraphProcessor:
         self._points = []
         self._float = False
 
-    def add_point(self, time: datetime.timedelta, value: float) -> None:
+    def add_point(self, time: datetime.timedelta, value: int | float) -> None:
         # minor optimization of merging straight lines
         if len(self._points) >= 2 and value == self._points[-1][1] and value == self._points[-2][1]:
             del self._points[-1]
