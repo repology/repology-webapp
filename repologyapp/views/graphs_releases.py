@@ -17,7 +17,6 @@
 
 import time
 from dataclasses import dataclass
-from typing import Optional
 
 from repologyapp.config import config
 from repologyapp.db import get_db
@@ -30,8 +29,8 @@ from repologyapp.xmlwriter import XmlDocument
 class _Release:
     version: str
     start_ts: float
-    trusted_start_ts: Optional[float]
-    end_ts: Optional[float]
+    trusted_start_ts: float | None
+    end_ts: float | None
 
 
 @ViewRegistrar('/graph/project/<project>/releases.svg')
@@ -64,7 +63,7 @@ def graph_releases(project: str) -> Response:
 
     doc.tag('line', x1=time_column_width + 0.5, x2=time_column_width + 0.5, y1=0, y2=height, stroke='#00000040')
 
-    def draw_bar(left: float, right: Optional[float], trusted: bool) -> None:
+    def draw_bar(left: float, right: float | None, trusted: bool) -> None:
         left_frac = (left - min_time) / (max_time - min_time)
         right_frac = (right - min_time) / (max_time - min_time) if right is not None else 1.0
 

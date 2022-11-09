@@ -17,7 +17,7 @@
 
 import json
 from datetime import timedelta
-from typing import Any, Dict, Optional
+from typing import Any
 
 import flask
 
@@ -28,7 +28,7 @@ from repologyapp.package import PackageDataDetailed, PackageStatus
 from repologyapp.view_registry import Response, ViewRegistrar
 
 
-def api_v1_package_to_json(package: PackageDataDetailed) -> Dict[str, Any]:
+def api_v1_package_to_json(package: PackageDataDetailed) -> dict[str, Any]:
     output = {
         field: getattr(package, field) for field in (
             'repo',
@@ -77,7 +77,7 @@ def api_v1() -> Response:
 
 @ViewRegistrar('/api/v1/projects/')
 @ViewRegistrar('/api/v1/projects/<bound>/')
-def api_v1_projects(bound: Optional[str] = None) -> Response:
+def api_v1_projects(bound: str | None = None) -> Response:
     filterinfo = MetapackagesFilterInfo()
     filterinfo.parse_flask_args()
 

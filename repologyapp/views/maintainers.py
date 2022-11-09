@@ -17,7 +17,6 @@
 
 import datetime
 from dataclasses import dataclass
-from typing import Optional
 
 import flask
 
@@ -31,7 +30,7 @@ from repologyapp.views.problems import problems_generic
 
 @ViewRegistrar('/maintainers/')
 @ViewRegistrar('/maintainers/<bound>/')
-def maintainers(bound: Optional[str] = None) -> Response:
+def maintainers(bound: str | None = None) -> Response:
     reverse = False
     if bound and bound.startswith('..'):
         bound = bound[2:]

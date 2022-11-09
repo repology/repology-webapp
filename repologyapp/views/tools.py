@@ -19,7 +19,6 @@ import json
 from dataclasses import dataclass
 from datetime import timedelta
 from enum import Enum
-from typing import List
 
 import flask
 
@@ -40,7 +39,7 @@ class EndpointType(Enum):
 class AllowedTargetPage:
     endpoint: str
     desc: str
-    args: List[str]
+    args: list[str]
     type_: EndpointType = EndpointType.HTML
 
 

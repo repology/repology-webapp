@@ -20,7 +20,7 @@ import re
 from collections import defaultdict
 from functools import cmp_to_key
 from itertools import zip_longest
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 import flask
 
@@ -183,7 +183,7 @@ def badge_versions_matrix() -> Response:
     header = args.get('header')
 
     # parse requirements
-    required_projects: Dict[str, Optional[Tuple[str, str]]] = {}
+    required_projects: dict[str, tuple[str, str] | None] = {}
 
     for project in args.get('projects', '').split(','):
         match = re.fullmatch('(.*?)(>=?|<=?)(.*?)', project)
@@ -207,7 +207,7 @@ def badge_versions_matrix() -> Response:
         )
     ]
 
-    packages_by_project: Dict[str, List[PackageDataMinimal]] = defaultdict(list)
+    packages_by_project: dict[str, list[PackageDataMinimal]] = defaultdict(list)
     repos = set()
     for package in packages:
         packages_by_project[package.effname].append(package)

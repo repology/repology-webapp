@@ -16,12 +16,11 @@
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 from dataclasses import dataclass
-from typing import Dict, Tuple
 
 import PIL.ImageFont
 
 
-_Dimensions = Tuple[int, int]
+_Dimensions = tuple[int, int]
 
 
 @dataclass
@@ -32,7 +31,7 @@ class _CacheEntry:
 
 class FontMeasurer:
     _font: PIL.ImageFont.FreeTypeFont
-    _cache: Dict[str, _CacheEntry]
+    _cache: dict[str, _CacheEntry]
     _maxcachesize: int
     _generation: int
 
@@ -42,7 +41,7 @@ class FontMeasurer:
         self._maxcachesize = maxcachesize
         self._generation = 0
 
-    def get_text_dimensions(self, text: str) -> Tuple[int, int]:
+    def get_text_dimensions(self, text: str) -> tuple[int, int]:
         self._generation += 1
 
         if text in self._cache:

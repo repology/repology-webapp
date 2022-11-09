@@ -15,9 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional
-
-
 __all__ = ['is_fallback_maintainer', 'for_page', 'has_flag', 'has_flag_at']
 
 
@@ -25,7 +22,7 @@ def is_fallback_maintainer(maintainer: str) -> bool:
     return maintainer.startswith('fallback-mnt-') and maintainer.endswith('@repology')
 
 
-def for_page(value: str, letter: Optional[str] = None) -> bool:
+def for_page(value: str, letter: str | None = None) -> bool:
     if letter is None or letter == '0':
         return not value or value < 'a'
     elif letter >= 'z':

@@ -16,7 +16,7 @@
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 from dataclasses import dataclass
-from typing import ClassVar, List, Optional, Protocol, Tuple, TypeVar
+from typing import ClassVar, Protocol, TypeVar
 
 from libversion import ANY_IS_PATCH, P_IS_PATCH, version_compare
 
@@ -183,28 +183,28 @@ class PackageDataMinimal:
 
 @dataclass
 class PackageDataSummarizable(PackageDataMinimal):
-    maintainers: Optional[List[str]]
+    maintainers: list[str] | None
 
 
 @dataclass
 class PackageDataDetailed(PackageDataSummarizable):
-    subrepo: Optional[str]
+    subrepo: str | None
 
-    name: Optional[str]
-    srcname: Optional[str]
-    binname: Optional[str]
-    trackname: Optional[str]
-    projectname_seed: Optional[str]
+    name: str | None
+    srcname: str | None
+    binname: str | None
+    trackname: str | None
+    projectname_seed: str | None
 
     origversion: str
     rawversion: str
 
-    category: Optional[str]
-    comment: Optional[str]
-    licenses: Optional[List[str]]
-    links: Optional[List[Tuple[int, int]]]
+    category: str | None
+    comment: str | None
+    licenses: list[str] | None
+    links: list[tuple[int, int]] | None
 
-    url: Optional[str] = None
+    url: str | None = None
 
 
 AnyPackageDataMinimal = TypeVar('AnyPackageDataMinimal', bound=PackageDataMinimal)

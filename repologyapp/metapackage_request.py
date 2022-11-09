@@ -15,10 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional, Tuple
-
-
-def split_range(s: str) -> Tuple[Optional[int], ...]:
+def split_range(s: str) -> tuple[int | None, ...]:
     comps = s.split('-', 1)
     if len(comps) == 1:
         comps.append(comps[0])
@@ -26,26 +23,26 @@ def split_range(s: str) -> Tuple[Optional[int], ...]:
 
 
 class MetapackageRequest:
-    pivot: Optional[str]
+    pivot: str | None
     reverse: bool
 
-    search: Optional[str]
+    search: str | None
 
-    maintainer: Optional[str]
+    maintainer: str | None
 
-    min_repos: Optional[int]
-    max_repos: Optional[int]
-    min_families: Optional[int]
-    max_families: Optional[int]
-    min_repos_newest: Optional[int]
-    max_repos_newest: Optional[int]
-    min_families_newest: Optional[int]
-    max_families_newest: Optional[int]
+    min_repos: int | None
+    max_repos: int | None
+    min_families: int | None
+    max_families: int | None
+    min_repos_newest: int | None
+    max_repos_newest: int | None
+    min_families_newest: int | None
+    max_families_newest: int | None
 
-    inrepo: Optional[str]
-    notinrepo: Optional[str]
+    inrepo: str | None
+    notinrepo: str | None
 
-    category: Optional[str]
+    category: str | None
 
     newest: bool
     outdated: bool
@@ -87,7 +84,7 @@ class MetapackageRequest:
         self.vulnerable = False
         self.has_related = False
 
-    def set_bound(self, bound: Optional[str]) -> None:
+    def set_bound(self, bound: str | None) -> None:
         if not bound:
             pass
         elif bound.startswith('..'):
@@ -95,14 +92,14 @@ class MetapackageRequest:
         else:
             self.require_name_from(bound)
 
-    def require_name_from(self, name: Optional[str]) -> None:
+    def require_name_from(self, name: str | None) -> None:
         if self.pivot:
             raise RuntimeError('duplicate effname condition')
         if name is not None:
             self.pivot = name
             self.reverse = False
 
-    def require_name_to(self, name: Optional[str]) -> None:
+    def require_name_to(self, name: str | None) -> None:
         if self.pivot:
             raise RuntimeError('duplicate effname condition')
         if name is not None:

@@ -21,7 +21,7 @@ import json
 import os
 import sys
 import xml.etree.ElementTree
-from typing import Any, List, Optional
+from typing import Any
 
 import pytest
 
@@ -58,7 +58,7 @@ except RuntimeError:
 
 
 # HTTP request check helpers (which also return content)
-def checkurl_data(url: str, status_code: Optional[int] = 200, mimetype: Optional[str] = None) -> bytes:
+def checkurl_data(url: str, status_code: int | None = 200, mimetype: str | None = None) -> bytes:
     __tracebackhide__ = True
     reply = test_client.get(url)
     if status_code is not None:
@@ -68,7 +68,7 @@ def checkurl_data(url: str, status_code: Optional[int] = 200, mimetype: Optional
     return reply.data
 
 
-def checkurl_text(url: str, status_code: Optional[int] = 200, mimetype: Optional[str] = 'text/plain', has: List[str] = [], hasnot: List[str] = []) -> str:
+def checkurl_text(url: str, status_code: int | None = 200, mimetype: str | None = 'text/plain', has: list[str] = [], hasnot: list[str] = []) -> str:
     __tracebackhide__ = True
     text = checkurl_data(url, status_code, mimetype).decode('utf-8')
     assert isinstance(text, str)
@@ -79,7 +79,7 @@ def checkurl_text(url: str, status_code: Optional[int] = 200, mimetype: Optional
     return text
 
 
-def checkurl_html(url: str, status_code: Optional[int] = 200, mimetype: Optional[str] = 'text/html', has: List[str] = [], hasnot: List[str] = []) -> str:
+def checkurl_html(url: str, status_code: int | None = 200, mimetype: str | None = 'text/html', has: list[str] = [], hasnot: list[str] = []) -> str:
     __tracebackhide__ = True
     document = checkurl_text(url, status_code, mimetype, has, hasnot)
     if html_validation:
@@ -92,26 +92,26 @@ def checkurl_html(url: str, status_code: Optional[int] = 200, mimetype: Optional
     return document
 
 
-def checkurl_json(url: str, status_code: Optional[int] = 200, mimetype: Optional[str] = 'application/json', has: List[str] = [], hasnot: List[str] = []) -> Any:
+def checkurl_json(url: str, status_code: int | None = 200, mimetype: str | None = 'application/json', has: list[str] = [], hasnot: list[str] = []) -> Any:
     __tracebackhide__ = True
     return json.loads(
         checkurl_text(url, status_code, mimetype, has, hasnot)
     )
 
 
-def checkurl_xml(url: str, status_code: Optional[int] = 200, mimetype: Optional[str] = 'application/xml', has: List[str] = [], hasnot: List[str] = []) -> xml.etree.ElementTree.Element:
+def checkurl_xml(url: str, status_code: int | None = 200, mimetype: str | None = 'application/xml', has: list[str] = [], hasnot: list[str] = []) -> xml.etree.ElementTree.Element:
     __tracebackhide__ = True
     return xml.etree.ElementTree.fromstring(
         checkurl_text(url, status_code, mimetype, has, hasnot)
     )
 
 
-def checkurl_svg(url: str, status_code: Optional[int] = 200, mimetype: Optional[str] = 'image/svg+xml', has: List[str] = [], hasnot: List[str] = []) -> xml.etree.ElementTree.Element:
+def checkurl_svg(url: str, status_code: int | None = 200, mimetype: str | None = 'image/svg+xml', has: list[str] = [], hasnot: list[str] = []) -> xml.etree.ElementTree.Element:
     __tracebackhide__ = True
     return checkurl_xml(url, status_code, mimetype, has, hasnot)
 
 
-def checkurl_atom(url: str, status_code: Optional[int] = 200, mimetype: Optional[str] = 'application/atom+xml', has: List[str] = [], hasnot: List[str] = []) -> xml.etree.ElementTree.Element:
+def checkurl_atom(url: str, status_code: int | None = 200, mimetype: str | None = 'application/atom+xml', has: list[str] = [], hasnot: list[str] = []) -> xml.etree.ElementTree.Element:
     __tracebackhide__ = True
     return checkurl_xml(url, status_code, mimetype, has, hasnot)
 

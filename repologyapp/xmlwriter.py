@@ -16,7 +16,7 @@
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 from itertools import chain
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 
 def _escape(val: Any) -> str:
@@ -31,11 +31,11 @@ class _XmlElement:
 
     _document: 'XmlDocument'
     _tagname: str
-    _rawattrs: Tuple[Tuple[str, Any], ...]
-    _attrs: Dict[str, Any]
-    _childs: List[Any]
+    _rawattrs: tuple[tuple[str, Any], ...]
+    _attrs: dict[str, Any]
+    _childs: list[Any]
 
-    def __init__(self, document: 'XmlDocument', tagname: str, *rawattrs: Tuple[str, Any], **attrs: Any) -> None:
+    def __init__(self, document: 'XmlDocument', tagname: str, *rawattrs: tuple[str, Any], **attrs: Any) -> None:
         self._document = document
         self._tagname = tagname
         self._rawattrs = rawattrs
@@ -72,7 +72,7 @@ class XmlDocument:
     __slots__ = ['_root', '_path']
 
     _root: _XmlElement
-    _path: List[_XmlElement]
+    _path: list[_XmlElement]
 
     def __init__(self, tagname: str, *rawattrs: Any, **attrs: Any) -> None:
         root = _XmlElement(self, tagname, *rawattrs, **attrs)

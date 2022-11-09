@@ -18,7 +18,7 @@
 
 from copy import copy
 from functools import total_ordering
-from typing import Any, Iterable, Set, Tuple
+from typing import Any, Iterable
 
 from libversion import ANY_IS_PATCH, P_IS_PATCH, version_compare
 
@@ -100,7 +100,7 @@ class UserVisibleVersionInfo:
 
 
 def iter_aggregate_versions(packages: Iterable[AnyPackageDataMinimal]) -> Iterable[UserVisibleVersionInfo]:
-    seen: Set[Tuple[str, int, int]] = set()
+    seen: set[tuple[str, int, int]] = set()
 
     for package in packages:
         version = UserVisibleVersionInfo(package)

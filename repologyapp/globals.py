@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Any, Dict, Tuple
+from typing import Any
 
 from repologyapp.config import config
 from repologyapp.fontmeasurer import FontMeasurer
@@ -28,7 +28,7 @@ __all__ = [
 ]
 
 
-_fontmeasurers: Dict[Tuple[int, bool], FontMeasurer] = {}
+_fontmeasurers: dict[tuple[int, bool], FontMeasurer] = {}
 
 repometadata = RepositoryMetadata()
 

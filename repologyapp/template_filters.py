@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Iterable, List, Optional
+from typing import Iterable
 from urllib.parse import urlparse
 
 from repologyapp.package import PackageStatus
@@ -24,7 +24,7 @@ from repologyapp.package import PackageStatus
 __all__ = ['maintainer_to_links', 'maintainers_to_group_mailto', 'css_for_versionclass']
 
 
-def maintainer_to_links(maintainer: str) -> List[str]:
+def maintainer_to_links(maintainer: str) -> list[str]:
     links = []
 
     if '@' in maintainer:
@@ -47,7 +47,7 @@ def maintainer_to_links(maintainer: str) -> List[str]:
     return links
 
 
-def maintainers_to_group_mailto(maintainers: Iterable[str], subject: Optional[str] = None) -> Optional[str]:
+def maintainers_to_group_mailto(maintainers: Iterable[str], subject: str | None = None) -> str | None:
     emails = []
 
     for maintainer in maintainers:

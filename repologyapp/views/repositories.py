@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional, cast
+from typing import cast
 
 import flask
 
@@ -27,7 +27,7 @@ from repologyapp.view_registry import Response, ViewRegistrar
 
 @ViewRegistrar('/repositories/statistics')
 @ViewRegistrar('/repositories/statistics/<sorting>')
-def repositories_statistics(sorting: Optional[str] = None) -> Response:
+def repositories_statistics(sorting: str | None = None) -> Response:
     autorefresh = flask.request.args.to_dict().get('autorefresh')
 
     repostats_by_name = {repostat['name']: repostat for repostat in get_db().get_active_repositories()}

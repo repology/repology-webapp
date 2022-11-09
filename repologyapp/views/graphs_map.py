@@ -17,7 +17,7 @@
 
 import math
 from dataclasses import dataclass
-from typing import Any, Callable, Dict, Tuple
+from typing import Any, Callable
 
 import flask
 
@@ -43,8 +43,8 @@ class _MapPoint:
     color: str
 
 
-def _map_repo_generic(getx: Callable[[Dict[str, Any]], float],
-                      gety: Callable[[Dict[str, Any]], float],
+def _map_repo_generic(getx: Callable[[dict[str, Any]], float],
+                      gety: Callable[[dict[str, Any]], float],
                       namex: str = 'X',
                       namey: str = 'Y',
                       unitx: str = '',
@@ -122,7 +122,7 @@ def _map_repo_generic(getx: Callable[[Dict[str, Any]], float],
             doc.text(f'{max_y}{unity}')
 
     # data points (labels)
-    def point_coords(point: _MapPoint) -> Tuple[float, float]:
+    def point_coords(point: _MapPoint) -> tuple[float, float]:
         return (
             int(offset_left + point.x / max_x * (width - offset_left - offset_right)) + 0.5,
             int(height - offset_bottom - point.y / max_y * (height - offset_top - offset_bottom)) + 0.5

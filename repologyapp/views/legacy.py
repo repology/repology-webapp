@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Collection, Dict, Optional
+from typing import Collection
 
 import flask
 
@@ -24,7 +24,7 @@ from repologyapp.globals import repometadata
 from repologyapp.view_registry import Response, ViewRegistrar
 
 
-def _get_filtered_args(wanted_args: Collection[str]) -> Dict[str, str]:
+def _get_filtered_args(wanted_args: Collection[str]) -> dict[str, str]:
     return {
         key: val
         for key, val in flask.request.args.to_dict().items()
@@ -32,7 +32,7 @@ def _get_filtered_args(wanted_args: Collection[str]) -> Dict[str, str]:
     }
 
 
-def _get_projects_args() -> Dict[str, str]:
+def _get_projects_args() -> dict[str, str]:
     return _get_filtered_args({
         'category',
         'families',
@@ -52,25 +52,25 @@ def _get_projects_args() -> Dict[str, str]:
 
 @ViewRegistrar('/metapackages/all/')
 @ViewRegistrar('/metapackages/all/<bound>/')
-def metapackages_all(bound: Optional[str] = None) -> Response:
+def metapackages_all(bound: str | None = None) -> Response:
     return flask.redirect(flask.url_for('projects', bound=bound, search=flask.request.args.to_dict().get('search')), 301)
 
 
 @ViewRegistrar('/metapackages/unique/')
 @ViewRegistrar('/metapackages/unique/<bound>/')
-def metapackages_unique(bound: Optional[str] = None) -> Response:
+def metapackages_unique(bound: str | None = None) -> Response:
     return flask.redirect(flask.url_for('projects', bound=bound, families=1, search=flask.request.args.to_dict().get('search')), 301)
 
 
 @ViewRegistrar('/metapackages/widespread/')
 @ViewRegistrar('/metapackages/widespread/<bound>/')
-def metapackages_widespread(bound: Optional[str] = None) -> Response:
+def metapackages_widespread(bound: str | None = None) -> Response:
     return flask.redirect(flask.url_for('projects', bound=bound, families='10-', search=flask.request.args.to_dict().get('search')), 301)
 
 
 @ViewRegistrar('/metapackages/in-repo/<repo>/')
 @ViewRegistrar('/metapackages/in-repo/<repo>/<bound>/')
-def metapackages_in_repo(repo: str, bound: Optional[str] = None) -> Response:
+def metapackages_in_repo(repo: str, bound: str | None = None) -> Response:
     if repo not in repometadata.active_names():
         flask.abort(404)
 
@@ -79,7 +79,7 @@ def metapackages_in_repo(repo: str, bound: Optional[str] = None) -> Response:
 
 @ViewRegistrar('/metapackages/outdated-in-repo/<repo>/')
 @ViewRegistrar('/metapackages/outdated-in-repo/<repo>/<bound>/')
-def metapackages_outdated_in_repo(repo: str, bound: Optional[str] = None) -> Response:
+def metapackages_outdated_in_repo(repo: str, bound: str | None = None) -> Response:
     if repo not in repometadata.active_names():
         flask.abort(404)
 
@@ -88,7 +88,7 @@ def metapackages_outdated_in_repo(repo: str, bound: Optional[str] = None) -> Res
 
 @ViewRegistrar('/metapackages/not-in-repo/<repo>/')
 @ViewRegistrar('/metapackages/not-in-repo/<repo>/<bound>/')
-def metapackages_not_in_repo(repo: str, bound: Optional[str] = None) -> Response:
+def metapackages_not_in_repo(repo: str, bound: str | None = None) -> Response:
     if repo not in repometadata.active_names():
         flask.abort(404)
 
@@ -97,7 +97,7 @@ def metapackages_not_in_repo(repo: str, bound: Optional[str] = None) -> Response
 
 @ViewRegistrar('/metapackages/candidates-for-repo/<repo>/')
 @ViewRegistrar('/metapackages/candidates-for-repo/<repo>/<bound>/')
-def metapackages_candidates_for_repo(repo: str, bound: Optional[str] = None) -> Response:
+def metapackages_candidates_for_repo(repo: str, bound: str | None = None) -> Response:
     if repo not in repometadata.active_names():
         flask.abort(404)
 
@@ -106,7 +106,7 @@ def metapackages_candidates_for_repo(repo: str, bound: Optional[str] = None) -> 
 
 @ViewRegistrar('/metapackages/unique-in-repo/<repo>/')
 @ViewRegistrar('/metapackages/unique-in-repo/<repo>/<bound>/')
-def metapackages_unique_in_repo(repo: str, bound: Optional[str] = None) -> Response:
+def metapackages_unique_in_repo(repo: str, bound: str | None = None) -> Response:
     if repo not in repometadata.active_names():
         flask.abort(404)
 
@@ -115,13 +115,13 @@ def metapackages_unique_in_repo(repo: str, bound: Optional[str] = None) -> Respo
 
 @ViewRegistrar('/metapackages/by-maintainer/<maintainer>/')
 @ViewRegistrar('/metapackages/by-maintainer/<maintainer>/<bound>/')
-def metapackages_by_maintainer(maintainer: str, bound: Optional[str] = None) -> Response:
+def metapackages_by_maintainer(maintainer: str, bound: str | None = None) -> Response:
     return flask.redirect(flask.url_for('projects', bound=bound, maintainer=maintainer, search=flask.request.args.to_dict().get('search')), 301)
 
 
 @ViewRegistrar('/metapackages/outdated-by-maintainer/<maintainer>/')
 @ViewRegistrar('/metapackages/outdated-by-maintainer/<maintainer>/<bound>/')
-def metapackages_outdated_by_maintainer(maintainer: str, bound: Optional[str] = None) -> Response:
+def metapackages_outdated_by_maintainer(maintainer: str, bound: str | None = None) -> Response:
     return flask.redirect(flask.url_for('projects', bound=bound, maintainer=maintainer, outdated=1, search=flask.request.args.to_dict().get('search')), 301)
 
 
@@ -132,7 +132,7 @@ def legacy_repositories() -> Response:
 
 @ViewRegistrar('/statistics')
 @ViewRegistrar('/statistics/<sorting>')
-def legacy_statistics(sorting: Optional[str] = None) -> Response:
+def legacy_statistics(sorting: str | None = None) -> Response:
     return flask.redirect(flask.url_for('repositories_statistics', sorting=sorting), 301)
 
 
@@ -148,7 +148,7 @@ def project(name: str) -> Response:
 
 @ViewRegistrar('/metapackages/')
 @ViewRegistrar('/metapackages/<bound>/')
-def metapackages(bound: Optional[str] = None) -> Response:
+def metapackages(bound: str | None = None) -> Response:
     return flask.redirect(flask.url_for('projects', bound=bound, **_get_projects_args()), 301)
 
 
@@ -189,7 +189,7 @@ def metapackage_report(name: str) -> Response:
 
 @ViewRegistrar('/api/v1/metapackages/')
 @ViewRegistrar('/api/v1/metapackages/<bound>/')
-def api_v1_metapackages(bound: Optional[str] = None) -> Response:
+def api_v1_metapackages(bound: str | None = None) -> Response:
     return flask.redirect(flask.url_for('api_v1_projects', bound=bound, **_get_projects_args()), 301)
 
 
@@ -200,55 +200,55 @@ def api_v1_metapackage(name: str) -> Response:
 
 @ViewRegistrar('/api/v1/metapackages/all/')
 @ViewRegistrar('/api/v1/metapackages/all/<bound>/')
-def api_v1_metapackages_all(bound: Optional[str] = None) -> Response:
+def api_v1_metapackages_all(bound: str | None = None) -> Response:
     return flask.redirect(flask.url_for('api_v1_projects', bound=bound), 301)
 
 
 @ViewRegistrar('/api/v1/metapackages/unique/')
 @ViewRegistrar('/api/v1/metapackages/unique/<bound>/')
-def api_v1_metapackages_unique(bound: Optional[str] = None) -> Response:
+def api_v1_metapackages_unique(bound: str | None = None) -> Response:
     return flask.redirect(flask.url_for('api_v1_projects', bound=bound, families=1), 301)
 
 
 @ViewRegistrar('/api/v1/metapackages/in-repo/<repo>/')
 @ViewRegistrar('/api/v1/metapackages/in-repo/<repo>/<bound>/')
-def api_v1_metapackages_in_repo(repo: str, bound: Optional[str] = None) -> Response:
+def api_v1_metapackages_in_repo(repo: str, bound: str | None = None) -> Response:
     return flask.redirect(flask.url_for('api_v1_projects', bound=bound, inrepo=repo), 301)
 
 
 @ViewRegistrar('/api/v1/metapackages/outdated-in-repo/<repo>/')
 @ViewRegistrar('/api/v1/metapackages/outdated-in-repo/<repo>/<bound>/')
-def api_v1_metapackages_outdated_in_repo(repo: str, bound: Optional[str] = None) -> Response:
+def api_v1_metapackages_outdated_in_repo(repo: str, bound: str | None = None) -> Response:
     return flask.redirect(flask.url_for('api_v1_projects', bound=bound, inrepo=repo, outdated=1), 301)
 
 
 @ViewRegistrar('/api/v1/metapackages/not-in-repo/<repo>/')
 @ViewRegistrar('/api/v1/metapackages/not-in-repo/<repo>/<bound>/')
-def api_v1_metapackages_not_in_repo(repo: str, bound: Optional[str] = None) -> Response:
+def api_v1_metapackages_not_in_repo(repo: str, bound: str | None = None) -> Response:
     return flask.redirect(flask.url_for('api_v1_projects', bound=bound, notinrepo=repo), 301)
 
 
 @ViewRegistrar('/api/v1/metapackages/candidates-in-repo/<repo>/')
 @ViewRegistrar('/api/v1/metapackages/candidates-in-repo/<repo>/<bound>/')
-def api_v1_metapackages_candidates_in_repo(repo: str, bound: Optional[str] = None) -> Response:
+def api_v1_metapackages_candidates_in_repo(repo: str, bound: str | None = None) -> Response:
     return flask.redirect(flask.url_for('api_v1_projects', bound=bound, inrepo=repo, families='5-'), 301)
 
 
 @ViewRegistrar('/api/v1/metapackages/unique-in-repo/<repo>/')
 @ViewRegistrar('/api/v1/metapackages/unique-in-repo/<repo>/<bound>/')
-def api_v1_metapackages_unique_in_repo(repo: str, bound: Optional[str] = None) -> Response:
+def api_v1_metapackages_unique_in_repo(repo: str, bound: str | None = None) -> Response:
     return flask.redirect(flask.url_for('api_v1_projects', bound=bound, inrepo=repo, families=1), 301)
 
 
 @ViewRegistrar('/api/v1/metapackages/by-maintainer/<maintainer>/')
 @ViewRegistrar('/api/v1/metapackages/by-maintainer/<maintainer>/<bound>/')
-def api_v1_metapackages_by_maintainer(maintainer: str, bound: Optional[str] = None) -> Response:
+def api_v1_metapackages_by_maintainer(maintainer: str, bound: str | None = None) -> Response:
     return flask.redirect(flask.url_for('api_v1_projects', bound=bound, maintainer=maintainer), 301)
 
 
 @ViewRegistrar('/api/v1/metapackages/outdated-by-maintainer/<maintainer>/')
 @ViewRegistrar('/api/v1/metapackages/outdated-by-maintainer/<maintainer>/<bound>/')
-def api_v1_metapackages_outdated_by_maintainer(maintainer: str, bound: Optional[str] = None) -> Response:
+def api_v1_metapackages_outdated_by_maintainer(maintainer: str, bound: str | None = None) -> Response:
     return flask.redirect(flask.url_for('api_v1_projects', bound=bound, maintainer=maintainer, outdated=1), 301)
 
 

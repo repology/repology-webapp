@@ -19,7 +19,7 @@ import importlib
 import inspect
 import os
 import types
-from typing import Any, Callable, Dict, Iterator, List, Optional, Tuple, Union
+from typing import Any, Callable, Iterator, Union
 
 import flask
 
@@ -28,13 +28,13 @@ import werkzeug
 
 # Corresponds to flask typeshed, but simpler and stricter
 _Status = int
-_Headers = Dict[str, str]
-_Body = Union[str, werkzeug.Response]  # the latter is returned by e.g. flask.redirect
+_Headers = dict[str, str]
+_Body = str | werkzeug.Response  # the latter is returned by e.g. flask.redirect
 Response = Union[
     _Body,
-    Tuple[_Body, _Status, _Headers],
-    Tuple[_Body, _Status],
-    Tuple[_Body, _Headers],
+    tuple[_Body, _Status, _Headers],
+    tuple[_Body, _Status],
+    tuple[_Body, _Headers]
 ]
 _ViewFunc = Callable[..., Response]
 
@@ -50,11 +50,11 @@ def _enumerate_modules(pkgname: str, pkgfile: str) -> Iterator[types.ModuleType]
 
 class ViewRegistrant():
     _f: _ViewFunc
-    _next: Optional['ViewRegistrant']
+    _next: Union['ViewRegistrant', None]
     _route: str
-    _options: Dict[str, Any]
+    _options: dict[str, Any]
 
-    def __init__(self, f: Union['ViewRegistrant', _ViewFunc], route: str, options: Dict[str, Any]) -> None:
+    def __init__(self, f: 'ViewRegistrant' | _ViewFunc, route: str, options: dict[str, Any]) -> None:
         if isinstance(f, ViewRegistrant):
             # allow nesting
             self._f = f._f
@@ -77,7 +77,7 @@ class ViewRegistrant():
 
 class ViewRegistrar():
     _route: str
-    _options: Dict[str, Any]
+    _options: dict[str, Any]
 
     def __init__(self, route: str, **options: Any) -> None:
         self._route = route
@@ -88,7 +88,7 @@ class ViewRegistrar():
 
 
 class ViewRegistry():
-    _registrants: List[ViewRegistrant]
+    _registrants: list[ViewRegistrant]
 
     def __init__(self, pkgname: str, pkgfile: str) -> None:
         self._registrants = []

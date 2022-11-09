@@ -15,8 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional
-
 import flask
 
 from repologyapp.config import config
@@ -25,7 +23,7 @@ from repologyapp.globals import repometadata
 from repologyapp.view_registry import Response
 
 
-def problems_generic(repo: str, maintainer: Optional[str] = None, start: Optional[str] = None, end: Optional[str] = None) -> Response:
+def problems_generic(repo: str, maintainer: str | None = None, start: str | None = None, end: str | None = None) -> Response:
     if repo not in repometadata.active_names():
         flask.abort(404)
 

@@ -16,13 +16,12 @@
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
-from typing import List, Optional, Tuple
 
 
 class AFKChecker:
-    _intervals: List[Tuple[datetime.date, datetime.date]]
+    _intervals: list[tuple[datetime.date, datetime.date]]
 
-    def __init__(self, intervals: List[str] = []) -> None:
+    def __init__(self, intervals: list[str] = []) -> None:
         self._intervals = []
 
         for interval in intervals:
@@ -33,7 +32,7 @@ class AFKChecker:
 
             self._intervals.append((start, rest[0] if rest else start))
 
-    def get_afk_end(self, today: Optional[datetime.date] = None) -> Optional[datetime.date]:
+    def get_afk_end(self, today: datetime.date | None = None) -> datetime.date | None:
         if today is None:
             today = datetime.date.today()
 

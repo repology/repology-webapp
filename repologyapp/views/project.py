@@ -19,7 +19,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from datetime import timedelta
 from functools import cmp_to_key
-from typing import Any, Callable, Collection, Dict, Iterable, List, Optional
+from typing import Any, Callable, Collection, Iterable
 
 import flask
 
@@ -36,7 +36,7 @@ from repologyapp.version import UserVisibleVersionInfo, iter_aggregate_versions
 from repologyapp.view_registry import Response, ViewRegistrar
 
 
-def handle_nonexisting_project(name: str, metapackage: Dict[str, Any]) -> Response:
+def handle_nonexisting_project(name: str, metapackage: dict[str, Any]) -> Response:
     # we don't show anything to user when REDIRECTS_PER_PAGE is reached as
     # number of redirect targets is natually limited and we don't expect it to be reached
     redirects = get_db().get_project_redirects(name, limit=config['REDIRECTS_PER_PAGE'])
@@ -47,8 +47,8 @@ def handle_nonexisting_project(name: str, metapackage: Dict[str, Any]) -> Respon
         assert flask.request.endpoint is not None
         return flask.redirect(flask.url_for(flask.request.endpoint, name=redirects[0]), 301)
 
-    metapackages: List[Any] = []
-    metapackagedata: Dict[str, Any] = {}
+    metapackages: list[Any] = []
+    metapackagedata: dict[str, Any] = {}
 
     if redirects:
         # show redirects
@@ -95,7 +95,7 @@ def project_versions(name: str) -> Response:
         for item in get_db().get_metapackage_packages(name, detailed=True, url=True)
     ]
 
-    packages_by_repo: Dict[str, List[PackageDataDetailed]] = defaultdict(list)
+    packages_by_repo: dict[str, list[PackageDataDetailed]] = defaultdict(list)
     for package in packages:
         packages_by_repo[package.repo].append(package)
 
@@ -124,11 +124,11 @@ def project_versions_compact(name: str) -> Response:
         for item in get_db().get_metapackage_packages(name, minimal=True)
     ]
 
-    packages_by_repo: Dict[str, List[PackageDataMinimal]] = defaultdict(list)
+    packages_by_repo: dict[str, list[PackageDataMinimal]] = defaultdict(list)
     for package in packages:
         packages_by_repo[package.repo].append(package)
 
-    versions: Dict[str, List[UserVisibleVersionInfo]] = {
+    versions: dict[str, list[UserVisibleVersionInfo]] = {
         repo: sorted(iter_aggregate_versions(repo_packages), reverse=True)
         for repo, repo_packages in packages_by_repo.items()
     }
@@ -149,11 +149,11 @@ def project_packages(name: str) -> Response:
     if not metapackage or metapackage['num_repos'] == 0:
         return handle_nonexisting_project(name, metapackage)
 
-    packages_by_repo: Dict[str, List[PackageDataDetailed]] = defaultdict(list)
+    packages_by_repo: dict[str, list[PackageDataDetailed]] = defaultdict(list)
     for package in (PackageDataDetailed(**item) for item in get_db().get_metapackage_packages(name, detailed=True)):
         packages_by_repo[package.repo].append(package)
 
-    packages: List[PackageDataDetailed] = []
+    packages: list[PackageDataDetailed] = []
     for repo in repometadata.active_names():
         if repo in packages_by_repo:
             packages.extend(packageset_sort_by_name_version(packages_by_repo[repo]))
@@ -182,7 +182,7 @@ def project_information(name: str) -> Response:
         key=lambda package: (package.repo, package.visiblename, package.version)
     )
 
-    information: Dict[str, Any] = {}
+    information: dict[str, Any] = {}
 
     def append_info(infokey: str, infoval: Any, package: PackageDataDetailed) -> None:
         if infokey not in information:
@@ -276,7 +276,7 @@ def project_information(name: str) -> Response:
 
 @ViewRegistrar('/project/<name>/history')
 def project_history(name: str) -> Response:
-    def prepare_repos(repos: Collection[str]) -> List[str]:
+    def prepare_repos(repos: Collection[str]) -> list[str]:
         if not repos:
             return []
 
@@ -285,7 +285,7 @@ def project_history(name: str) -> Response:
         # ensure correct ordering
         return [name for name in repometadata.all_names() if name in repos]
 
-    def prepare_versions(versions: List[str]) -> List[str]:
+    def prepare_versions(versions: list[str]) -> list[str]:
         if not versions:
             return []
 
@@ -294,11 +294,11 @@ def project_history(name: str) -> Response:
     def timedelta_from_seconds(seconds: int) -> timedelta:
         return timedelta(seconds=seconds)
 
-    def apply_to_field(datadict: Dict[str, Any], key: str, func: Callable[..., Any]) -> None:
+    def apply_to_field(datadict: dict[str, Any], key: str, func: Callable[..., Any]) -> None:
         if key in datadict and datadict[key] is not None:
             datadict[key] = func(datadict[key])
 
-    def postprocess_history(history: List[Dict[str, Any]]) -> Iterable[Dict[str, Any]]:
+    def postprocess_history(history: list[dict[str, Any]]) -> Iterable[dict[str, Any]]:
         for entry in history:
             data = entry['data']
 
@@ -493,13 +493,13 @@ def project_report(name: str) -> Response:
 
 @dataclass
 class _VersionRange:
-    start: Optional[str]
-    end: Optional[str]
+    start: str | None
+    end: str | None
     start_excluded: bool
     end_excluded: bool
     highlighted: bool = False
 
-    def set_highlight(self, version: Optional[str]) -> '_VersionRange':
+    def set_highlight(self, version: str | None) -> '_VersionRange':
         if version is None:
             return self
         if self.start is not None and version_compare(version, self.start) < (1 if self.start_excluded else 0):
@@ -534,7 +534,7 @@ def project_cves(name: str) -> Response:
     highlight_version = flask.request.args.to_dict().get('version')
 
     cve_ids = set()
-    cves: Dict[_CVEAggregation, List[_VersionRange]] = defaultdict(list)
+    cves: dict[_CVEAggregation, list[_VersionRange]] = defaultdict(list)
     for item in get_db().get_project_cves(name, config['CVES_PER_PAGE']):
         cve_ids.add(item[0])
         cves[

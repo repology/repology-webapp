@@ -17,13 +17,13 @@
 
 # mypy: no-disallow-untyped-calls
 
-from typing import Any, Dict
+from typing import Any
 
 from repologyapp.package import PackageDataDetailed
 
 
 def spawn_package(**custom_args: Any) -> PackageDataDetailed:
-    args: Dict[str, Any] = {
+    args: dict[str, Any] = {
         'repo': 'dummyrepo',
         'family': 'dummyfamily',
         'subrepo': None,

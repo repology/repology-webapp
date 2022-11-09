@@ -16,7 +16,7 @@
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 from collections import defaultdict
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable
 
 import flask
 
@@ -55,7 +55,7 @@ def admin() -> Response:
     return flask.render_template('admin.html')
 
 
-def admin_reports_generic(report_getter: Callable[[], Dict[str, Any]]) -> Response:
+def admin_reports_generic(report_getter: Callable[[], dict[str, Any]]) -> Response:
     if not flask.session.get('admin'):
         return unauthorized()
 
@@ -110,7 +110,7 @@ def admin_redirects() -> Response:
 
     project = flask.request.args.get('project')
 
-    redirects: List[Dict[str, Any]] = []
+    redirects: list[dict[str, Any]] = []
 
     if project is not None:
         if flask.request.method == 'POST':
@@ -164,7 +164,7 @@ def admin_name_samples() -> Response:
     if not flask.session.get('admin'):
         return unauthorized()
 
-    samples_by_repo: Dict[str, List[Dict[Any, Any]]] = defaultdict(list)
+    samples_by_repo: dict[str, list[dict[Any, Any]]] = defaultdict(list)
 
     for sample in get_db().get_name_samples(10):
         samples_by_repo[sample['repo']].append(sample)
@@ -176,9 +176,9 @@ def admin_name_samples() -> Response:
 
 
 class CpeVals:
-    _values: Dict[str, str]
+    _values: dict[str, str]
 
-    def __init__(self, form: Optional[Dict[str, str]] = None):
+    def __init__(self, form: dict[str, str] | None = None):
         self._values = {
             'cpe_vendor': '',
             'cpe_product': '',
@@ -208,7 +208,7 @@ class CpeVals:
         return ':'.join(['cpe', '2.3', 'a'] + [v for k, v in self._values.items() if k.startswith('cpe_')])
 
 
-def handle_cpe_request() -> Optional[Response]:
+def handle_cpe_request() -> Response | None:
     """Process POST request related to CPEs.
 
     Does necessary checks and modifications to the database, and
@@ -226,7 +226,7 @@ def handle_cpe_request() -> Optional[Response]:
     cpe_keys = ['cpe_vendor', 'cpe_product', 'cpe_edition', 'cpe_lang', 'cpe_sw_edition', 'cpe_target_sw', 'cpe_target_hw', 'cpe_other']
     cpe_args = {key: flask.request.form.get(key, '').strip() for key in cpe_keys}
 
-    def format_cpe(vals: Dict[str, str]) -> str:
+    def format_cpe(vals: dict[str, str]) -> str:
         return ':'.join(['cpe', '2.3', 'a'] + [vals[k] for k in cpe_keys])
 
     def check_required_cpe_fields() -> bool:

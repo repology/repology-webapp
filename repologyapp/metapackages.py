@@ -17,7 +17,7 @@
 
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import Any, Callable, Dict, Iterable, List, Optional, Sequence, Tuple
+from typing import Any, Callable, Iterable, Sequence
 
 import flask
 
@@ -34,7 +34,7 @@ class MetapackagesFilterInfo:
         action: Callable[[MetapackageRequest, Any], None]
         sanitize: Callable[[Any], Any] = lambda value: value
 
-    _fields: Dict[str, _FieldDescriptor] = {
+    _fields: dict[str, _FieldDescriptor] = {
         'search': _FieldDescriptor(
             str,
             False,
@@ -112,7 +112,7 @@ class MetapackagesFilterInfo:
         ),
     }
 
-    _args: Dict[str, Any]
+    _args: dict[str, Any]
 
     def __init__(self) -> None:
         self._args = {}
@@ -129,7 +129,7 @@ class MetapackagesFilterInfo:
                 elif fielddesc.argtype is str and flask_args[fieldname]:
                     self._args[fieldname] = fielddesc.sanitize(flask_args[fieldname])
 
-    def get_dict(self) -> Dict[str, Any]:
+    def get_dict(self) -> dict[str, Any]:
         return self._args
 
     def get_request(self) -> MetapackageRequest:
@@ -140,10 +140,10 @@ class MetapackagesFilterInfo:
 
         return request
 
-    def get_maintainer(self) -> Optional[str]:
+    def get_maintainer(self) -> str | None:
         return self._args['maintainer'] if 'maintainer' in self._args else None
 
-    def get_repo(self) -> Optional[str]:
+    def get_repo(self) -> str | None:
         return self._args['inrepo'] if 'inrepo' in self._args else None
 
     def is_advanced(self) -> bool:
@@ -153,7 +153,7 @@ class MetapackagesFilterInfo:
         return False
 
 
-def get_packages_name_range(packages: Sequence[AnyPackageDataMinimal]) -> Tuple[Optional[str], Optional[str]]:
+def get_packages_name_range(packages: Sequence[AnyPackageDataMinimal]) -> tuple[str | None, str | None]:
     firstname, lastname = None, None
 
     if packages:
@@ -165,16 +165,16 @@ def get_packages_name_range(packages: Sequence[AnyPackageDataMinimal]) -> Tuple[
     return firstname, lastname
 
 
-def packages_to_summary_items(packages: Iterable[AnyPackageDataSummarizable], repo: Optional[str] = None, maintainer: Optional[str] = None) -> Dict[str, Dict[str, Any]]:
+def packages_to_summary_items(packages: Iterable[AnyPackageDataSummarizable], repo: str | None = None, maintainer: str | None = None) -> dict[str, dict[str, Any]]:
     sumtypes = ('explicit', 'newest', 'outdated', 'ignored')
 
-    def summary_factory() -> Dict[str, Dict[str, Any]]:
+    def summary_factory() -> dict[str, dict[str, Any]]:
         return {
             sumtype: defaultdict(set)
             for sumtype in sumtypes
         }
 
-    summaries: Dict[str, Dict[str, Any]] = defaultdict(summary_factory)
+    summaries: dict[str, dict[str, Any]] = defaultdict(summary_factory)
 
     want_selected = repo is not None or maintainer is not None
 
@@ -208,8 +208,8 @@ def packages_to_summary_items(packages: Iterable[AnyPackageDataSummarizable], re
     return summaries
 
 
-def packages_to_metapackages(*packagesets: Iterable[AnyPackageDataMinimal]) -> Dict[str, List[AnyPackageDataMinimal]]:
-    metapackages: Dict[str, List[AnyPackageDataMinimal]] = defaultdict(list)
+def packages_to_metapackages(*packagesets: Iterable[AnyPackageDataMinimal]) -> dict[str, list[AnyPackageDataMinimal]]:
+    metapackages: dict[str, list[AnyPackageDataMinimal]] = defaultdict(list)
 
     for packages in packagesets:
         for package in packages:

@@ -16,11 +16,11 @@
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
-def unicalize_feed_timestamps(entries: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    prev_ts: Optional[datetime.datetime] = None
+def unicalize_feed_timestamps(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    prev_ts: datetime.datetime | None = None
 
     # it is likely for multiple events to share the same timestamp,
     # however at least W3C feed validator (https://validator.w3.org/feed)

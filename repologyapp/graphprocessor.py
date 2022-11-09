@@ -17,13 +17,12 @@
 
 import datetime
 import math
-from typing import List, Optional, Tuple
 
 
 class GraphProcessor:
-    _minval: Optional[int | float]
-    _maxval: Optional[int | float]
-    _points: List[Tuple[datetime.timedelta, int | float]]
+    _minval: int | float | None
+    _maxval: int | float | None
+    _points: list[tuple[datetime.timedelta, int | float]]
     _float: bool
 
     def __init__(self) -> None:
@@ -43,7 +42,7 @@ class GraphProcessor:
         if isinstance(value, float):
             self._float = True
 
-    def get_points(self, period: int) -> List[Tuple[float, float]]:
+    def get_points(self, period: int) -> list[tuple[float, float]]:
         if self._minval is None or self._maxval is None:
             return []
 
@@ -66,7 +65,7 @@ class GraphProcessor:
             ) for point in self._points
         ]
 
-    def get_y_ticks(self, suffix: str = '') -> List[Tuple[float, str]]:
+    def get_y_ticks(self, suffix: str = '') -> list[tuple[float, str]]:
         if self._minval is None or self._maxval is None:
             return []
 
@@ -79,7 +78,7 @@ class GraphProcessor:
 
         step = (self._maxval - self._minval) / 10
 
-        steps: List[float] = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000]
+        steps: list[float] = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000]
         if self._float:
             steps = [0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5] + steps
 

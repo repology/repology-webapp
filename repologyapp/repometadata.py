@@ -16,7 +16,7 @@
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
-from typing import Any, ClassVar, Dict, Iterable, List, Optional, cast
+from typing import Any, ClassVar, Iterable, cast
 
 from repologyapp.db import get_db
 
@@ -36,9 +36,9 @@ def _convert_metadata(metadata: dict[str, Any]) -> dict[str, Any]:
 class RepositoryMetadata:
     AUTOREFRESH_PERIOD: ClassVar[datetime.timedelta] = datetime.timedelta(seconds=300)
 
-    _repos: List[Dict[str, Any]]
-    _by_name: Dict[str, Dict[str, Any]]
-    _update_time: Optional[datetime.datetime]
+    _repos: list[dict[str, Any]]
+    _by_name: dict[str, dict[str, Any]]
+    _update_time: datetime.datetime | None
 
     def __init__(self) -> None:
         self._repos = []
@@ -53,7 +53,7 @@ class RepositoryMetadata:
     def is_stale(self) -> bool:
         return self._update_time is None or datetime.datetime.now() - self._update_time > RepositoryMetadata.AUTOREFRESH_PERIOD
 
-    def __getitem__(self, reponame: str) -> Dict[str, Any]:
+    def __getitem__(self, reponame: str) -> dict[str, Any]:
         if reponame not in self._by_name or self.is_stale():
             self.update()
 
@@ -67,17 +67,17 @@ class RepositoryMetadata:
             self.update()
         return reponame in self._by_name
 
-    def all_names(self) -> List[str]:
+    def all_names(self) -> list[str]:
         if self.is_stale():
             self.update()
         return [repo['name'] for repo in self._repos]
 
-    def active_names(self) -> List[str]:
+    def active_names(self) -> list[str]:
         if self.is_stale():
             self.update()
         return [repo['name'] for repo in self._repos if repo['active']]
 
-    def sorted_active_names(self, names: Iterable[str]) -> List[str]:
+    def sorted_active_names(self, names: Iterable[str]) -> list[str]:
         if self.is_stale():
             self.update()
         names_set = set(names)

@@ -16,7 +16,6 @@
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
 from dataclasses import dataclass
-from typing import Dict, List
 
 import flask
 
@@ -41,7 +40,7 @@ class Top:
         name: str
         value: float
 
-    _top: Dict[str, 'Top._Group']
+    _top: dict[str, 'Top._Group']
     _reverse: bool
 
     def __init__(self, reverse: bool = False) -> None:
@@ -52,7 +51,7 @@ class Top:
         if group not in self._top or value > self._top[group].value:
             self._top[group] = Top._Group(name, value)
 
-    def get(self, count: int) -> List['Top.Item']:
+    def get(self, count: int) -> list['Top.Item']:
         return [
             Top.Item(groupname, groupdata.name, groupdata.value)
             for groupname, groupdata in sorted(

@@ -21,7 +21,7 @@ import argparse
 import pickle
 import sys
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from repologyapp.config import config
 from repologyapp.db import Database
@@ -108,7 +108,7 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def run_single_query(database: Database, method: str, kwargs: Any, options: argparse.Namespace) -> float:
-    mindelta: Optional[float] = None
+    mindelta: float | None = None
     totaldelta = 0.0
     iteration = 0
 
@@ -133,7 +133,7 @@ def run_single_query(database: Database, method: str, kwargs: Any, options: argp
     return mindelta
 
 
-def check_keywords(name: str, keywords: List[str]) -> bool:
+def check_keywords(name: str, keywords: list[str]) -> bool:
     if not keywords:
         return True
 
@@ -150,7 +150,7 @@ def main() -> int:
     querymgr = QueryManager(options.sql_dir)
     database = Database(options.dsn, querymgr, readonly=True, application_name='repology-benchmark')
 
-    reference: Dict[str, float] = {}
+    reference: dict[str, float] = {}
     if options.load:
         try:
             with open(options.load, 'rb') as reffile:

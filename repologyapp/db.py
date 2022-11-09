@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Any, Optional, TYPE_CHECKING
+from typing import Any, TYPE_CHECKING
 
 import flask
 
@@ -36,7 +36,7 @@ _querymgr = QueryManager(config['SQL_DIR'])
 class Database:
     _db: 'psycopg2.connection'
 
-    def __init__(self, dsn: str, querymgr: QueryManager, readonly: bool = True, autocommit: bool = False, application_name: Optional[str] = None) -> None:
+    def __init__(self, dsn: str, querymgr: QueryManager, readonly: bool = True, autocommit: bool = False, application_name: str | None = None) -> None:
         self._db = psycopg2.connect(dsn, application_name=application_name)
         self._db.set_session(readonly=readonly, autocommit=autocommit)
         querymgr.inject_queries(self, self._db)
