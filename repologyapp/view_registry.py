@@ -19,7 +19,7 @@ import importlib
 import inspect
 import os
 import types
-from typing import Any, Callable, Iterator, Union
+from typing import Any, Callable, Iterator, TypeAlias, Union
 
 import flask
 
@@ -27,16 +27,16 @@ import werkzeug
 
 
 # Corresponds to flask typeshed, but simpler and stricter
-_Status = int
-_Headers = dict[str, str]
-_Body = str | werkzeug.Response  # the latter is returned by e.g. flask.redirect
-Response = Union[
+_Status: TypeAlias = int
+_Headers: TypeAlias = dict[str, str]
+_Body: TypeAlias = str | werkzeug.Response  # the latter is returned by e.g. flask.redirect
+Response: TypeAlias = Union[
     _Body,
     tuple[_Body, _Status, _Headers],
     tuple[_Body, _Status],
     tuple[_Body, _Headers]
 ]
-_ViewFunc = Callable[..., Response]
+_ViewFunc: TypeAlias = Callable[..., Response]
 
 
 def _enumerate_modules(pkgname: str, pkgfile: str) -> Iterator[types.ModuleType]:
