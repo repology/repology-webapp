@@ -101,7 +101,7 @@
 			{% for link_key, spread in links_spread_by_slice.homepages %}
 			{% set link = links[link_key[0]] %}
 			{% set link_url = link.url + '#' + link_key[1] if link_key|length > 1 else link.url %}
-				<li><a href="{{ link_url }}">{{ link_url }}</a>{{ macros.link_status(link, True) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
+				<li class="break-word"><a href="{{ link_url }}">{{ link_url }}</a>{{ macros.link_status(link, True) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
 			{% endfor %}
 			</ul>
 		</section>
