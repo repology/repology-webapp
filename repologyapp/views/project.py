@@ -19,7 +19,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from datetime import timedelta
 from functools import cmp_to_key
-from typing import Any, Callable, Collection, Iterable, TypeVar
+from typing import Any, Callable, Collection, Iterable, TypeAlias, TypeVar, Union
 
 import flask
 
@@ -167,14 +167,14 @@ def project_packages(name: str) -> Response:
     )
 
 
-_T = TypeVar('T', int, str)
+_T = TypeVar('_T')
 
 
 def _families_to_spreads(families_by_key: dict[_T, set[str]]) -> dict[_T, int]:
     return {key: len(families) for key, families in families_by_key.items()}
 
 
-def _link_type_to_slice_name(link_type: int) -> str:
+def _link_type_to_slice_name(link_type: int) -> str | None:
     match link_type:
         case LinkType.UPSTREAM_HOMEPAGE | LinkType.PROJECT_HOMEPAGE:
             return 'homepages'
@@ -197,12 +197,16 @@ def _link_type_to_slice_name(link_type: int) -> str:
 
     return None
 
+
 def _link_type_is_raw(link_type: int) -> bool:
     match link_type:
         case LinkType.PACKAGE_RECIPE_RAW | LinkType.PACKAGE_PATCH_RAW | LinkType.PACKAGE_BUILD_LOG_RAW:
             return True
 
     return False
+
+
+_LinkKey: TypeAlias = Union[tuple[int], tuple[int, str]]  # id, fragment
 
 
 @ViewRegistrar('/project/<name>/information')
@@ -228,7 +232,7 @@ def project_information(name: str) -> Response:
     families_by_category = defaultdict(set)
     families_by_license = defaultdict(set)
 
-    link_families_by_slice_by_id = defaultdict(lambda: defaultdict(set))
+    link_families_by_slice_by_id: dict[str, dict[_LinkKey, set[str]]] = defaultdict(lambda: defaultdict(set))
 
     for package in packages:
         families_by_name[package.projectname_seed].add(package.family)
@@ -246,11 +250,13 @@ def project_information(name: str) -> Response:
             for license_ in package.licenses:
                 families_by_license[license_].add(package.family)
         if package.links is not None:
-            package_link_families_by_slice_by_id = defaultdict(lambda: defaultdict(set))
-            is_raw_slice = {}
+            package_link_families_by_slice_by_id: dict[str, dict[_LinkKey, set[str]]] = defaultdict(lambda: defaultdict(set))
+            is_raw_slice: dict[str, bool] = {}
 
             # group link ids by slice name (based on link type)
-            for link_type, link_id in package.links:
+            for link_type, *link_key_list in package.links:
+                link_key: _LinkKey = tuple(link_key_list)  # type: ignore
+
                 if slice_name := _link_type_to_slice_name(link_type):
                     is_raw = _link_type_is_raw(link_type)
 
@@ -260,13 +266,13 @@ def project_information(name: str) -> Response:
                     elif not is_raw and is_raw_slice.get(slice_name, False):
                         del package_link_families_by_slice_by_id[slice_name]
 
-                    package_link_families_by_slice_by_id[slice_name][link_id].add(package.family)
+                    package_link_families_by_slice_by_id[slice_name][link_key].add(package.family)
                     is_raw_slice[slice_name] = is_raw
 
             # append to global slices
-            for slice_name, families_by_link_id in package_link_families_by_slice_by_id.items():
-                for link_id, families in families_by_link_id.items():
-                    link_families_by_slice_by_id[slice_name][link_id].update(families)
+            for slice_name, families_by_link_key in package_link_families_by_slice_by_id.items():
+                for link_key, families in families_by_link_key.items():
+                    link_families_by_slice_by_id[slice_name][link_key].update(families)
 
     links = get_db().get_project_links(name)
 
@@ -294,10 +300,10 @@ def project_information(name: str) -> Response:
         links_spread_by_slice={
             # sort links by url
             slice_name: sorted(
-                _families_to_spreads(families_by_link_id).items(),
-                key=lambda l: links[l[0]]['url'].lower()
+                _families_to_spreads(families_by_link_key).items(),
+                key=lambda l: links[l[0][0]]['url'].lower()  # type: ignore
             )
-            for slice_name, families_by_link_id in link_families_by_slice_by_id.items()
+            for slice_name, families_by_link_key in link_families_by_slice_by_id.items()
         }
     )
 

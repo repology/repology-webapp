@@ -202,7 +202,7 @@ class PackageDataDetailed(PackageDataSummarizable):
     category: str | None
     comment: str | None
     licenses: list[str] | None
-    links: list[tuple[int, int]] | None
+    links: list[tuple[int, int] | tuple[int, int, str]] | None
 
     url: str | None = None
 

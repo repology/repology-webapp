@@ -98,9 +98,10 @@
 		<section id="Homepage_links">
 			<h2>Homepage links</h2>
 			<ul>
-			{% for link_id, spread in links_spread_by_slice.homepages %}
-			{% set link = links[link_id] %}
-				<li><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link, True) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
+			{% for link_key, spread in links_spread_by_slice.homepages %}
+			{% set link = links[link_key[0]] %}
+			{% set link_url = link.url + '#' + link_key[1] if link_key|length > 1 else link.url %}
+				<li><a href="{{ link_url }}">{{ link_url }}</a>{{ macros.link_status(link, True) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
 			{% endfor %}
 			</ul>
 		</section>
@@ -110,9 +111,10 @@
 		<section id="Issue_tracker_links">
 			<h2>Issue tracker links</h2>
 			<ul>
-			{% for link_id, spread in links_spread_by_slice.issues %}
-			{% set link = links[link_id] %}
-				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
+			{% for link_key, spread in links_spread_by_slice.issues %}
+			{% set link = links[link_key[0]] %}
+			{% set link_url = link.url + '#' + link_key[1] if link_key|length > 1 else link.url %}
+				<li class="break-word"><a href="{{ link_url }}">{{ link_url }}</a>{{ macros.link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
 			{% endfor %}
 			</ul>
 		</section>
@@ -122,9 +124,10 @@
 		<section id="Repository_links">
 			<h2>Repository links</h2>
 			<ul>
-			{% for link_id, spread in links_spread_by_slice.repositories %}
-			{% set link = links[link_id] %}
-				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
+			{% for link_key, spread in links_spread_by_slice.repositories %}
+			{% set link = links[link_key[0]] %}
+			{% set link_url = link.url + '#' + link_key[1] if link_key|length > 1 else link.url %}
+				<li class="break-word"><a href="{{ link_url }}">{{ link_url }}</a>{{ macros.link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
 			{% endfor %}
 			</ul>
 		</section>
@@ -134,9 +137,10 @@
 		<section id="Documentation_links">
 			<h2>Documentation links</h2>
 			<ul>
-			{% for link_id, spread in links_spread_by_slice.documentation %}
-			{% set link = links[link_id] %}
-				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
+			{% for link_key, spread in links_spread_by_slice.documentation %}
+			{% set link = links[link_key[0]] %}
+			{% set link_url = link.url + '#' + link_key[1] if link_key|length > 1 else link.url %}
+				<li class="break-word"><a href="{{ link_url }}">{{ link_url }}</a>{{ macros.link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
 			{% endfor %}
 			</ul>
 		</section>
@@ -146,9 +150,10 @@
 		<section id="All_package_recipes">
 			<h2>All package recipes</h2>
 			<ul>
-			{% for link_id, spread in links_spread_by_slice.recipes %}
-			{% set link = links[link_id] %}
-				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
+			{% for link_key, spread in links_spread_by_slice.recipes %}
+			{% set link = links[link_key[0]] %}
+			{% set link_url = link.url + '#' + link_key[1] if link_key|length > 1 else link.url %}
+				<li class="break-word"><a href="{{ link_url }}">{{ link_url }}</a>{{ macros.link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
 			{% endfor %}
 			</ul>
 		</section>
@@ -158,9 +163,10 @@
 		<section id="Downloads">
 			<h2>Downloads</h2>
 			<ul>
-			{% for link_id, spread in links_spread_by_slice.downloads %}
-			{% set link = links[link_id] %}
-				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
+			{% for link_key, spread in links_spread_by_slice.downloads %}
+			{% set link = links[link_key[0]] %}
+			{% set link_url = link.url + '#' + link_key[1] if link_key|length > 1 else link.url %}
+				<li class="break-word"><a href="{{ link_url }}">{{ link_url }}</a>{{ macros.link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
 			{% endfor %}
 			</ul>
 		</section>
@@ -170,9 +176,10 @@
 		<section id="Patches">
 			<h2>Patches</h2>
 			<ul>
-			{% for link_id, spread in links_spread_by_slice.patches %}
-			{% set link = links[link_id] %}
-				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
+			{% for link_key, spread in links_spread_by_slice.patches %}
+			{% set link = links[link_key[0]] %}
+			{% set link_url = link.url + '#' + link_key[1] if link_key|length > 1 else link.url %}
+				<li class="break-word"><a href="{{ link_url }}">{{ link_url }}</a>{{ macros.link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
 			{% endfor %}
 			</ul>
 		</section>
@@ -182,9 +189,10 @@
 		<section id="Build_logs">
 			<h2>Build logs</h2>
 			<ul>
-			{% for link_id, spread in links_spread_by_slice.buildlogs %}
-			{% set link = links[link_id] %}
-				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
+			{% for link_key, spread in links_spread_by_slice.buildlogs %}
+			{% set link = links[link_key[0]] %}
+			{% set link_url = link.url + '#' + link_key[1] if link_key|length > 1 else link.url %}
+				<li class="break-word"><a href="{{ link_url }}">{{ link_url }}</a>{{ macros.link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
 			{% endfor %}
 			</ul>
 		</section>

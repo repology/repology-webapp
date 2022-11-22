@@ -74,12 +74,14 @@
 					</ul>
 				</li>
 			{% endif %}
-			{% if package.links  %}
+			{% if package.links %}
 				<li class="list-group-item"><b>Link(s):</b>
 					<ul class="list-package-details">
-					{% for link_type, link_id in package.links %}
-						{% set link = links[link_id] %}
-						<li><a href="{{ link.url }}">{{ mlinks.format_link_type(link_type) }}</a>{{ macros.link_status(link) }}</li>
+					{% for link_info in package.links %}
+						{% set link_type = link_info[0] %}
+						{% set link = links[link_info[1]] %}
+						{% set link_url = link.url + '#' + link_info[2] if link_info|length > 2 else link.url %}
+						<li><a href="{{ link_url }}">{{ mlinks.format_link_type(link_type) }}</a>{{ macros.link_status(link) }}</li>
 					{% endfor %}
 					</ul>
 				</li>
