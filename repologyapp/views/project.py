@@ -19,7 +19,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from datetime import timedelta
 from functools import cmp_to_key
-from typing import Any, Callable, Collection, Iterable
+from typing import Any, Callable, Collection, Iterable, TypeVar
 
 import flask
 
@@ -167,6 +167,44 @@ def project_packages(name: str) -> Response:
     )
 
 
+_T = TypeVar('T', int, str)
+
+
+def _families_to_spreads(families_by_key: dict[_T, set[str]]) -> dict[_T, int]:
+    return {key: len(families) for key, families in families_by_key.items()}
+
+
+def _link_type_to_slice_name(link_type: int) -> str:
+    match link_type:
+        case LinkType.UPSTREAM_HOMEPAGE | LinkType.PROJECT_HOMEPAGE:
+            return 'homepages'
+        case LinkType.UPSTREAM_DOWNLOAD | LinkType.PROJECT_DOWNLOAD:
+            return 'downloads'
+        case LinkType.UPSTREAM_ISSUE_TRACKER:
+            return 'issues'
+        case LinkType.UPSTREAM_REPOSITORY:
+            return 'repositories'
+        case LinkType.UPSTREAM_DOCUMENTATION:
+            return 'documentation'
+        case LinkType.PACKAGE_HOMEPAGE:
+            return 'packages'
+        case LinkType.PACKAGE_RECIPE | LinkType.PACKAGE_RECIPE_RAW:
+            return 'recipes'
+        case LinkType.PACKAGE_PATCH | LinkType.PACKAGE_PATCH_RAW:
+            return 'patches'
+        case LinkType.PACKAGE_BUILD_LOG | LinkType.PACKAGE_BUILD_LOGS | LinkType.PACKAGE_BUILD_LOG_RAW:
+            return 'buildlogs'
+
+    return None
+
+def _link_type_is_raw(link_type: int) -> bool:
+    match link_type:
+        case LinkType.PACKAGE_RECIPE_RAW | LinkType.PACKAGE_PATCH_RAW | LinkType.PACKAGE_BUILD_LOG_RAW:
+            return True
+
+    return False
+
+
 @ViewRegistrar('/project/<name>/information')
 def project_information(name: str) -> Response:
     metapackage = get_db().get_metapackage(name)
@@ -182,95 +220,85 @@ def project_information(name: str) -> Response:
         key=lambda package: (package.repo, package.visiblename, package.version)
     )
 
-    information: dict[str, Any] = {}
+    families_by_name = defaultdict(set)
+    families_by_version = defaultdict(set)
+    repositories = set()
+    families_by_summary = defaultdict(set)
+    families_by_maintainer = defaultdict(set)
+    families_by_category = defaultdict(set)
+    families_by_license = defaultdict(set)
 
-    def append_info(infokey: str, infoval: Any, package: PackageDataDetailed) -> None:
-        if infokey not in information:
-            information[infokey] = {}
-
-        if infoval not in information[infokey]:
-            information[infokey][infoval] = set()
-
-        information[infokey][infoval].add(package.family)
+    link_families_by_slice_by_id = defaultdict(lambda: defaultdict(set))
 
     for package in packages:
-        append_info('names', package.projectname_seed, package)
-        append_info('versions', package.version, package)
-        append_info('repos', package.repo, package)
+        families_by_name[package.projectname_seed].add(package.family)
+        families_by_version[package.version].add(package.family)
+        repositories.add(package.repo)
 
         if package.comment:
-            append_info('summaries', package.comment, package)
+            families_by_summary[package.comment].add(package.family)
         if package.maintainers is not None:
             for maintainer in package.maintainers:
-                append_info('maintainers', maintainer, package)
+                families_by_maintainer[maintainer].add(package.family)
         if package.category:
-            append_info('categories', package.category, package)
+            families_by_category[package.category].add(package.family)
         if package.licenses is not None:
             for license_ in package.licenses:
-                append_info('licenses', license_, package)
+                families_by_license[license_].add(package.family)
         if package.links is not None:
-            maybe_raw_links = defaultdict(list)
+            package_link_families_by_slice_by_id = defaultdict(lambda: defaultdict(set))
+            is_raw_slice = {}
+
+            # group link ids by slice name (based on link type)
             for link_type, link_id in package.links:
-                if link_type in [LinkType.UPSTREAM_HOMEPAGE, LinkType.PROJECT_HOMEPAGE]:
-                    append_info('homepages', link_id, package)
-                elif link_type in [LinkType.UPSTREAM_DOWNLOAD, LinkType.PROJECT_DOWNLOAD]:
-                    append_info('downloads', link_id, package)
-                elif link_type == LinkType.UPSTREAM_ISSUE_TRACKER:
-                    append_info('issues', link_id, package)
-                elif link_type == LinkType.UPSTREAM_REPOSITORY:
-                    append_info('repositories', link_id, package)
-                elif link_type == LinkType.UPSTREAM_DOCUMENTATION:
-                    append_info('documentation', link_id, package)
-                elif link_type == LinkType.PACKAGE_HOMEPAGE:
-                    append_info('packages', link_id, package)
-                elif link_type == LinkType.PACKAGE_RECIPE:
-                    maybe_raw_links['recipes'].append(link_id)
-                elif link_type == LinkType.PACKAGE_RECIPE_RAW:
-                    maybe_raw_links['recipes_raw'].append(link_id)
-                elif link_type == LinkType.PACKAGE_PATCH:
-                    maybe_raw_links['patches'].append(link_id)
-                elif link_type == LinkType.PACKAGE_PATCH_RAW:
-                    maybe_raw_links['patches_raw'].append(link_id)
-                elif link_type == LinkType.PACKAGE_BUILD_LOG or link_type == LinkType.PACKAGE_BUILD_LOGS:
-                    maybe_raw_links['buildlogs'].append(link_id)
-                elif link_type == LinkType.PACKAGE_BUILD_LOG_RAW:
-                    maybe_raw_links['buildlogs_raw'].append(link_id)
+                if slice_name := _link_type_to_slice_name(link_type):
+                    is_raw = _link_type_is_raw(link_type)
 
-            # for links which may have both human-readlabe and raw flavors, we
-            # prefer human-readable ones here
-            for key in ['recipes', 'patches', 'buildlogs']:
-                if key in maybe_raw_links:
-                    for link_id in maybe_raw_links[key]:
-                        append_info(key, link_id, package)
-                elif key + '_raw' in maybe_raw_links:
-                    for link_id in maybe_raw_links[key + '_raw']:
-                        append_info(key, link_id, package)
+                    # prefer human readable links over raw links
+                    if is_raw and not is_raw_slice.get(slice_name, False):
+                        continue
+                    elif not is_raw and is_raw_slice.get(slice_name, False):
+                        del package_link_families_by_slice_by_id[slice_name]
 
-    if 'repos' in information:
-        # preserve repos order
-        information['repos'] = [
-            (reponame, information['repos'][reponame])
-            for reponame in repometadata.active_names() if reponame in information['repos']
-        ]
+                    package_link_families_by_slice_by_id[slice_name][link_id].add(package.family)
+                    is_raw_slice[slice_name] = is_raw
 
-    versions = packageset_aggregate_by_version(packages, {PackageStatus.LEGACY: PackageStatus.OUTDATED})
+            # append to global slices
+            for slice_name, families_by_link_id in package_link_families_by_slice_by_id.items():
+                for link_id, families in families_by_link_id.items():
+                    link_families_by_slice_by_id[slice_name][link_id].update(families)
 
     links = get_db().get_project_links(name)
 
-    for key in ['homepages', 'downloads', 'issues', 'repositories', 'patches', 'buildlogs', 'documentation', 'recipes']:
-        if key in information:
-            information[key] = sorted(
-                information[key].items(),
-                key=lambda l: links[l[0]]['url'].lower()  # type: ignore
-            )
+    versions = packageset_aggregate_by_version(packages, {PackageStatus.LEGACY: PackageStatus.OUTDATED})
 
     return flask.render_template(
         'project-information.html',
         name=name,
         metapackage=metapackage,
-        information=information,
         versions=versions,
-        links=links
+        links=links,
+
+        names_spread=_families_to_spreads(families_by_name),
+        versions_spread=_families_to_spreads(families_by_version),
+        repositories=[
+            # preserve order from repometadata
+            reponame
+            for reponame in repometadata.active_names()
+            if reponame in repositories
+        ],
+        summaries_spread=_families_to_spreads(families_by_summary),
+        maintainers_spread=_families_to_spreads(families_by_maintainer),
+        categories_spread=_families_to_spreads(families_by_category),
+        licenses_spread=_families_to_spreads(families_by_license),
+        links_spread_by_slice={
+            # sort links by url
+            slice_name: sorted(
+                _families_to_spreads(families_by_link_id).items(),
+                key=lambda l: links[l[0]]['url'].lower()
+            )
+            for slice_name, families_by_link_id in link_families_by_slice_by_id.items()
+        }
     )
 
 

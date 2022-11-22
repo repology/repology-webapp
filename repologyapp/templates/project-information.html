@@ -28,8 +28,8 @@
 		<section id="Package_names">
 			<h2>Package names</h2>
 			<ul>
-			{% for name,families in information.names|dictsort(case_sensitive=True) %}
-				<li>{{ name }}{% if families|length > 1 %} <b>({{ families|length }})</b>{% endif %}</li>
+			{% for name, spread in names_spread|dictsort(case_sensitive=True) %}
+				<li>{{ name }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
 			{% endfor %}
 			</ul>
 		</section>
@@ -37,155 +37,154 @@
 		<section id="Repositories">
 			<h2>Repositories</h2>
 			<ul>
-			{% for reponame,families in information.repos %}
+			{% for reponame in repositories %}
 				<li><a href="{{ url_for('repository', repo=reponame) }}">{{ repometadata[reponame].desc }}</a></li>
 			{% endfor %}
 			</ul>
 		</section>
 
-		{% if information.categories %}
+		{% if categories_spread %}
 		<section id="Categories">
 			<h2>Categories</h2>
 			<ul>
-			{% for category,families in information.categories|dictsort(case_sensitive=True) %}
-				<li>{{ category }}{% if families|length > 1 %} <b>({{ families|length }})</b>{% endif %}</li>
+			{% for category, spread in categories_spread|dictsort(case_sensitive=True) %}
+				<li>{{ category }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
 			{% endfor %}
 			</ul>
 		</section>
 		{% endif %}
 
-		{% if information.licenses %}
+		{% if licenses_spread %}
 		<section id="Licenses">
 			<h2>Licenses</h2>
 			<ul>
-			{% for license,families in information.licenses|dictsort(case_sensitive=True) %}
-				<li>{{ license }}{% if families|length > 1 %} <b>({{ families|length }})</b>{% endif %}</li>
+			{% for license, spread in licenses_spread|dictsort(case_sensitive=True) %}
+				<li>{{ license }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
 			{% endfor %}
 			</ul>
 		</section>
 		{% endif %}
 	</div>
 	<div class="col-md-8">
-
-		{% if information.summaries %}
+		{% if summaries_spread %}
 		<section id="Summaries">
 			<h2>Summaries</h2>
 			<ul>
-			{% for summary,families in information.summaries|dictsort(case_sensitive=True) %}
-				<li>{{ summary }}{% if families|length > 1 %} <b>({{ families|length }})</b>{% endif %}</li>
+			{% for summary, spread in summaries_spread|dictsort(case_sensitive=True) %}
+				<li>{{ summary }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
 			{% endfor %}
 			</ul>
 		</section>
 		{% endif %}
 
-		{% if information.maintainers %}
+		{% if maintainers_spread %}
 		<section id="Maintainers">
 			<h2>Maintainers</h2>
 			<ul>
-			{% for maintainer,families in information.maintainers|dictsort(case_sensitive=True) %}
-				<li><a href="{{ url_for('maintainer', maintainer=maintainer) }}">{{ maintainer }}</a>{% if families|length > 1 %} <b>({{ families|length }})</b>{% endif %}</li>
+			{% for maintainer, spread in maintainers_spread|dictsort(case_sensitive=True) %}
+				<li><a href="{{ url_for('maintainer', maintainer=maintainer) }}">{{ maintainer }}</a>{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
 			{% endfor %}
 			</ul>
 
-			{% if information.maintainers|maintainers_to_group_mailto %}
+			{% if maintainers_spread|maintainers_to_group_mailto %}
 			<ul>
-				<li><a href="{{ information.maintainers|maintainers_to_group_mailto('%5B' + name + '%20package%5D') }}">Group email</a></li>
+				<li><a href="{{ maintainers_spread|maintainers_to_group_mailto('%5B' + name + '%20package%5D') }}">Group email</a></li>
 			</ul>
 			{% endif %}
 		</section>
 		{% endif %}
 
-		{% if information.homepages %}
+		{% if links_spread_by_slice.homepages %}
 		<section id="Homepage_links">
 			<h2>Homepage links</h2>
 			<ul>
-			{% for link_id, families in information.homepages %}
+			{% for link_id, spread in links_spread_by_slice.homepages %}
 			{% set link = links[link_id] %}
-				<li><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link, True) }}{% if families|length > 1 %} <b>({{ families|length }})</b>{% endif %}</li>
+				<li><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link, True) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
 			{% endfor %}
 			</ul>
 		</section>
 		{% endif %}
 
-		{% if information.issues %}
+		{% if links_spread_by_slice.issues %}
 		<section id="Issue_tracker_links">
 			<h2>Issue tracker links</h2>
 			<ul>
-			{% for link_id, families in information.issues %}
+			{% for link_id, spread in links_spread_by_slice.issues %}
 			{% set link = links[link_id] %}
-				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if families|length > 1 %} <b>({{ families|length }})</b>{% endif %}</li>
+				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
 			{% endfor %}
 			</ul>
 		</section>
 		{% endif %}
 
-		{% if information.repositories %}
+		{% if links_spread_by_slice.repositories %}
 		<section id="Repository_links">
 			<h2>Repository links</h2>
 			<ul>
-			{% for link_id, families in information.repositories %}
+			{% for link_id, spread in links_spread_by_slice.repositories %}
 			{% set link = links[link_id] %}
-				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if families|length > 1 %} <b>({{ families|length }})</b>{% endif %}</li>
+				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
 			{% endfor %}
 			</ul>
 		</section>
 		{% endif %}
 
-		{% if information.documentation %}
+		{% if links_spread_by_slice.documentation %}
 		<section id="Documentation_links">
 			<h2>Documentation links</h2>
 			<ul>
-			{% for link_id, families in information.documentation %}
+			{% for link_id, spread in links_spread_by_slice.documentation %}
 			{% set link = links[link_id] %}
-				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if families|length > 1 %} <b>({{ families|length }})</b>{% endif %}</li>
+				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
 			{% endfor %}
 			</ul>
 		</section>
 		{% endif %}
 
-		{% if information.recipes %}
+		{% if links_spread_by_slice.recipes %}
 		<section id="All_package_recipes">
 			<h2>All package recipes</h2>
 			<ul>
-			{% for link_id, families in information.recipes %}
+			{% for link_id, spread in links_spread_by_slice.recipes %}
 			{% set link = links[link_id] %}
-				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if families|length > 1 %} <b>({{ families|length }})</b>{% endif %}</li>
+				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
 			{% endfor %}
 			</ul>
 		</section>
 		{% endif %}
 
-		{% if information.downloads %}
+		{% if links_spread_by_slice.downloads %}
 		<section id="Downloads">
 			<h2>Downloads</h2>
 			<ul>
-			{% for link_id, families in information.downloads %}
+			{% for link_id, spread in links_spread_by_slice.downloads %}
 			{% set link = links[link_id] %}
-				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if families|length > 1 %} <b>({{ families|length }})</b>{% endif %}</li>
+				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
 			{% endfor %}
 			</ul>
 		</section>
 		{% endif %}
 
-		{% if information.patches %}
+		{% if links_spread_by_slice.patches %}
 		<section id="Patches">
 			<h2>Patches</h2>
 			<ul>
-			{% for link_id, families in information.patches %}
+			{% for link_id, spread in links_spread_by_slice.patches %}
 			{% set link = links[link_id] %}
-				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if families|length > 1 %} <b>({{ families|length }})</b>{% endif %}</li>
+				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
 			{% endfor %}
 			</ul>
 		</section>
 		{% endif %}
 
-		{% if information.buildlogs %}
+		{% if links_spread_by_slice.buildlogs %}
 		<section id="Build_logs">
 			<h2>Build logs</h2>
 			<ul>
-			{% for link_id, families in information.buildlogs %}
+			{% for link_id, spread in links_spread_by_slice.buildlogs %}
 			{% set link = links[link_id] %}
-				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if families|length > 1 %} <b>({{ families|length }})</b>{% endif %}</li>
+				<li class="break-word"><a href="{{ link.url }}">{{ link.url }}</a>{{ macros.link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
 			{% endfor %}
 			</ul>
 		</section>
