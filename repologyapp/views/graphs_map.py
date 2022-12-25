@@ -50,7 +50,8 @@ def _map_repo_generic(getx: Callable[[dict[str, Any]], float],
                       unitx: str = '',
                       unity: str = '',
                       xlimit: int | None = None,
-                      ylimit: int | None = None) -> Response:
+                      ylimit: int | None = None,
+                      upper_deadzone: bool = False) -> Response:
     points = [
         _MapPoint(
             x=getx(repo),
@@ -88,6 +89,13 @@ def _map_repo_generic(getx: Callable[[dict[str, Any]], float],
     offset_top = 30
     offset_right = 50
     offset_bottom = 20
+
+    # upper dead zone
+    if upper_deadzone:
+        # h solves: (v,h)=point_coords(x,x) with v=offset_top//2+0.5
+        h = offset_left + (width - offset_left - offset_right) / (height - offset_top - offset_bottom) * max_y / max_x * (height - offset_bottom - offset_top // 2) + 0.5
+        with doc.tag('path', d=f'M {offset_left + 0.5},{height - offset_bottom + 0.5} V {offset_top // 2 + 0.5} H {h} Z', fill='#d0d0d0'):
+            pass
 
     # axes
     doc.tag(
@@ -182,6 +190,7 @@ def graph_map_repo_size_fresh() -> Response:
         namey='Number of fresh packages in repository',
         xlimit=xlimit,
         ylimit=ylimit,
+        upper_deadzone=True,
     )
 
 
@@ -196,6 +205,7 @@ def graph_map_repo_size_fresh_nonunique() -> Response:
         namey='Number of fresh packages in repository',
         xlimit=xlimit,
         ylimit=ylimit,
+        upper_deadzone=True,
     )
 
 
