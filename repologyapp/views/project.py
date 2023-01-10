@@ -468,7 +468,7 @@ def project_report(name: str) -> Response:
     need_split = False
     need_merge = False
     need_vuln = False
-    comment = None
+    comment: str | None = None
     errors = []
 
     if flask.request.method == 'POST':
@@ -485,16 +485,19 @@ def project_report(name: str) -> Response:
         comment = flask.request.form.get('comment', '').strip().replace('\r', '') or None
 
         if comment and len(comment) > 10240:
-            errors.append('Could not add report: comment is too long')
+            errors.append('comment is too long')
 
         if not need_verignore and not need_split and not need_merge and not need_vuln and not comment:
-            errors.append('Could not add report: please fill out the form')
+            errors.append('please fill out the form')
 
         if comment and '<a href' in comment:
-            errors.append('Spammers not welcome, HTML not allowed')
+            errors.append('spammers not welcome, HTML not allowed')
 
         if need_verignore and need_split and need_merge and need_vuln and not comment:
-            errors.append('Spammers not welcome')
+            errors.append('spammers not welcome')
+
+        if need_vuln and (comment is None or 'nvd.nist.gov/vuln/detail/CVE-' not in comment):
+            errors.append('link to missing NVD CVE entry (e.g. https://nvd.nist.gov/vuln/detail/CVE-*) is required')
 
         if not errors:
             get_db().add_report(
@@ -521,7 +524,7 @@ def project_report(name: str) -> Response:
         need_merge=need_merge,
         need_vuln=need_vuln,
         comment=comment,
-        messages=[('danger', error) for error in errors]
+        messages=[('danger', f'Could not add report: {error}') for error in errors]
     )
 
 
