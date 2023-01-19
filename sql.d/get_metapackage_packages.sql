@@ -64,13 +64,16 @@ SELECT
 		SELECT url
 		FROM links
 		WHERE id = (
+			WITH expanded_links AS (
+				SELECT
+					(tuple->>0)::integer AS link_type,
+					(tuple->>1)::integer AS link_id,
+					ordinality
+				FROM json_array_elements(links) WITH ORDINALITY AS t(tuple, ordinality)
+			)
 			SELECT
 				link_id
-			FROM (
-				SELECT
-					(json_array_elements(links)->>0)::integer AS link_type,
-					(json_array_elements(links)->>1)::integer AS link_id
-			) AS expanded_links
+			FROM expanded_links
 			WHERE
 				link_type IN (
 					4,  -- PROJECT_HOMEPAGE
@@ -79,7 +82,7 @@ SELECT
 					9,  -- PACKAGE_RECIPE
 					10  -- PACKAGE_RECIPE_RAW
 				)
-			ORDER BY link_type, link_id  -- provide some stability (but note that there's no preference mechanism)
+			ORDER BY ordinality -- or link_type, ordinality
 			LIMIT 1
 		) --AND coalesce(ipv4_success, true)  -- XXX: better display link status
 	) AS url
