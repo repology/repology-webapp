@@ -145,6 +145,24 @@
 <p>There are <a href="{{ url_for('repository_problems', repo=repo) }}">{{ repo_info.num_problems }} known problems</a> for packages in this repository</p>
 {% endif %}
 
+<h2>Badge</h2>
+
+<p><a href="{{ REPOLOGY_HOME }}{{ url_for('repository', repo=repo) }}"><img src="{{ url_for('badge_repository_big', name=name, repo=repo) }}" alt="Repository status"></a></p>
+
+<p>Markdown code:</p>
+<pre>
+[![Repository status]({{ REPOLOGY_HOME }}{{ url_for('badge_repository_big', repo=repo) }})]({{ REPOLOGY_HOME }}{{ url_for('repository', repo=repo) }})
+</pre>
+
+<p>HTML code:</p>
+<pre>
+&lt;a href=&quot;{{ REPOLOGY_HOME }}{{ url_for('repository', repo=repo) }}&quot;&gt;
+    &lt;img src=&quot;{{ REPOLOGY_HOME }}{{ url_for('badge_repository_big', repo=repo)}}&quot; alt=&quot;Repository status&quot;&gt;
+&lt;/a&gt;
+</pre>
+
+<p>Badge header may be changed or removed by <code>header</code> URL parameter, for example: <code>{{ REPOLOGY_HOME }}{{ url_for('badge_repository_big', repo=repo, header=repometadata[repo].desc) }}</code></p>
+
 <h2>Graphs</h2>
 <h3>Total projects</h3>
 <img src="{{ url_for('graph_repo_projects_total', repo=repo) }}" alt="Total projects graph">
