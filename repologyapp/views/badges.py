@@ -268,7 +268,10 @@ def badge_repository_big(repo: str) -> Response:
         flask.abort(404)
 
     args = flask.request.args.to_dict()
-    header = args.get('header') or 'Repository status'
+    header = args.get('header')
+
+    if header is None:
+        header = 'Repository status'
 
     data = get_db().get_repository_information(repo)
 
