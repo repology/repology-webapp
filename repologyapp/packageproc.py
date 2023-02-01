@@ -27,40 +27,58 @@ def packageset_sort_by_version(packages: Iterable[AnyPackageDataMinimal]) -> lis
     return sorted(packages, key=cmp_to_key(package_version_compare), reverse=True)
 
 
-def packageset_to_best(packages: Iterable[AnyPackageDataMinimal], allow_ignored: bool = False) -> AnyPackageDataMinimal | None:
-    sorted_packages = packageset_sort_by_version(packages)
+def _is_good_representative_package(package: AnyPackageDataMinimal, allow_ignored: bool) -> bool:
+    """Check if a package is suitable to represent a repository."""
+    # avoid recalled packages
+    if package.flags & PackageFlags.RECALLED:
+        return False
 
-    if not sorted_packages:
-        return None
+    # avoid ignored packages, unless explicitly allowed
+    if not allow_ignored and PackageStatus.is_ignored(package.versionclass):
+        return False
 
-    # if allowed, return first package regardless of status
-    if allow_ignored:
-        return sorted_packages[0]
-
-    # otherwise, return first non-ignore package
-    for package in sorted_packages:
-        if not PackageStatus.is_ignored(package.versionclass):
-            return package
-
-    # fallback to first package
-    return sorted_packages[0]
+    return True
 
 
 def packageset_to_best_by_repo(packages: Iterable[AnyPackageDataMinimal], allow_ignored: bool = False) -> dict[str, AnyPackageDataMinimal]:
+    """Given a collection of packages, return representative package for each encountered repository.
+
+    Sometimes we need to choose a single package to represent a
+    repository, e.g. on a badge where there's place for only one
+    entry per repository. For that purpose we pick a package with
+    highest version. We skip some subsets of packages such as
+    ignored and recalled ones, but fallback to these if there's
+    no other option.
+    """
     state_by_repo: dict[str, AnyPackageDataMinimal] = {}
+    good_by_repo: dict[str, bool] = {}
 
     for package in packageset_sort_by_version(packages):
-        # start with first package
         if package.repo not in state_by_repo:
+            # start with picking the first available package
             state_by_repo[package.repo] = package
-            continue
-
-        # replace by non-ignored if needed and possible
-        if not allow_ignored and PackageStatus.is_ignored(state_by_repo[package.repo].versionclass):
-            if not PackageStatus.is_ignored(package.versionclass):
-                state_by_repo[package.repo] = package
+            good_by_repo[package.repo] = _is_good_representative_package(package, allow_ignored)
+        elif not good_by_repo[package.repo] and _is_good_representative_package(package, allow_ignored):
+            # but then replace it by more suitable one if possible
+            state_by_repo[package.repo] = package
+            good_by_repo[package.repo] = True
 
     return state_by_repo
+
+
+def packageset_to_best(packages: Iterable[AnyPackageDataMinimal], allow_ignored: bool = False) -> AnyPackageDataMinimal | None:
+    """Given a collection of packages, return a representative package.
+
+    Same logic as packageset_to_best_by_repo, but assumes that all
+    packages belong to a single repository. A bit more efficient.
+    """
+    sorted_packages = packageset_sort_by_version(packages)
+
+    for package in sorted_packages:
+        if _is_good_representative_package(package, allow_ignored):
+            return package
+
+    return sorted_packages[0] if sorted_packages else None
 
 
 def packageset_sort_by_name_version(packages: Iterable[AnyPackageDataMinimal]) -> list[AnyPackageDataMinimal]:
