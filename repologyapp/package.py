@@ -82,7 +82,7 @@ class PackageFlags:
     UNTRUSTED: ClassVar[int] = 1 << 4
     NOSCHEME: ClassVar[int] = 1 << 5
     ROLLING: ClassVar[int] = 1 << 7
-    OUTDATED: ClassVar[int] = 1 << 8
+    SINK: ClassVar[int] = 1 << 8
     LEGACY: ClassVar[int] = 1 << 9
     P_IS_PATCH: ClassVar[int] = 1 << 10
     ANY_IS_PATCH: ClassVar[int] = 1 << 11
@@ -91,6 +91,10 @@ class PackageFlags:
     STABLE: ClassVar[int] = 1 << 14
     ALTVER: ClassVar[int] = 1 << 15
     VULNERABLE: ClassVar[int] = 1 << 16
+    ALTSCHEME: ClassVar[int] = 1 << 17
+    NOLEGACY: ClassVar[int] = 1 << 18
+    OUTDATED: ClassVar[int] = 1 << 19
+    RECALLED: ClassVar[int] = 1 << 20
 
     ANY_IGNORED: ClassVar[int] = IGNORE | INCORRECT | UNTRUSTED | NOSCHEME
 
@@ -105,7 +109,7 @@ class PackageFlags:
         """
         if val & PackageFlags.ROLLING:
             return 1
-        if val & PackageFlags.OUTDATED:
+        if val & PackageFlags.SINK:
             return -1
         return 0
 
@@ -124,7 +128,7 @@ class PackageFlags:
                 PackageFlags.UNTRUSTED: 'UNTRUSTED',
                 PackageFlags.NOSCHEME: 'NOSCHEME',
                 PackageFlags.ROLLING: 'ROLLING',
-                PackageFlags.OUTDATED: 'OUTDATED',
+                PackageFlags.SINK: 'SINK',
                 PackageFlags.LEGACY: 'LEGACY',
                 PackageFlags.P_IS_PATCH: 'P_IS_PATCH',
                 PackageFlags.ANY_IS_PATCH: 'ANY_IS_PATCH',
@@ -132,6 +136,11 @@ class PackageFlags:
                 PackageFlags.WEAK_DEVEL: 'WEAK_DEVEL',
                 PackageFlags.STABLE: 'STABLE',
                 PackageFlags.ALTVER: 'ALTVER',
+                PackageFlags.VULNERABLE: 'VULNERABLE',
+                PackageFlags.ALTSCHEME: 'ALTSCHEME',
+                PackageFlags.NOLEGACY: 'NOLEGACY',
+                PackageFlags.OUTDATED: 'OUTDATED',
+                PackageFlags.RECALLED: 'RECALLED',
             }.items() if val & var
         )
 
