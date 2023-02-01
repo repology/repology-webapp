@@ -1,5 +1,17 @@
 {%- macro projects_table(metapackages, metapackagedata, repo=None, maintainer=None, target_project_endpoint='project_versions') -%}
 
+{%- macro versions_list(versioninfos, explicit_empty=False) %}
+{% for versioninfo in versioninfos %}
+	<span class="version version-{{ versioninfo.versionclass|css_for_versionclass }}">
+		{{- versioninfo.version -}}
+		{%- if versioninfo.vulnerable %}<span class="vulnerable">▲</span>{% endif -%}
+	</span>
+	{%- if versioninfo.spread > 1 %}<sup>{{ versioninfo.spread }}</sup>{% endif %}
+{%- else -%}
+	{%- if explicit_empty -%}-{% endif -%} {#- XXX: can the explicit column even be empty -#}
+{%- endfor -%}
+{%- endmacro -%}
+
 {% if metapackagedata %}
 <p><b>{{ metapackagedata|length }}</b> project(s) on this page</p>
 
@@ -37,46 +49,12 @@
 			</td>
 
 			{% if repo or maintainer %}
-			<td>
-			{% for versioninfo in data.explicit %}
-				<span class="version version-{{ versioninfo.versionclass|css_for_versionclass }}">
-					{{- versioninfo.version -}}
-					{%- if versioninfo.vulnerable %}<span class="vulnerable">▲</span>{% endif -%}
-				</span>
-				{% if versioninfo.spread > 1 %}<sup>{{ versioninfo.spread }}</sup>{% endif %}
-			{% else %}
-				-
-			{% endfor %}
-			</td>
+			<td>{{ versions_list(data.explicit, explicit_empty=True) }}</td>
 			{% endif %}
 			<td class="text-center"><b>{{ metapackage.num_families }}</b></td>
-			<td>
-			{% for versioninfo in data.newest %}
-				<span class="version version-{{ versioninfo.versionclass|css_for_versionclass }}">
-					{{- versioninfo.version -}}
-					{%- if versioninfo.vulnerable %}<span class="vulnerable">▲</span>{% endif -%}
-				</span>
-				{%- if versioninfo.spread > 1 %}<sup>{{ versioninfo.spread }}</sup>{% endif %}
-			{% endfor %}
-			</td>
-			<td>
-			{% for versioninfo in data.outdated %}
-				<span class="version version-{{ versioninfo.versionclass|css_for_versionclass }}">
-					{{- versioninfo.version -}}
-					{%- if versioninfo.vulnerable %}<span class="vulnerable">▲</span>{% endif -%}
-				</span>
-				{%- if versioninfo.spread > 1 %}<sup>{{ versioninfo.spread }}</sup>{% endif %}
-			{% endfor %}
-			</td>
-			<td>
-			{% for versioninfo in data.ignored %}
-				<span class="version version-{{ versioninfo.versionclass|css_for_versionclass }}">
-					{{- versioninfo.version -}}
-					{%- if versioninfo.vulnerable %}<span class="vulnerable">▲</span>{% endif -%}
-				</span>
-				{%- if versioninfo.spread > 1 %}<sup>{{ versioninfo.spread }}</sup>{% endif %}
-			{% endfor %}
-			</td>
+			<td>{{ versions_list(data.newest) }}</td>
+			<td>{{ versions_list(data.outdated) }}</td>
+			<td>{{ versions_list(data.ignored) }}</td>
 			{% if 'rank' in metapackage %}
 			<td>{{ metapackage.rank|round(2) }}</td>
 			{% endif %}
