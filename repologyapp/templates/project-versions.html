@@ -28,26 +28,30 @@
 			{%- endif -%}
 		</td>
 		<td class="text-center">
-			{%- if package.url is not none %}
+			{%- if package.url is not none -%}
 			<a href="{{ package.url }}">{{ package.visiblename }}</a>
 			{%- else -%}
 			{{ package.visiblename }}
 			{%- endif -%}
 		</td>
 		<td class="text-center">
-			{%- set vuln = package.flags is has_flag_at(16) -%}
-			{%- if package.origversion != package.version -%}
-			<span class="version version-big version-{{ package.versionclass|css_for_versionclass }} version-property-fixed" title="{{ package.versionclass|css_for_versionclass }} version; normalized from &quot;{{ package.origversion }}&quot;">
-			{%- else -%}
-			<span class="version version-big version-{{ package.versionclass|css_for_versionclass }}" title="{{ package.versionclass|css_for_versionclass }} version">
-			{%- endif -%}
-				{%- if package.url is not none %}
+			{%- set is_vulnerable = package.flags is has_flag_at(16) -%}
+			{%- set is_recalled =  package.flags is has_flag_at(20) -%}
+			{%- set is_fixed = package.origversion != package.version -%}
+			<span class="version version-big version-{{ package.versionclass|css_for_versionclass }}
+				{%- if is_fixed %} version-property-fixed{% endif -%}
+				{%- if is_recalled %} version-property-recalled{% endif -%}
+				" title="{{ package.versionclass|css_for_versionclass }} version
+				{%- if is_fixed %}; was normalized from &quot;{{ package.origversion }}&quot;{% endif -%}
+				{%- if is_recalled %}; version is recalled{% endif -%}
+			">
+				{%- if package.url is not none -%}
 				<a href="{{ package.url }}">{{ package.version }}</a>
 				{%- else -%}
 				{{ package.version }}
 				{%- endif -%}
-				{%- if vuln %} <a href="{{ url_for('project_cves', name=name, version=package.version) }}"><img src="{{ url_for("static", filename="vulnerable.v1.svg") }}" alt="Potentially vulnerable"></a>{% endif -%}
-			</span>{#-#}
+				{%- if is_vulnerable %} <a href="{{ url_for('project_cves', name=name, version=package.version) }}"><img src="{{ url_for("static", filename="vulnerable.v1.svg") }}" alt="Potentially vulnerable"></a>{% endif -%}
+			</span>{#- -#}
 		</td>
 		<td class="text-center">
 			{{- package.category|default('-', boolean=True) -}}

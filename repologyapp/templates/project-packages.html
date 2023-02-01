@@ -30,17 +30,20 @@
 					{{- package.visiblename -}}
 				</h3>
 				<div class="package-version">
-					{%- set vuln = package.flags is has_flag_at(16) -%}
-					{%- if package.version != package.origversion -%}
-					<span class="version-property-fixed" title="Normalized from &quot;{{ package.origversion }}&quot;">
+					{%- set is_vulnerable = package.flags is has_flag_at(16) -%}
+					{%- set is_recalled = package.flags is has_flag_at(20) -%}
+					{%- set is_fixed = package.version != package.origversion -%}
+					<span class="
+						{%- if is_fixed %} version-property-fixed{% endif -%}
+						{%- if is_recalled %} version-property-recalled{% endif -%}
+						"
+						{%- if is_fixed %} title="Normalized from &quot;{{ package.origversion }}&quot;"{% endif -%}
+					>
 						{{- package.version -}}
-						{%- if vuln %} <a href="{{ url_for('project_cves', name=name, version=package.version) }}"><img src="{{ url_for("static", filename="vulnerable.v1.svg") }}" alt="Potentially vulnerable"></a>{% endif -%}
+						{%- if is_vulnerable %} <a href="{{ url_for('project_cves', name=name, version=package.version) }}"><img src="{{ url_for("static", filename="vulnerable.v1.svg") }}" alt="Potentially vulnerable"></a>{% endif -%}
 					</span>
-					{%- else -%}
-					{{- package.version -}}
-					{%- if vuln %} <a href="{{ url_for('project_cves', name=name, version=package.version) }}"><img src="{{ url_for("static", filename="vulnerable.v1.svg") }}" alt="Potentially vulnerable"></a>{% endif -%}
-					{%- endif -%}
 					{%- if package.rawversion != package.version %} ({{ package.rawversion }}){% endif -%}
+					{%- if is_recalled %} (recalled){% endif -%}
 				</div>
 			</div>
 			<ul class="list-group">
