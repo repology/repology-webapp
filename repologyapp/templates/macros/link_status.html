@@ -1,0 +1,42 @@
+{#-
+
+Status matrix we use:
+                                    IPv6
+             |      Redir    | Ok |          Dead          |    None
+   ----------+---------------+----+------------------------+----------------
+       Redir | redir from v6 | ok | mixed: v4 redir, no v6 | redir from v4
+IPv4      Ok | redir from v6 | ok | mixed: v4 ok, no v6    | ok
+        Dead | redir from v6 | ok | dead                   | dead
+        None | redir from v6 | ok | dead                   | none
+
+-#}
+
+{%- macro link_status(link, use_archive=False) -%}
+{%- if link.ipv4_success is not none or link.ipv6_success is not none -%}
+	<sup class="link-status non-selectable"><a href="{{ url_for('link', url=link.url) }}" rel="nofollow">
+		{%- if link.ipv6_success and link.ipv6_permanent_redirect_target is not none -%}
+			<span class="link-redirect">redir</span>
+		{%- elif link.ipv6_success -%}
+			<span class="link-ok">ok</span>
+		{%- elif link.ipv6_success is none -%}
+			{%- if link.ipv4_success and link.ipv4_permanent_redirect_target is not none -%}
+				<span class="link-redirect">redir</span>
+			{%- elif link.ipv4_success -%}
+				<span class="link-ok">ok</span>
+			{%- else -%}
+				<span class="link-error">dead</span>
+			{%- endif -%}
+		{%- else -%}
+			{%- if link.ipv4_success and link.ipv4_permanent_redirect_target is not none -%}
+				<span class="link-redirect">redir</span>, <span class="link-error">no IPv6</span>
+			{%- elif link.ipv4_success -%}
+				<span class="link-ok">ok</span>, <span class="link-error">no IPv6</span>
+			{%- else -%}
+				<span class="link-error">dead</span>
+			{%- endif -%}
+		{%- endif -%}
+	</a>
+	{%- if not link.ipv4_success and not link.ipv6_success %} <a href="{{ 'https://web.archive.org/web/*/' + link.url }}">(see archive.org)</a>{% endif -%}
+	</sup>
+{%- endif -%}
+{%- endmacro -%}

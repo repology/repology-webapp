@@ -26,39 +26,6 @@
 
 {% if linkinfo.last_checked is not none %}
 
-<h3>IPv4</h3>
-
-<ul class="list-unstyled">
-	<li>Last success:
-	{% if linkinfo.ipv4_last_success is not none %}
-		<b>{{ macros.format_absolute_time_sec(linkinfo.ipv4_last_success) }}</b>
-		(<b>{{ macros.format_time_interval(now() - linkinfo.ipv4_last_success) }} ago</b>)
-	{% else %}
-		<b>never</b>
-	{% endif %}
-	</li>
-	<li>Last failure:
-	{% if linkinfo.ipv4_last_failure is not none %}
-		<b>{{ macros.format_absolute_time_sec(linkinfo.ipv4_last_failure) }}</b>
-		(<b>{{ macros.format_time_interval(now() - linkinfo.ipv4_last_failure) }} ago</b>)
-	{% else %}
-		<b>never</b>
-	{% endif %}
-	</li>
-	<li>Status:
-	{% if linkinfo.ipv4_success is none %}
-		<b>-</b>
-	{% elif linkinfo.ipv4_success and linkinfo.ipv4_permanent_redirect_target is not none %}
-		<b class="link-redirect">permanent redirect</b> to <b><a href="{{ linkinfo.ipv4_permanent_redirect_target }}">{{ linkinfo.ipv4_permanent_redirect_target }}</a></b>
-	{% elif linkinfo.ipv4_success %}
-		<b class="link-ok">OK ({{ linkinfo.ipv4_status_code }})</b>
-	{% else %}
-		<b class="link-error">{{ mlinks.format_link_status_code(linkinfo.ipv4_status_code) }}</b>
-		{{ mlinks.format_link_suggestions(linkinfo.ipv4_status_code, linkinfo.url) }}
-	{% endif %}
-	</li>
-</ul>
-
 <h3>IPv6</h3>
 
 <ul class="list-unstyled">
@@ -91,6 +58,43 @@
 	{% endif %}
 	</li>
 </ul>
+
+{% if linkinfo.ipv4_success is none and linkinfo.ipv6_success is not none %}
+<p>Legacy IPv4 check was skipped because IPv6 check succeeded</p>
+{% else %}
+<h3>IPv4</h3>
+
+<ul class="list-unstyled">
+	<li>Last success:
+	{% if linkinfo.ipv4_last_success is not none %}
+		<b>{{ macros.format_absolute_time_sec(linkinfo.ipv4_last_success) }}</b>
+		(<b>{{ macros.format_time_interval(now() - linkinfo.ipv4_last_success) }} ago</b>)
+	{% else %}
+		<b>never</b>
+	{% endif %}
+	</li>
+	<li>Last failure:
+	{% if linkinfo.ipv4_last_failure is not none %}
+		<b>{{ macros.format_absolute_time_sec(linkinfo.ipv4_last_failure) }}</b>
+		(<b>{{ macros.format_time_interval(now() - linkinfo.ipv4_last_failure) }} ago</b>)
+	{% else %}
+		<b>never</b>
+	{% endif %}
+	</li>
+	<li>Status:
+	{% if linkinfo.ipv4_success is none %}
+		<b>-</b>
+	{% elif linkinfo.ipv4_success and linkinfo.ipv4_permanent_redirect_target is not none %}
+		<b class="link-redirect">permanent redirect</b> to <b><a href="{{ linkinfo.ipv4_permanent_redirect_target }}">{{ linkinfo.ipv4_permanent_redirect_target }}</a></b>
+	{% elif linkinfo.ipv4_success %}
+		<b class="link-ok">OK ({{ linkinfo.ipv4_status_code }})</b>
+	{% else %}
+		<b class="link-error">{{ mlinks.format_link_status_code(linkinfo.ipv4_status_code) }}</b>
+		{{ mlinks.format_link_suggestions(linkinfo.ipv4_status_code, linkinfo.url) }}
+	{% endif %}
+	</li>
+</ul>
+{% endif %}
 
 {% endif %}
 
