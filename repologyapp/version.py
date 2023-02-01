@@ -27,13 +27,14 @@ from repologyapp.package import AnyPackageDataMinimal, PackageFlags
 
 @total_ordering
 class UserVisibleVersionInfo:
-    __slots__ = ['version', 'versionclass', 'metaorder', 'versionflags', 'vulnerable', 'spread']
+    __slots__ = ['version', 'versionclass', 'metaorder', 'versionflags', 'vulnerable', 'recalled', 'spread']
 
     version: str
     versionclass: int
     metaorder: int
     versionflags: int
     vulnerable: bool
+    recalled: bool
     spread: int
 
     def __init__(self, package: AnyPackageDataMinimal, spread: int = 1) -> None:
@@ -45,6 +46,7 @@ class UserVisibleVersionInfo:
                              ((package.flags & PackageFlags.ANY_IS_PATCH) and ANY_IS_PATCH))
 
         self.vulnerable = bool(package.flags & PackageFlags.VULNERABLE)
+        self.recalled = bool(package.flags & PackageFlags.RECALLED)
         self.spread = spread
 
     def as_with_spread(self, spread: int) -> 'UserVisibleVersionInfo':
@@ -58,6 +60,7 @@ class UserVisibleVersionInfo:
                 self.version == other.version and
                 version_compare(self.version, other.version, self.versionflags, other.versionflags) == 0 and
                 self.vulnerable == other.vulnerable and
+                self.recalled == other.recalled and
                 self.spread == other.spread)
 
     def __lt__(self, other: 'UserVisibleVersionInfo') -> bool:
@@ -83,9 +86,17 @@ class UserVisibleVersionInfo:
         if self.versionclass > other.versionclass:
             return False
 
+        # XXX: We may not need to distinguish these - a version recalled/vulnerable
+        # in one repository, but not another is still recalled/vulnerable
+        # However to do that properly we'll need to merge these fields
         if self.vulnerable > other.vulnerable:
             return True
         if self.vulnerable < other.vulnerable:
+            return False
+
+        if self.recalled > other.recalled:
+            return True
+        if self.recalled < other.recalled:
             return False
 
         if self.spread < other.spread:

@@ -2,7 +2,7 @@
 
 {%- macro versions_list(versioninfos, explicit_empty=False) %}
 {% for versioninfo in versioninfos %}
-	<span class="version version-{{ versioninfo.versionclass|css_for_versionclass }}">
+	<span class="version version-{{ versioninfo.versionclass|css_for_versionclass }}{% if versioninfo.recalled %} version-property-recalled{% endif %}">
 		{{- versioninfo.version -}}
 		{%- if versioninfo.vulnerable %}<span class="vulnerable">▲</span>{% endif -%}
 	</span>
