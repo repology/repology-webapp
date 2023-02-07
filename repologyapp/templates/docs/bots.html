@@ -59,7 +59,7 @@ visits you site, this means it is mentioned in some package metadata.</p>
 <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods">HEAD</a>
 request first, and only if that fails it falls back to a
 <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods">GET</a>
-request. This means that it most cases the robot won't retrieve the contents of an URL,
+request. This means that it most cases the robot won't retrieve the contents of a URL,
 using only marginal amount of web traffic. Also, there's a delay of 3 seconds between
 consecutive requests to a single hostname, to ensure no excess site load is generated.</p>
 
@@ -72,11 +72,11 @@ consecutive requests to a single hostname, to ensure no excess site load is gene
 
 <p>This process maintains up to date information on software security vulnerabilities
 in Repology by periodically fetching <a href="https://nvd.nist.gov/vuln/data-feeds#JSON_FEED">NVD JSON feeds</a>.
-It isses a <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods">GET</a>
+It issues a <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods">GET</a>
 request to each feed every 10 minutes, <code>Etag</code> and <code>If-None-Match</code> HTTP headers
 are used to avoid refetching the files if they have not changed since the last request.</p>
 
-<p>You may see the vuln updater source code
+<p>You may see the vulnupdater's source code
 <a href="{{ config['REPOLOGY_VULNUPDATER_REPO_URL'] }}">here</a>.</p>
 
 <h3>robots.txt policy</h3>
