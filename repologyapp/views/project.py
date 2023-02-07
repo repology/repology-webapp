@@ -19,7 +19,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from datetime import timedelta
 from functools import cmp_to_key
-from typing import Any, Callable, Collection, Iterable, TypeAlias, TypeVar, Union
+from typing import Any, Callable, Collection, Iterable, Self, TypeAlias, TypeVar
 
 import flask
 
@@ -206,7 +206,7 @@ def _link_type_is_raw(link_type: int) -> bool:
     return False
 
 
-_LinkKey: TypeAlias = Union[tuple[int], tuple[int, str]]  # id, fragment
+_LinkKey: TypeAlias = tuple[int] | tuple[int, str]  # id, fragment
 
 
 @ViewRegistrar('/project/<name>/information')
@@ -536,7 +536,7 @@ class _VersionRange:
     end_excluded: bool
     highlighted: bool = False
 
-    def set_highlight(self, version: str | None) -> '_VersionRange':
+    def set_highlight(self, version: str | None) -> Self:
         if version is None:
             return self
         if self.start is not None and version_compare(version, self.start) < (1 if self.start_excluded else 0):

@@ -30,12 +30,7 @@ import werkzeug
 _Status: TypeAlias = int
 _Headers: TypeAlias = dict[str, str]
 _Body: TypeAlias = str | werkzeug.Response  # the latter is returned by e.g. flask.redirect
-Response: TypeAlias = Union[
-    _Body,
-    tuple[_Body, _Status, _Headers],
-    tuple[_Body, _Status],
-    tuple[_Body, _Headers]
-]
+Response: TypeAlias = _Body | tuple[_Body, _Status, _Headers] | tuple[_Body, _Status] | tuple[_Body, _Headers]
 _ViewFunc: TypeAlias = Callable[..., Response]
 
 

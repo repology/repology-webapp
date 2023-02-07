@@ -18,7 +18,7 @@
 
 from copy import copy
 from functools import total_ordering
-from typing import Any, Iterable
+from typing import Any, Iterable, Self
 
 from libversion import ANY_IS_PATCH, P_IS_PATCH, version_compare
 
@@ -49,7 +49,7 @@ class UserVisibleVersionInfo:
         self.recalled = bool(package.flags & PackageFlags.RECALLED)
         self.spread = spread
 
-    def as_with_spread(self, spread: int) -> 'UserVisibleVersionInfo':
+    def as_with_spread(self, spread: int) -> Self:
         result = copy(self)
         result.spread = spread
         return result
