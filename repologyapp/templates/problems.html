@@ -104,6 +104,8 @@
 				for more than a month and should be replaced by alive link (see other packages for hints).
 			{% elif problem.type == 'download_permanent_https_redirect' %}
 				Download link <code>{{ problem.data.url }}</code> is a permanent redirect to its HTTPS counterpart <code>{{ problem.data.target }}</code> and should be updated.
+			{% elif problem.type == 'homepage_sourceforge_missing_trailing_slash' %}
+				Homepage link <code>{{ problem.data.url }}</code> needs a trailing slash added, otherwise there's a javascript redirect.
 			{% else %}
 				Unformatted problem of type <code>{{ problem.type }}</code>, data=<code>{{ problem.data }}</code>. The template should be updated, please report this.
 			{% endif %}
