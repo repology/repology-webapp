@@ -1,0 +1,93 @@
+{% extends "project/_base.html" %}
+{% import "macros.html" as macros %}
+
+{% block title %}{{ name }} package versions - Repology{% endblock %}
+{% block header %}Versions for <strong>{{ name }}</strong>{% endblock %}
+{% block description %}List of package versions for project {{ name }} in all repositories{% endblock %}
+
+{% block content %}
+<div class="container">
+
+<p><b>{{ packages|length }}</b> package(s) known</p>
+
+<table class="table table-striped">
+	<tr>
+		<th class="text-right">Repository</th>
+		<th class="text-center">Package name</th>
+		<th class="text-center">Version</th>
+		<th class="text-center">Category</th>
+		<th class="text-left">Maintainer(s)</th>
+	</tr>
+{% for reponame in repometadata.active_names() %}
+{% for package in packages_by_repo[reponame] %}
+	<tr{% if loop.first %} id="{{ reponame }}"{% endif %}>
+		<td class="text-right">
+			<a href="{{ url_for('repository', repo=reponame) }}">{{ repometadata[reponame].desc }}</a>
+			{%- if package.subrepo -%}
+				<br><sup>{{ package.subrepo }}</sup>
+			{%- endif -%}
+		</td>
+		<td class="text-center">
+			{%- if package.url is not none -%}
+			<a href="{{ package.url }}">{{ package.visiblename }}</a>
+			{%- else -%}
+			{{ package.visiblename }}
+			{%- endif -%}
+		</td>
+		<td class="text-center">
+			{%- set is_vulnerable = package.flags is has_flag_at(16) -%}
+			{%- set is_recalled =  package.flags is has_flag_at(20) -%}
+			{%- set is_fixed = package.origversion != package.version -%}
+			<span class="version version-big version-{{ package.versionclass|css_for_versionclass }}
+				{%- if is_fixed %} version-property-fixed{% endif -%}
+				{%- if is_recalled %} version-property-recalled{% endif -%}
+				" title="{{ package.versionclass|css_for_versionclass }} version
+				{%- if is_fixed %}; was normalized from &quot;{{ package.origversion }}&quot;{% endif -%}
+				{%- if is_recalled %}; version is recalled{% endif -%}
+			">
+				{%- if package.url is not none -%}
+				<a href="{{ package.url }}">{{ package.version }}</a>
+				{%- else -%}
+				{{ package.version }}
+				{%- endif -%}
+				{%- if is_vulnerable %} <a href="{{ url_for('project_cves', name=name, version=package.version) }}"><img src="{{ url_for("static", filename="vulnerable.v1.svg") }}" alt="Potentially vulnerable"></a>{% endif -%}
+			</span>{#- -#}
+		</td>
+		<td class="text-center">
+			{{- package.category|default('-', boolean=True) -}}
+		</td>
+		<td class="text-left">
+		{%- if package.maintainers -%}
+			{%- for maintainer in package.maintainers -%}
+				{%- if not loop.first %}, {% endif -%}
+				<a href="{{ url_for('maintainer', maintainer=maintainer) }}">{{ maintainer }}</a>
+			{%- endfor -%}
+		{%- else -%}
+			-
+		{%- endif -%}
+		</td>
+	</tr>
+{% endfor %}
+{% endfor %}
+</table>
+
+{% if false and reponames_absent %}
+<h1>Absent in repositories</h1>
+
+<div class="row">
+{% for column in reponames_absent|slice(4) %}
+{% if column %}
+	<div class="col-md-3">
+		<ul>
+		{% for reponame in column %}
+			<li>{{ repometadata[reponame].desc }}</li>
+		{% endfor %}
+		</ul>
+	</div>
+{% endif %}
+{% endfor %}
+</div>
+{% endif %}
+
+</div> {#- container #}
+{% endblock %}

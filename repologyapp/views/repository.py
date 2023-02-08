@@ -33,10 +33,10 @@ def repository(repo: str) -> Response:
 
     if repo not in repometadata.all_names():
         flask.abort(404)
-        #return (flask.render_template('repository-404.html', repo=repo), 404)
+        #return (flask.render_template('repository/404.html', repo=repo), 404)
     if repo not in repometadata.active_names():
         # HTTP code is intentionally 404
-        return (flask.render_template('repository-410.html', repo=repo, repo_info=get_db().get_repository_information(repo)), 404)
+        return (flask.render_template('repository/410.html', repo=repo, repo_info=get_db().get_repository_information(repo)), 404)
 
     return flask.render_template(
         'repository.html',
@@ -60,7 +60,7 @@ def repository_feed(repo: str) -> Response:
     autorefresh = flask.request.args.to_dict().get('autorefresh')
 
     return flask.render_template(
-        'repository-feed.html',
+        'repository/feed.html',
         repo=repo,
         history=unicalize_feed_timestamps(
             get_db().get_repository_feed(
@@ -76,7 +76,7 @@ def repository_feed(repo: str) -> Response:
 def repository_feed_atom(repo: str) -> Response:
     return (
         flask.render_template(
-            'repository-feed-atom.xml',
+            'atom-feeds/repository/feed.xml',
             repo=repo,
             history=unicalize_feed_timestamps(
                 get_db().get_repository_feed(

@@ -53,7 +53,7 @@ def repositories_statistics(sorting: str | None = None) -> Response:
         sorting = 'name'
 
     return flask.render_template(
-        'repositories-statistics.html',
+        'repositories/statistics.html',
         sorting=sorting,
         repostats=repostats,
         repostats_old={},  # {repo['name']: repo for repo in get_db().GetRepositoriesHistoryAgo(60 * 60 * 24 * 7)},
@@ -70,7 +70,7 @@ def repositories_packages() -> Response:
     repostats = [repostats_by_name[reponame] for reponame in repometadata.active_names() if reponame in repostats_by_name]
 
     return flask.render_template(
-        'repositories-packages.html',
+        'repositories/packages.html',
         repostats=repostats,
         counts=get_db().get_counts(),
         autorefresh=autorefresh
@@ -82,7 +82,7 @@ def repositories_updates() -> Response:
     autorefresh = flask.request.args.to_dict().get('autorefresh')
 
     return flask.render_template(
-        'repositories-updates.html',
+        'repositories/updates.html',
         repos=get_db().get_repositories_update_statistics(),
         autorefresh=autorefresh
     )
@@ -93,7 +93,7 @@ def repositories_graphs() -> Response:
     autorefresh = flask.request.args.to_dict().get('autorefresh')
 
     return flask.render_template(
-        'repositories-graphs.html',
+        'repositories/graphs.html',
         autorefresh=autorefresh
     )
 
@@ -103,6 +103,6 @@ def repositories_fields() -> Response:
     autorefresh = flask.request.args.to_dict().get('autorefresh')
 
     return flask.render_template(
-        'repositories-fields.html',
+        'repositories/fields.html',
         autorefresh=autorefresh
     )

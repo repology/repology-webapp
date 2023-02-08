@@ -62,7 +62,7 @@ def handle_nonexisting_project(name: str, metapackage: dict[str, Any]) -> Respon
     if not metapackage:
         return (
             flask.render_template(
-                'project-404.html',
+                'project/404.html',
                 name=name,
                 metapackages=metapackages,
                 metapackagedata=metapackagedata
@@ -72,7 +72,7 @@ def handle_nonexisting_project(name: str, metapackage: dict[str, Any]) -> Respon
     else:
         return (
             flask.render_template(
-                'project-410.html',
+                'project/410.html',
                 name=name,
                 metapackage=metapackage,
                 metapackages=metapackages,
@@ -103,7 +103,7 @@ def project_versions(name: str) -> Response:
         packages_by_repo[repo] = packageset_sort_by_version(repo_packages)
 
     return flask.render_template(
-        'project-versions.html',
+        'project/versions.html',
         name=name,
         metapackage=metapackage,
         packages=packages,
@@ -134,7 +134,7 @@ def project_versions_compact(name: str) -> Response:
     }
 
     return flask.render_template(
-        'project-versions-compact.html',
+        'project/versions-compact.html',
         name=name,
         metapackage=metapackage,
         packages=packages,
@@ -159,7 +159,7 @@ def project_packages(name: str) -> Response:
             packages.extend(packageset_sort_by_name_version(packages_by_repo[repo]))
 
     return flask.render_template(
-        'project-packages.html',
+        'project/packages.html',
         name=name,
         metapackage=metapackage,
         packages=packages,
@@ -279,7 +279,7 @@ def project_information(name: str) -> Response:
     versions = packageset_aggregate_by_version(packages, {PackageStatus.LEGACY: PackageStatus.OUTDATED})
 
     return flask.render_template(
-        'project-information.html',
+        'project/information.html',
         name=name,
         metapackage=metapackage,
         versions=versions,
@@ -393,7 +393,7 @@ def project_history(name: str) -> Response:
         return handle_nonexisting_project(name, metapackage)
 
     return flask.render_template(
-        'project-history.html',
+        'project/history.html',
         name=name,
         metapackage=metapackage,
         history=history,
@@ -421,7 +421,7 @@ def project_related(name: str) -> Response:
 
     return (
         flask.render_template(
-            'project-related.html',
+            'project/related.html',
             name=name,
             metapackage=metapackage,
             metapackages=metapackages,
@@ -446,7 +446,7 @@ def project_badges(name: str) -> Response:
     repos = [repo for repo in repometadata.active_names() if repo in repos_present_in]
 
     return flask.render_template(
-        'project-badges.html',
+        'project/badges.html',
         name=name,
         metapackage=metapackage,
         repos=repos
@@ -513,7 +513,7 @@ def project_report(name: str) -> Response:
             return flask.redirect(flask.url_for('metapackage_report', name=name))
 
     return flask.render_template(
-        'project-report.html',
+        'project/report.html',
         name=name,
         metapackage=metapackage,
         reports=reports,
@@ -590,7 +590,7 @@ def project_cves(name: str) -> Response:
         return handle_nonexisting_project(name, metapackage)
 
     return flask.render_template(
-        'project-cves.html',
+        'project/cves.html',
         name=name,
         metapackage=metapackage,
         highlight_version=highlight_version,

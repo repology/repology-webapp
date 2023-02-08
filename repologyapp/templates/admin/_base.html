@@ -1,0 +1,44 @@
+{% extends "_base.html" %}
+
+{% block extrameta %}
+	<meta name="robots" content="noindex">
+{% endblock %}
+
+{% block title %}Admin area - Repology{% endblock %}
+{% block header %}Admin area{% endblock %}
+
+{% block preheader %}
+{% if session.admin %}
+<form class="form-inline pageheader-right" action="{{ url_for("admin") }}" method="POST">
+	<button type="submit" class="btn btn-default">Logout</button>
+</form>
+<div class="btn-group pageheader-right">
+	<a href="{{ url_for("admin_reports_unprocessed") }}" class="btn btn-default{% if request.endpoint == "admin_reports_unprocessed" %} active{% endif %}">Unprocessed reports</a>
+	<a href="{{ url_for("admin_reports_recent") }}" class="btn btn-default{% if request.endpoint == "admin_reports_recent" %} active{% endif %}">Recent reports</a>
+	<a href="{{ url_for("admin_updates") }}" class="btn btn-default{% if request.endpoint == "admin_updates" %} active{% endif %}">Updates</a>
+	<a href="{{ url_for("admin_redirects") }}" class="btn btn-default{% if request.endpoint == "admin_redirects" %} active{% endif %}">Redirects</a>
+	<a href="{{ url_for("admin_name_samples") }}" class="btn btn-default{% if request.endpoint == "admin_name_samples" %} active{% endif %}">Name samples</a>
+	<a href="{{ url_for("admin_cpes") }}" class="btn btn-default{% if request.endpoint == "admin_cpes" %} active{% endif %}">CPEs</a>
+	<a href="{{ url_for("admin_cve_misses") }}" class="btn btn-default{% if request.endpoint == "admin_cve_misses" %} active{% endif %}">CVE misses</a>
+	<a href="{{ url_for("admin_omni_cves") }}" class="btn btn-default{% if request.endpoint == "admin_omni_cves" %} active{% endif %}">Omni CVEs</a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+
+{% if session.admin %}
+<p>Administrative access granted</p>
+{% else %}
+<form class="form-inline" action="{{ url_for_self() }}" method="POST">
+	<div class="form-group">
+		<label for="password">Password</label>
+		<input class="form-control" id="password" name="password" type="password">
+	</div>
+	<button type="submit" class="btn btn-default">Login</button>
+</form>
+{% endif %}
+
+</div>
+{% endblock %}

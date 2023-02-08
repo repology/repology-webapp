@@ -68,7 +68,7 @@ def projects(bound: str | None = None) -> Response:
     metapackagedata = packages_to_summary_items(packages, filterinfo.get_repo(), filterinfo.get_maintainer())
 
     return flask.render_template(
-        'projects.html',
+        'projects/index.html',
         firstname=firstname,
         lastname=lastname,
         search=filterinfo.get_dict(),

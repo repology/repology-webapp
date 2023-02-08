@@ -31,13 +31,13 @@ def experimental() -> Response:
         flask.flash(f'Experimental mode {"enabled" if enabled else "disabled"}', 'success')
         return flask.redirect(url_for_self(), 302)
 
-    return flask.render_template('experimental.html')
+    return flask.render_template('experimental/index.html')
 
 
 @ViewRegistrar('/experimental/turnover/maintainers')
 def maintainers_turnover() -> Response:
     return flask.render_template(
-        'maintainers-turnover.html',
+        'experimental/maintainers-turnover.html',
         added=get_db().get_recently_added_maintainers(config['TURNOVER_PER_PAGE']),
         removed=get_db().get_recently_removed_maintainers(config['TURNOVER_PER_PAGE'])
     )
@@ -45,4 +45,4 @@ def maintainers_turnover() -> Response:
 
 @ViewRegistrar('/experimental/distromap')
 def distromap() -> Response:
-    return flask.render_template('distromap.html')
+    return flask.render_template('experimental/distromap.html')

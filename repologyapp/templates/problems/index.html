@@ -1,0 +1,122 @@
+{% extends "_base.html" %}
+{% import "_macros/links.html" as mlinks %}
+{% import "_macros/cpes.html" as mcpes %}
+
+{% block title %}Problems{% if maintainer %} for {{ maintainer}}{% endif %} in {{ repometadata[repo].desc }} - Repology{% endblock %}
+{% block header %}Problems{% if maintainer %} for <strong>{{ maintainer}}</strong>{% endif %} in <strong>{{ repometadata[repo].desc }}</strong>{% endblock %}
+
+{% block content %}
+<div class="container">
+
+<nav>
+        <div class="form-group">
+                <form class="form-inline" action="{{ url_for_self(start=None, end=None) }}" method="GET">
+                        <div class="btn-group">
+                                <a href="{{ url_for_self(start=None, end=None) }}" class="btn btn-default {% if is_first_page %} disabled{% endif %}">&laquo;&laquo;</a>
+                                {% if problems %}
+                                <a href="{{ url_for_self(start=None, end=(problems|first).effname) }}" class="btn btn-default{% if is_first_page %} disabled{% endif %}" rel="prev">&laquo;</a>
+                                <a href="{{ url_for_self(start=(problems|last).effname, end=None) }}" class="btn btn-default{% if is_last_page %} disabled{% endif %}" rel="next">&raquo;</a>
+                                {% endif %}
+                                {% if last %}
+                                <a href="{{ url_for_self(start=None, end=last) }}" class="btn btn-default {% if is_last_page %} disabled{% endif %}">&raquo;&raquo;</a>
+                                {% endif %}
+                        </div>
+                </form>
+        </div>
+</nav>
+
+{% if problems %}
+<p><b>{{ problems|length }}</b> problem(s) on this page</p>
+
+<table class="table table-striped table-hover">
+	<thead>
+		<tr>
+			<th class="text-center">Project</th>
+			<th class="text-center">Package name</th>
+			{% if not maintainer %}
+			<th class="text-center">Maintainer</th>
+			{% endif %}
+			<th class="text-left">Problem</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for problem in problems %}
+		<tr>
+			<td class="text-center"><a href="{{ url_for('project_versions', name=problem.effname) }}">{{ problem.effname }}</a></td>
+			<td class="text-center">
+				{%- if problem.url is not none %}
+				<a href="{{ problem.url }}">{{ problem.visiblename }}</a>
+				{%- else -%}
+				{{ problem.visiblename }}
+				{%- endif -%}
+			</td>
+			{%- if not maintainer -%}
+			<td class="text-center">
+			{%- if problem.maintainer -%}
+				<a href="{{ url_for('maintainer', maintainer=problem.maintainer) }}">{{ problem.maintainer }}</a>
+			{%- else -%}
+				-
+			{%- endif -%}
+			</td>
+			{%- endif -%}
+			<td class="text-left">
+			{% if problem.type == 'homepage_dead' %}
+				Homepage link <code>{{ problem.data.url }}</code> is <a href="{{ url_for('link', url=problem.data.url) }}">dead</a> (<b class="link-error">{{ mlinks.format_link_status_code(problem.data.code) }}</b>)
+				for more than a month and should be replaced by alive link (see other packages for hints, or link to <a href="https://archive.org/">archive.org</a> as a last resort).
+			{% elif problem.type == 'homepage_permanent_https_redirect' %}
+				Homepage link <code>{{ problem.data.url }}</code> is a permanent redirect to its HTTPS counterpart <code>{{ problem.data.target }}</code> and should be updated.
+			{% elif problem.type == 'homepage_discontinued_google' %}
+				Homepage link <code>{{ problem.data.url }}</code> points to Google Code which was discontinued.
+				The link should be updated (probably along with download URLs).
+				If this link is still alive, it may point to a new project homepage.
+			{% elif problem.type == 'homepage_discontinued_codeplex' %}
+				Homepage link <code>{{ problem.data.url }}</code> points to codeplex which was discontinued.
+				The link should be updated (probably along with download URLs).
+			{% elif problem.type == 'homepage_discontinued_gna' %}
+				Homepage link <code>{{ problem.data.url }}</code> points to Gna which was discontinued.
+				The link should be updated (probably along with download URLs).
+			{% elif problem.type == 'homepage_discontinued_cpan' %}
+				Homepage link <code>{{ problem.data.url }}</code> points to CPAN which was discontinued.
+				The link should be updated to <a href="https://metacpan.org/">MetaCPAN</a> (probably along with download URLs).
+				See <a href="https://www.perl.com/article/saying-goodbye-to-search-cpan-org/">https://www.perl.com/article/saying-goodbye-to-search-cpan-org/</a> for details.
+			{% elif problem.type == 'cpe_unreferenced' %}
+				CPE information defined for the package:<div>{{ mcpes.panels(problem.data.cpe) }}</div>was not found neither among known CVEs nor in NVD CPE dictionary, so it may be invalid.
+				{% if problem.data.suggestions %}
+				Suggested CPEs (as per known <a href="{{ url_for('project_cves', name=problem.effname) }}">CVEs</a>):
+				<ul class="list-unstyled">
+				{% for suggestion in problem.data.suggestions %}
+					<li>{{ mcpes.panels(suggestion) }}</li>
+				{% endfor %}
+				</ul>
+				{% endif %}
+			{% elif problem.type == 'cpe_missing' %}
+				CPE information is missing for this package, while repository defines it for other packages.
+				{% if problem.data.suggestions %}
+				Suggested CPEs (as per known <a href="{{ url_for('project_cves', name=problem.effname) }}">CVEs</a>):
+				<ul class="list-unstyled">
+				{% for suggestion in problem.data.suggestions %}
+					<li>{{ mcpes.panels(suggestion) }}</li>
+				{% endfor %}
+				</ul>
+				{% endif %}
+			{% elif problem.type == 'download_dead' %}
+				Download link <code>{{ problem.data.url }}</code> is <a href="{{ url_for('link', url=problem.data.url) }}">dead</a> (<b class="link-error">{{ mlinks.format_link_status_code(problem.data.code) }}</b>)
+				for more than a month and should be replaced by alive link (see other packages for hints).
+			{% elif problem.type == 'download_permanent_https_redirect' %}
+				Download link <code>{{ problem.data.url }}</code> is a permanent redirect to its HTTPS counterpart <code>{{ problem.data.target }}</code> and should be updated.
+			{% elif problem.type == 'homepage_sourceforge_missing_trailing_slash' %}
+				Homepage link <code>{{ problem.data.url }}</code> needs a trailing slash added, otherwise there's a javascript redirect.
+			{% else %}
+				Unformatted problem of type <code>{{ problem.type }}</code>, data=<code>{{ problem.data }}</code>. The template should be updated, please report this.
+			{% endif %}
+			</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+{% else %}
+<div class="alert alert-success" role="alert">No problems found matching the criteria</div>
+{% endif %}
+
+</div> {#- container #}
+{% endblock %}
