@@ -1,0 +1,204 @@
+{% extends "project/_base.html" %}
+{% from "_macros/link_status.html" import link_status %}
+
+{% block title %}{{ name }} packages dissection - Repology{% endblock %}
+{% block header %}Information for <strong>{{ name }}</strong>{% endblock %}
+{% block description %}Aggregated information from all packages for project {{ name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+
+<div class="row">
+	<div class="col-md-4">
+		<section id="Versions">
+			<h2>Versions</h2>
+			<ul class="list-sparse">
+			{% for versioninfo in versions %}
+				<li>{#-#}
+					<span class="version version-big version-{{ versioninfo.versionclass|css_for_versionclass }}">
+						{{- versioninfo.version -}}
+						{%- if versioninfo.vulnerable %} <a href="{{ url_for('project_cves', name=name, version=versioninfo.version) }}"><img src="{{ url_for("static", filename="vulnerable.v1.svg") }}" alt="Potentially vulnerable"></a>{% endif -%}
+					</span>
+					{%- if versioninfo.numfamilies > 1 %} <b>({{ versioninfo.numfamilies }})</b>{% endif -%}
+				</li>
+			{% endfor %}
+			</ul>
+		</section>
+
+		<section id="Package_names">
+			<h2>Package names</h2>
+			<ul>
+			{% for name, spread in names_spread|dictsort(case_sensitive=True) %}
+				<li>{{ name }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
+			{% endfor %}
+			</ul>
+		</section>
+
+		<section id="Repositories">
+			<h2>Repositories</h2>
+			<ul>
+			{% for reponame in repositories %}
+				<li><a href="{{ url_for('repository', repo=reponame) }}">{{ repometadata[reponame].desc }}</a></li>
+			{% endfor %}
+			</ul>
+		</section>
+
+		{% if categories_spread %}
+		<section id="Categories">
+			<h2>Categories</h2>
+			<ul>
+			{% for category, spread in categories_spread|dictsort(case_sensitive=True) %}
+				<li>{{ category }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
+			{% endfor %}
+			</ul>
+		</section>
+		{% endif %}
+
+		{% if licenses_spread %}
+		<section id="Licenses">
+			<h2>Licenses</h2>
+			<ul>
+			{% for license, spread in licenses_spread|dictsort(case_sensitive=True) %}
+				<li>{{ license }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
+			{% endfor %}
+			</ul>
+		</section>
+		{% endif %}
+	</div>
+	<div class="col-md-8">
+		{% if summaries_spread %}
+		<section id="Summaries">
+			<h2>Summaries</h2>
+			<ul>
+			{% for summary, spread in summaries_spread|dictsort(case_sensitive=True) %}
+				<li>{{ summary }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
+			{% endfor %}
+			</ul>
+		</section>
+		{% endif %}
+
+		{% if maintainers_spread %}
+		<section id="Maintainers">
+			<h2>Maintainers</h2>
+			<ul>
+			{% for maintainer, spread in maintainers_spread|dictsort(case_sensitive=True) %}
+				<li><a href="{{ url_for('maintainer', maintainer=maintainer) }}">{{ maintainer }}</a>{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
+			{% endfor %}
+			</ul>
+
+			{% if maintainers_spread|maintainers_to_group_mailto %}
+			<ul>
+				<li><a href="{{ maintainers_spread|maintainers_to_group_mailto('%5B' + name + '%20package%5D') }}">Group email</a></li>
+			</ul>
+			{% endif %}
+		</section>
+		{% endif %}
+
+		{% if links_spread_by_slice.homepages %}
+		<section id="Homepage_links">
+			<h2>Homepage links</h2>
+			<ul>
+			{% for link_key, spread in links_spread_by_slice.homepages %}
+			{% set link = links[link_key[0]] %}
+			{% set link_url = link.url + '#' + link_key[1] if link_key|length > 1 else link.url %}
+				<li class="break-word"><a href="{{ link_url }}">{{ link_url }}</a>{{ link_status(link, True) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
+			{% endfor %}
+			</ul>
+		</section>
+		{% endif %}
+
+		{% if links_spread_by_slice.issues %}
+		<section id="Issue_tracker_links">
+			<h2>Issue tracker links</h2>
+			<ul>
+			{% for link_key, spread in links_spread_by_slice.issues %}
+			{% set link = links[link_key[0]] %}
+			{% set link_url = link.url + '#' + link_key[1] if link_key|length > 1 else link.url %}
+				<li class="break-word"><a href="{{ link_url }}">{{ link_url }}</a>{{ link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
+			{% endfor %}
+			</ul>
+		</section>
+		{% endif %}
+
+		{% if links_spread_by_slice.repositories %}
+		<section id="Repository_links">
+			<h2>Repository links</h2>
+			<ul>
+			{% for link_key, spread in links_spread_by_slice.repositories %}
+			{% set link = links[link_key[0]] %}
+			{% set link_url = link.url + '#' + link_key[1] if link_key|length > 1 else link.url %}
+				<li class="break-word"><a href="{{ link_url }}">{{ link_url }}</a>{{ link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
+			{% endfor %}
+			</ul>
+		</section>
+		{% endif %}
+
+		{% if links_spread_by_slice.documentation %}
+		<section id="Documentation_links">
+			<h2>Documentation links</h2>
+			<ul>
+			{% for link_key, spread in links_spread_by_slice.documentation %}
+			{% set link = links[link_key[0]] %}
+			{% set link_url = link.url + '#' + link_key[1] if link_key|length > 1 else link.url %}
+				<li class="break-word"><a href="{{ link_url }}">{{ link_url }}</a>{{ link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
+			{% endfor %}
+			</ul>
+		</section>
+		{% endif %}
+
+		{% if links_spread_by_slice.recipes %}
+		<section id="All_package_recipes">
+			<h2>All package recipes</h2>
+			<ul>
+			{% for link_key, spread in links_spread_by_slice.recipes %}
+			{% set link = links[link_key[0]] %}
+			{% set link_url = link.url + '#' + link_key[1] if link_key|length > 1 else link.url %}
+				<li class="break-word"><a href="{{ link_url }}">{{ link_url }}</a>{{ link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
+			{% endfor %}
+			</ul>
+		</section>
+		{% endif %}
+
+		{% if links_spread_by_slice.downloads %}
+		<section id="Downloads">
+			<h2>Downloads</h2>
+			<ul>
+			{% for link_key, spread in links_spread_by_slice.downloads %}
+			{% set link = links[link_key[0]] %}
+			{% set link_url = link.url + '#' + link_key[1] if link_key|length > 1 else link.url %}
+				<li class="break-word"><a href="{{ link_url }}">{{ link_url }}</a>{{ link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
+			{% endfor %}
+			</ul>
+		</section>
+		{% endif %}
+
+		{% if links_spread_by_slice.patches %}
+		<section id="Patches">
+			<h2>Patches</h2>
+			<ul>
+			{% for link_key, spread in links_spread_by_slice.patches %}
+			{% set link = links[link_key[0]] %}
+			{% set link_url = link.url + '#' + link_key[1] if link_key|length > 1 else link.url %}
+				<li class="break-word"><a href="{{ link_url }}">{{ link_url }}</a>{{ link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
+			{% endfor %}
+			</ul>
+		</section>
+		{% endif %}
+
+		{% if links_spread_by_slice.buildlogs %}
+		<section id="Build_logs">
+			<h2>Build logs</h2>
+			<ul>
+			{% for link_key, spread in links_spread_by_slice.buildlogs %}
+			{% set link = links[link_key[0]] %}
+			{% set link_url = link.url + '#' + link_key[1] if link_key|length > 1 else link.url %}
+				<li class="break-word"><a href="{{ link_url }}">{{ link_url }}</a>{{ link_status(link) }}{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
+			{% endfor %}
+			</ul>
+		</section>
+		{% endif %}
+	</div>
+</div>
+
+</div> {#- container #}
+{% endblock %}

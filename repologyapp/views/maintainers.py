@@ -71,7 +71,7 @@ def maintainers(bound: str | None = None) -> Response:
             lastpage = True
 
     return flask.render_template(
-        'maintainers.html',
+        'maintainers/index.html',
         search=search,
         minmaintainer=minmaintainer,
         maxmaintainer=maxmaintainer,
@@ -88,10 +88,10 @@ def maintainer(maintainer: str) -> Response:
     maintainer_info = get_db().get_maintainer_information(maintainer)
 
     if not maintainer_info:
-        return (flask.render_template('maintainer-404.html', maintainer=maintainer, maintainer_info=maintainer_info), 404)
+        return (flask.render_template('maintainer/404.html', maintainer=maintainer, maintainer_info=maintainer_info), 404)
     elif maintainer_info['num_packages'] == 0:
         # HTTP code is intentionally 404
-        return (flask.render_template('maintainer-410.html', maintainer=maintainer, maintainer_info=maintainer_info), 404)
+        return (flask.render_template('maintainer/410.html', maintainer=maintainer, maintainer_info=maintainer_info), 404)
 
     metapackages = get_db().get_maintainer_metapackages(maintainer, 500)
     similar_maintainers = get_db().get_maintainer_similar_maintainers(maintainer, 50)
@@ -152,7 +152,7 @@ def maintainer_repo_feed(maintainer: str, repo: str) -> Response:
     autorefresh = flask.request.args.to_dict().get('autorefresh')
 
     return flask.render_template(
-        'maintainer-repo-feed.html',
+        'maintainer/repo-feed.html',
         maintainer=maintainer,
         repo=repo,
         history=unicalize_feed_timestamps(
@@ -170,7 +170,7 @@ def maintainer_repo_feed(maintainer: str, repo: str) -> Response:
 def maintainer_repo_feed_atom(maintainer: str, repo: str) -> Response:
     return (
         flask.render_template(
-            'maintainer-repo-feed-atom.xml',
+            'atom-feeds/maintainer/repo-feed.xml',
             maintainer=maintainer,
             repo=repo,
             history=unicalize_feed_timestamps(

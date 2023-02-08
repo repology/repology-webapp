@@ -57,4 +57,4 @@ def favicon() -> Response:
 
 @ViewRegistrar('/tools')
 def tools() -> Response:
-    return flask.render_template('tools.html')
+    return flask.render_template('tools/index.html')

@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "_base.html" %}
 
 {% block title %}About Repology{% endblock %}
 {% block header %}About{% endblock %}
@@ -39,7 +39,7 @@
 
 <h3>Supported repositories</h3>
 
-{% include "supported_repos.html" %}
+{% include "_includes/supported_repos.html" %}
 
 <h3>How does it work?</h3>
 
@@ -63,7 +63,7 @@ are unrelated projects).</p>
 <p>Last, for each project versions are compared with a custom
 general algorithm, and each package is classified by its version.</p>
 
-{% include "versionclass_list.html" %}
+{% include "_includes/versionclass/list.html" %}
 
 <p>Ruleset is also used to mark ignored and devel versions</p>
 

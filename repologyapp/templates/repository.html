@@ -1,5 +1,5 @@
-{% extends "layout.html" %}
-{% import "macros/autorefresh.html" as _autorefresh with context %}
+{% extends "_base.html" %}
+{% import "_macros/autorefresh.html" as _autorefresh with context %}
 
 {% block extrameta %}
 {{ _autorefresh.meta(3600 + randrange(60)) }}

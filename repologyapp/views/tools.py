@@ -105,9 +105,9 @@ def tool_project_by() -> Response:
 
     if repo and name_type and target_page:
         if repo not in repometadata.active_names():
-            return (flask.render_template('project-by-failed.html', reason='no_repo'), 404)
+            return (flask.render_template('tools/project-by/failed.html', reason='no_repo'), 404)
         elif repometadata[repo]['family'] in _DISALLOWED_FAMILIES:
-            return (flask.render_template('project-by-failed.html', reason='disallowed_repo'), 403)
+            return (flask.render_template('tools/project-by/failed.html', reason='disallowed_repo'), 403)
         elif name:
             targets = []
 
@@ -118,7 +118,7 @@ def tool_project_by() -> Response:
                 targets.append((project, flask.url_for(target_page.endpoint, **real_args)))
 
             if not targets:
-                return (flask.render_template('project-by-failed.html', reason='no_package'), 404)
+                return (flask.render_template('tools/project-by/failed.html', reason='no_package'), 404)
             elif noautoresolve and len(targets) > 1:
                 if target_page.type_ == EndpointType.JSON:
                     return (
@@ -136,7 +136,7 @@ def tool_project_by() -> Response:
                 else:
                     return (
                         flask.render_template(
-                            'project-by-ambiguity.html',
+                            'tools/project-by/ambiguity.html',
                             targets=targets,
                         ),
                         300
@@ -148,7 +148,7 @@ def tool_project_by() -> Response:
             template_url = url_for_self(**args)
 
     return flask.render_template(
-        'project-by.html',
+        'tools/project-by.html',
         allowed_target_pages=_ALLOWED_TARGET_PAGES,
         template_url=template_url,
         disallowed_families=_DISALLOWED_FAMILIES,
@@ -158,7 +158,7 @@ def tool_project_by() -> Response:
 @ViewRegistrar('/tools/trending')
 def trending() -> Response:
     return flask.render_template(
-        'projects-trending.html',
+        'tools/trending.html',
         trending=cache(
             'trending-positive',
             lambda: get_db().get_trending_projects(  # type: ignore  # https://github.com/python/mypy/issues/9590

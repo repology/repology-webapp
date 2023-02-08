@@ -22,9 +22,9 @@ from repologyapp.view_registry import Response, ViewRegistrar
 
 @ViewRegistrar('/opensearch/project.xml')
 def opensearch_project() -> Response:
-    return flask.render_template('opensearch-project.xml'), {'Content-type': 'application/xml'}
+    return flask.render_template('opensearch/project.xml'), {'Content-type': 'application/xml'}
 
 
 @ViewRegistrar('/opensearch/maintainer.xml')
 def opensearch_maintainer() -> Response:
-    return flask.render_template('opensearch-maintainer.xml'), {'Content-type': 'application/xml'}
+    return flask.render_template('opensearch/maintainer.xml'), {'Content-type': 'application/xml'}

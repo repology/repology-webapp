@@ -52,7 +52,7 @@ def admin() -> Response:
 
         return flask.redirect(flask.url_for('admin'), 302)
 
-    return flask.render_template('admin.html')
+    return flask.render_template('admin/_base.html')
 
 
 def admin_reports_generic(report_getter: Callable[[], dict[str, Any]]) -> Response:
@@ -79,7 +79,7 @@ def admin_reports_generic(report_getter: Callable[[], dict[str, Any]]) -> Respon
         flask.flash('Report updated succesfully', 'success')
         return flask.redirect(url_for_self())
 
-    return flask.render_template('admin-reports.html', reports=report_getter())
+    return flask.render_template('admin/reports.html', reports=report_getter())
 
 
 @ViewRegistrar('/admin/reports/unprocessed/', methods=['GET', 'POST'])
@@ -98,7 +98,7 @@ def admin_updates() -> Response:
         return unauthorized()
 
     return flask.render_template(
-        'admin-updates.html',
+        'admin/updates.html',
         repos=get_db().get_repositories_update_diagnostics()
     )
 
@@ -153,7 +153,7 @@ def admin_redirects() -> Response:
         redirects = get_db().get_project_redirects_admin(project, True) + get_db().get_project_redirects_admin(project, False)
 
     return flask.render_template(
-        'admin-redirects.html',
+        'admin/redirects.html',
         project=project,
         redirects=redirects
     )
@@ -170,7 +170,7 @@ def admin_name_samples() -> Response:
         samples_by_repo[sample['repo']].append(sample)
 
     return flask.render_template(
-        'admin-name-samples.html',
+        'admin/name-samples.html',
         samples_by_repo=samples_by_repo
     )
 
@@ -294,7 +294,7 @@ def admin_cpes() -> Response:
             return response
 
     return flask.render_template(
-        'admin-cpes.html',
+        'admin/cpes.html',
         cpes=get_db().get_manual_cpes()
     )
 
@@ -309,7 +309,7 @@ def admin_cve_misses() -> Response:
             return response
 
     return flask.render_template(
-        'admin-cve-misses.html',
+        'admin/cve-misses.html',
         items=get_db().get_recent_cve_misses()
     )
 
@@ -320,6 +320,6 @@ def admin_omni_cves() -> Response:
         return unauthorized()
 
     return flask.render_template(
-        'admin-omni-cves.html',
+        'admin/omni-cves.html',
         items=get_db().get_omni_cves()
     )

@@ -317,7 +317,7 @@ def maintainer_problems_legacy(maintainer: str) -> Response:
     maintainer_info = get_db().get_maintainer_information(maintainer)
 
     if not maintainer_info or not maintainer_info['num_projects_newest_per_repo']:
-        return (flask.render_template('maintainer-404.html', maintainer=maintainer), 404)
+        return (flask.render_template('maintainer/404.html', maintainer=maintainer), 404)
 
     bestrepo = max(
         (

@@ -1,5 +1,5 @@
-{% extends "layout.html" %}
-{% import "macros/projects_table.html" as projects_table %}
+{% extends "_base.html" %}
+{% import "_macros/projects_table.html" as projects_table %}
 
 {% block title %}Repology{% endblock %}
 {% block pageheader %}{% endblock %}
@@ -254,7 +254,7 @@
 	<section>
 		<h2>Popular packages</h2>
 
-		{% include "versionclass_legend.html" %}
+		{% include "_includes/versionclass/legend.html" %}
 
 		{{ projects_table.projects_table(metapackages, metapackagedata) }}
 
@@ -267,7 +267,7 @@
 			* "a lot of package repositories and other sources" include:
 		</p>
 
-		{% include "supported_repos.html" %}
+		{% include "_includes/supported_repos.html" %}
 	</section>
 
 </div> {# container #}

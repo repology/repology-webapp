@@ -45,7 +45,7 @@ def problems_generic(repo: str, maintainer: str | None = None, start: str | None
             is_last_page = True
 
     return flask.render_template(
-        'problems.html',
+        'problems/index.html',
         repo=repo,
         maintainer=maintainer,
         start=start,

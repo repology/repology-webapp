@@ -1,0 +1,35 @@
+{% extends "project/_base.html" %}
+{% import "macros.html" as macros %}
+
+{% block title %}{{ name }} package versions (compact view) - Repology{% endblock %}
+{% block header %}Versions (compact view) for <strong>{{ name }}</strong>{% endblock %}
+{% block description %}List of package versions (compact view) for project {{ name }} in all repositories{% endblock %}
+
+{% block content %}
+<div class="container">
+
+<p><b>{{ packages|length }}</b> package(s) known</p>
+
+<table class="table table-striped table-condensed">
+	<tr>
+		<th class="text-right">Repository</th>
+		<th class="text-left">Version(s)</th>
+	</tr>
+{% for reponame in repometadata.active_names() %}
+{% if reponame in versions %}
+	<tr id="{{ reponame }}">
+		<td class="text-right minimal-column">
+			<a href="{{ url_for('repository', repo=reponame) }}">{{ repometadata[reponame].desc }}</a>
+		</td>
+		<td>
+		{% for version in versions[reponame] %}
+			<span class="version version-{{ version.versionclass|css_for_versionclass }}">{{ version.version }}</span>
+		{% endfor %}
+		</td>
+	</tr>
+{% endif %}
+{% endfor %}
+</table>
+
+</div>
+{% endblock %}

@@ -1,7 +1,7 @@
-{% extends "base/security.html" %}
+{% extends "security/_base.html" %}
 {% import "macros.html" as _macros %}
-{% import "macros/cpes.html" as _cpes %}
-{% import "macros/autorefresh.html" as _autorefresh with context %}
+{% import "_macros/cpes.html" as _cpes %}
+{% import "_macros/autorefresh.html" as _autorefresh with context %}
 
 {% block title %}Recent CPE bindings - Repology{% endblock %}
 {% block header %}Recent CPE bindings{% endblock %}
