@@ -142,6 +142,7 @@ def metapackage(name: str) -> Response:
 
 
 @ViewRegistrar('/project/<name>')
+@ViewRegistrar('/project/<name>/')
 def project(name: str) -> Response:
     return flask.redirect(flask.url_for('project_versions', name=name), 301)
 
