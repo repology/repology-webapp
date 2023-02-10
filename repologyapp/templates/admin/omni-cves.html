@@ -1,6 +1,5 @@
 {% extends "admin/_base.html" %}
-{% import "macros.html" as macros %}
-{% import "_macros/cpes.html" as mcpes %}
+{% from "_macros/cpes.html" import cpe_components %}
 
 {% block title %}Omni CVEs - Repology{% endblock %}
 {% block header %}Omni CVEs{% endblock %}
@@ -49,7 +48,7 @@ CVEs yet, or it may be an error in NVD which should be fixed.</p>
 				{%- endif -%}
 				</span>
 			</td>
-			<td>{{ mcpes.panels(item) }}</td>
+			<td>{{ cpe_components(item) }}</td>
 		</tr>
 	{% endfor %}
 	</tbody>

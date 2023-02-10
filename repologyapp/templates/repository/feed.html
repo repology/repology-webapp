@@ -1,9 +1,9 @@
 {% extends "_base.html" %}
-{% import "macros.html" as macros %}
-{% import "_macros/autorefresh.html" as _autorefresh with context %}
+{% from "_macros/autorefresh.html" import autorefresh_toggler, enable_autorefresh with context %}
+{% from "_macros/time.html" import format_absolute_time, timezone_abbr %}
 
 {% block extrameta %}
-{{ _autorefresh.meta(3600 + randrange(60)) }}
+{{ enable_autorefresh(3600 + randrange(60)) }}
 	<link rel="alternate" href="{{ url_for('repository_feed_atom', repo=repo) }}" type="application/atom+xml" />
 {% endblock %}
 
@@ -16,17 +16,17 @@
 
 <p>This feed is also available in <a href="{{ url_for('repository_feed_atom', repo=repo) }}">atom<img src="{{ url_for('static', filename='feed.v1.svg') }}" width="16" height="16" alt="Atom feed"></a> format</p>
 
-{{ _autorefresh.toggler() }}
+{{ autorefresh_toggler() }}
 
 {% if history %}
 <table class="table table-striped">
 	<tr>
-		<th class="text-center">Date{{ macros.timezone_abbr() }}</th>
+		<th class="text-center">Date{{ timezone_abbr() }}</th>
 		<th class="text-center">Event</th>
 	</tr>
 {% for entry in history %}
 	<tr>
-		<td class="minimal-column">{{ macros.format_absolute_time(entry.ts) }}</td>
+		<td class="minimal-column">{{ format_absolute_time(entry.ts) }}</td>
 		<td>
 		{% if entry.type == 'added' %}
 			<a href="{{ url_for('project_versions', name=entry.effname) }}">{{ entry.effname }}</a> was added to <strong><a href="{{ url_for('repository', repo=repo) }}">{{ repometadata[repo].desc }}</a></strong>

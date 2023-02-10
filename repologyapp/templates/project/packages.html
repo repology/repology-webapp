@@ -1,6 +1,6 @@
 {% extends "project/_base.html" %}
-{% import "_macros/links.html" as mlinks %}
 {% from "_macros/link_status.html" import link_status %}
+{% from "_macros/links.html" import format_link_type %}
 
 {% block title %}{{ name }} packages - Repology{% endblock %}
 {% block header %}Packages for <strong>{{ name }}</strong>{% endblock %}
@@ -84,7 +84,7 @@
 						{% set link_type = link_info[0] %}
 						{% set link = links[link_info[1]] %}
 						{% set link_url = link.url + '#' + link_info[2] if link_info|length > 2 else link.url %}
-						<li><a href="{{ link_url }}">{{ mlinks.format_link_type(link_type) }}</a>{{ link_status(link) }}</li>
+						<li><a href="{{ link_url }}">{{ format_link_type(link_type) }}</a>{{ link_status(link) }}</li>
 					{% endfor %}
 					</ul>
 				</li>

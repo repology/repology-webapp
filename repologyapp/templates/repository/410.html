@@ -1,5 +1,5 @@
 {% extends "_base.html" %}
-{% import "macros.html" as macros %}
+{% from "_macros/time.html" import format_absolute_time, format_time_interval, timezone_abbr %}
 
 {% block extrameta %}
 	<meta http-equiv="robots" content="noindex">
@@ -13,7 +13,7 @@
 
 <div class="alert alert-warning" role="alert">
 	<p>Sorry, but Repology no longer tracks repository <strong>{{ repometadata[repo].desc }}</strong>.</p>
-	<p>Last time Repology has processed this repository was {{ macros.format_absolute_time(repo_info.last_seen) }}{{ macros.timezone_abbr() }} ({{ macros.format_time_interval(repo_info.last_seen_ago) }} ago).</p>
+	<p>Last time Repology has processed this repository was {{ format_absolute_time(repo_info.last_seen) }}{{ timezone_abbr() }} ({{ format_time_interval(repo_info.last_seen_ago) }} ago).</p>
 	<p>Some of the reasons which may have caused this:</p>
 	<ul>
 		<li>The repository has reached it's end of life, is no longer updated or supported, should no longer be used, and has probably disappeared from the mirrors. There may be a newer version of this repository available though, check <a href="{{ url_for('repositories_statistics') }}">the list</a>.</li>

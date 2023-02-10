@@ -1,5 +1,5 @@
 {% extends "_base.html" %}
-{% import "macros.html" as macros %}
+{% from "_macros/time.html" import format_time_interval %}
 
 {% block title %}Projects turnover - Repology{% endblock %}
 {% block header %}Projects turnover{% endblock %}
@@ -20,7 +20,7 @@
 			<tbody>
 			{% for package in added %}
 				<tr>
-					<td class="text-nowrap">{{ macros.format_time_interval(package.ago) }} ago</td>
+					<td class="text-nowrap">{{ format_time_interval(package.ago) }} ago</td>
 					<td>
 						<a href="{{ url_for('project_versions', name=package.effname) }}">{{ package.effname }}</a>
 					{%- if package.has_related -%}
@@ -44,7 +44,7 @@
 			<tbody>
 			{% for package in removed %}
 				<tr>
-					<td class="text-nowrap">{{ macros.format_time_interval(package.ago) }} ago</td>
+					<td class="text-nowrap">{{ format_time_interval(package.ago) }} ago</td>
 					<td>{{ package.effname }}</td>
 				</tr>
 			{% endfor %}

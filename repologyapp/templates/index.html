@@ -1,5 +1,5 @@
 {% extends "_base.html" %}
-{% import "_macros/projects_table.html" as projects_table %}
+{% from "_macros/projects_table.html" import projects_table %}
 
 {% block title %}Repology{% endblock %}
 {% block pageheader %}{% endblock %}
@@ -256,7 +256,7 @@
 
 		{% include "_includes/versionclass/legend.html" %}
 
-		{{ projects_table.projects_table(metapackages, metapackagedata) }}
+		{{ projects_table(metapackages, metapackagedata) }}
 
 	</section>
 

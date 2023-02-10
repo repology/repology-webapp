@@ -1,5 +1,5 @@
 {% extends "_base.html" %}
-{% import "macros.html" as macros %}
+{% from "_macros/numeric.html" import safe_percent %}
 
 {% block title %}{{ maintainer }} maintainer information - Repology{% endblock %}
 {% block header %}Maintainer <strong>{{ maintainer }}</strong>{% endblock %}
@@ -74,7 +74,7 @@
 			</td>
 			<td class="text-center version-cell version-big version-newest">
 				<a href="{{ url_for('projects', maintainer=maintainer, inrepo=repoinfo.repo, newest=1) }}">
-					{{- macros.safe_percent(repoinfo.num_projects_newest, repoinfo.num_projects) -}}
+					{{- safe_percent(repoinfo.num_projects_newest, repoinfo.num_projects) -}}
 				</a>
 			</td>
 			{%- else -%}<td class="text-center" colspan="2">-</td>{%- endif -%}
@@ -86,7 +86,7 @@
 			</td>
 			<td class="text-center version-cell version-big version-outdated">
 				<a href="{{ url_for('projects', maintainer=maintainer, inrepo=repoinfo.repo, outdated=1) }}">
-					{{- macros.safe_percent(repoinfo.num_projects_outdated, repoinfo.num_projects) -}}
+					{{- safe_percent(repoinfo.num_projects_outdated, repoinfo.num_projects) -}}
 				</a>
 			</td>
 			{%- else -%}<td class="text-center" colspan="2">-</td>{%- endif -%}
@@ -98,7 +98,7 @@
 			</td>
 			<td class="text-center version-cell version-big version-ignored">
 				<a href="{{ url_for('projects', maintainer=maintainer, inrepo=repoinfo.repo, problematic=1) }}">
-					{{- macros.safe_percent(repoinfo.num_projects_problematic, repoinfo.num_projects) -}}
+					{{- safe_percent(repoinfo.num_projects_problematic, repoinfo.num_projects) -}}
 				</a>
 			</td>
 			{%- else -%}<td class="text-center" colspan="2">-</td>{%- endif -%}
@@ -110,7 +110,7 @@
 			</td>
 			<td class="text-center vulnerable-cell">
 				<a href="{{ url_for('projects', maintainer=maintainer, inrepo=repoinfo.repo, vulnerable=1) }}">
-					{{- macros.safe_percent(repoinfo.num_projects_vulnerable, repoinfo.num_projects, 2) -}}
+					{{- safe_percent(repoinfo.num_projects_vulnerable, repoinfo.num_projects, 2) -}}
 				</a>
 			</td>
 			{%- else -%}<td class="text-center" colspan="2">-</td>{%- endif -%}
@@ -152,7 +152,7 @@
 			</td>
 			<td class="text-center version-cell version-big version-newest">
 				<a href="{{ url_for('projects', maintainer=maintainer, newest=1) }}">
-					{{- macros.safe_percent(maintainer_info.num_projects_newest, maintainer_info.num_projects) -}}
+					{{- safe_percent(maintainer_info.num_projects_newest, maintainer_info.num_projects) -}}
 				</a>
 			</td>
 			{%- else -%}<td class="text-center" colspan="2">-</td>{%- endif -%}
@@ -164,7 +164,7 @@
 			</td>
 			<td class="text-center version-cell version-big version-outdated">
 				<a href="{{ url_for('projects', maintainer=maintainer, inrepo=maintainer_info.repo, outdated=1) }}">
-					{{- macros.safe_percent(maintainer_info.num_projects_outdated, maintainer_info.num_projects) -}}
+					{{- safe_percent(maintainer_info.num_projects_outdated, maintainer_info.num_projects) -}}
 				</a>
 			</td>
 			{%- else -%}<td class="text-center" colspan="2">-</td>{%- endif -%}
@@ -176,7 +176,7 @@
 			</td>
 			<td class="text-center version-cell version-big version-ignored">
 				<a href="{{ url_for('projects', maintainer=maintainer, inrepo=maintainer_info.repo, problematic=1) }}">
-					{{- macros.safe_percent(maintainer_info.num_projects_problematic, maintainer_info.num_projects) -}}
+					{{- safe_percent(maintainer_info.num_projects_problematic, maintainer_info.num_projects) -}}
 				</a>
 			</td>
 			{%- else -%}<td class="text-center" colspan="2">-</td>{%- endif -%}
@@ -188,7 +188,7 @@
 			</td>
 			<td class="text-center vulnerable-cell">
 				<a href="{{ url_for('projects', maintainer=maintainer, inrepo=maintainer_info.repo, vulnerable=1) }}">
-					{{- macros.safe_percent(maintainer_info.num_projects_vulnerable, maintainer_info.num_projects, 2) -}}
+					{{- safe_percent(maintainer_info.num_projects_vulnerable, maintainer_info.num_projects, 2) -}}
 				</a>
 			</td>
 			{%- else -%}<td class="text-center" colspan="2">-</td>{%- endif -%}

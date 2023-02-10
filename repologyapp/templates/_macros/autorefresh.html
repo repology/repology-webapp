@@ -1,10 +1,11 @@
-{%- macro meta(period) -%}
+{%- macro autorefresh_toggler() -%}
+	<p>{% if autorefresh %}<a href="{{ url_for_self(autorefresh=None) }}">Disable</a>{% else %}
+		<a href="{{ url_for_self(autorefresh=1) }}" rel="nofollow">Enable</a>{% endif %} autorefresh.</p>
+{%- endmacro -%}
+
+{%- macro enable_autorefresh(period) -%}
 {% if autorefresh %}
 	<meta http-equiv="refresh" content="{{ period }}">
 	<link rel="canonical" href="{{ REPOLOGY_HOME }}{{ url_for_self(autorefresh=None) }}">
 {% endif %}
-{%- endmacro -%}
-
-{%- macro toggler() -%}
-<p>{% if autorefresh %}<a href="{{ url_for_self(autorefresh=None) }}">Disable</a>{% else %}<a href="{{ url_for_self(autorefresh=1) }}" rel="nofollow">Enable</a>{% endif %} autorefresh.</p>
 {%- endmacro -%}

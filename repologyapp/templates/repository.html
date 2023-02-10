@@ -1,8 +1,8 @@
 {% extends "_base.html" %}
-{% import "_macros/autorefresh.html" as _autorefresh with context %}
+{% from "_macros/autorefresh.html" import autorefresh_toggler, enable_autorefresh with context %}
 
 {% block extrameta %}
-{{ _autorefresh.meta(3600 + randrange(60)) }}
+{{ enable_autorefresh(3600 + randrange(60)) }}
 {% endblock %}
 
 {% block title %}{{ repometadata[repo].desc }} repository information - Repology{% endblock %}
@@ -13,7 +13,7 @@
 {% block content %}
 <div class="container">
 
-{{ _autorefresh.toggler() }}
+{{ autorefresh_toggler() }}
 
 {% if 0 not in repometadata[repo].used_package_link_types and 1 not in repometadata[repo].used_package_link_types and repometadata[repo].num_metapackages > 0 and repometadata[repo].type == 'repository' %}
 <div class="alert alert-danger" role="alert"><p>This repository <a href="{{ url_for('repositories_fields', _anchor=repo) }}">does not provide</a> package homepage information in a way accessible by Repology. This is critical, because homepages are used to resolve project name conflicts, e.g. to distinguish similarly named packages of unrelated projects. Because of that, this repository is <strong>subject for removal</strong> in the near future.</p><p>See <a href="{{ url_for('addrepo') }}">documentation</a> for a best way to make package metadata accessible for Repology.</p></div>

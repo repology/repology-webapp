@@ -1,0 +1,57 @@
+{%- macro format_absolute_time(datetime) -%}
+	<time class="tzfix_time"
+				datetime="{{ datetime.astimezone(tz).isoformat('T', 'minutes') }}">{{ datetime.astimezone(tz).strftime('%Y-%m-%d %H:%M') }}</time>
+{%- endmacro -%}
+
+{%- macro format_absolute_time_sec(datetime) -%}
+	<time class="tzfix_time_sec"
+				datetime="{{ datetime.astimezone(tz).isoformat('T', 'seconds') }}">{{ datetime.astimezone(tz).strftime('%Y-%m-%d %H:%M:%S') }}</time>
+{%- endmacro -%}
+
+{%- macro format_time_interval(value) -%}
+	{%- with seconds = value.total_seconds() | int -%}
+		{%- if seconds <= 1 -%}
+			a second
+		{%- elif seconds < 60 -%}
+			{{ seconds }} seconds
+		{%- elif seconds // 60 == 1 -%}
+			a minute
+		{%- elif seconds < 60 * 60 -%}
+			{{ seconds // 60 }} minutes
+		{%- elif seconds // (60 * 60) == 1 -%}
+			an hour
+		{%- elif seconds < 60 * 60 * 24 -%}
+			{{ seconds // (60 * 60) }} hours
+		{%- elif seconds // (60 * 60 * 24) == 1 -%}
+			a day
+		{%- elif seconds // (60 * 60 * 24) < 60 -%}
+			{{ seconds // (60 * 60 * 24) }} days
+		{%- elif seconds // (60 * 60 * 24) < 365 -%}
+			{{ seconds // (60 * 60 * 24 * 30) }} months
+		{%- elif seconds // (60 * 60 * 24 * 365) == 1 -%}
+			more than a year
+		{%- else -%}
+			{{ seconds // (60 * 60 * 24 * 365) }} years
+		{%- endif -%}
+	{%- endwith -%}
+{%- endmacro -%}
+
+{%- macro format_time_interval_short(value) -%}
+	{%- with seconds = value.total_seconds() | int -%}
+		{%- if seconds < 60 -%}
+			{{ seconds }}s
+		{%- elif seconds < 60 * 60 -%}
+			{{ seconds // 60 }}m
+		{%- elif seconds < 60 * 60 * 24 -%}
+			{{ seconds // (60 * 60) }}h
+		{%- elif seconds // (60 * 60 * 24) < 365 -%}
+			{{ seconds // (60 * 60 * 24) }}d
+		{%- else -%}
+			{{ seconds // (60 * 60 * 24 * 365) }}y
+		{%- endif -%}
+	{%- endwith -%}
+{%- endmacro -%}
+
+{%- macro timezone_abbr(datetime) -%}
+	<span class="tzfix_zone"> ({{ tz.key }})</span>
+{%- endmacro -%}

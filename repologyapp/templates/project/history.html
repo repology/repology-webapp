@@ -1,9 +1,10 @@
 {% extends "project/_base.html" %}
-{% import "macros.html" as macros %}
-{% import "_macros/autorefresh.html" as _autorefresh with context %}
+{% from "_macros/autorefresh.html" import autorefresh_toggler, enable_autorefresh with context %}
+{% from "_macros/links.html" import repository_link %}
+{% from "_macros/time.html" import format_absolute_time, format_time_interval, timezone_abbr %}
 
 {% block extrameta %}
-{{ _autorefresh.meta(3600 + randrange(60)) }}
+{{ enable_autorefresh(3600 + randrange(60)) }}
 {% endblock %}
 
 {% block title %}{{ name }} packaging history - Repology{% endblock %}
@@ -22,16 +23,16 @@ by repology. For example, if two projects are merged it will look
 like one project has appeared in more repositories and another one
 removed from all repositories.</p>
 
-{{ _autorefresh.toggler() }}
+{{ autorefresh_toggler() }}
 
 <table class="table table-striped">
 	<tr>
-		<th class="text-center">Date{{ macros.timezone_abbr() }}</th>
+		<th class="text-center">Date{{ timezone_abbr() }}</th>
 		<th class="text-center">Event</th>
 	</tr>
 {% for entry in history %}
 	<tr>
-		<td class="minimal-column">{{ macros.format_absolute_time(entry.ts) }}</td>
+		<td class="minimal-column">{{ format_absolute_time(entry.ts) }}</td>
 		<td>
 		{%- if entry.type == 'history_start' -%}
 			<b>
@@ -54,7 +55,7 @@ removed from all repositories.</p>
 				, up to date in
 
 				{% for repo in entry.data.actual_repos %}
-					{% if loop.index0 %}, {% endif %}{{ macros.repository_link(repo) }}
+					{% if loop.index0 %}, {% endif %}{{ repository_link(repo) }}
 				{%- endfor %}
 			{% endif %}
 
@@ -62,7 +63,7 @@ removed from all repositories.</p>
 				, {% if entry.data.actual_repos %}also {% endif %}present in
 
 				{% for repo in entry.data.old_repos %}
-					{% if loop.index0 %}, {% endif %}{{ macros.repository_link(repo) }}
+					{% if loop.index0 %}, {% endif %}{{ repository_link(repo) }}
 				{%- endfor %}
 			{% endif %}
 			</b>
@@ -79,7 +80,7 @@ removed from all repositories.</p>
 					by
 
 					{% for repo in entry.data.repos %}
-						{% if loop.index0 %}, {% endif %}{{ macros.repository_link(repo) }}
+						{% if loop.index0 %}, {% endif %}{{ repository_link(repo) }}
 					{%- endfor %}
 				{% endif %}
 			{%- else -%}
@@ -87,19 +88,19 @@ removed from all repositories.</p>
 			{% endif %}
 
 			{%- if entry.data.passed -%}
-				, in {{ macros.format_time_interval(entry.data.passed) }} since the last update
+				, in {{ format_time_interval(entry.data.passed) }} since the last update
 			{% endif %}
 
 			</b>
 		{%- elif entry.type == 'catch_up' -%}
 			{% for repo in entry.data.repos -%}
-				{% if loop.index0 %}, {% endif %}{{ macros.repository_link(repo) }}
+				{% if loop.index0 %}, {% endif %}{{ repository_link(repo) }}
 			{%- endfor %}
 
 			{% if entry.data.repos|length == 1 %}has{% else %}have{% endif %} caught up with the {{ entry.data.branch }} version
 
 			{% if entry.data.lag %}
-				in {{ macros.format_time_interval(entry.data.lag) }}
+				in {{ format_time_interval(entry.data.lag) }}
 			{% endif %}
 		{%- elif entry.type == 'repos_update' -%}
 			Project
@@ -107,7 +108,7 @@ removed from all repositories.</p>
 				added to
 
 				{% for repo in entry.data.repos_added %}
-					{% if loop.index0 %}, {% endif %}{{ macros.repository_link(repo) }}
+					{% if loop.index0 %}, {% endif %}{{ repository_link(repo) }}
 				{%- endfor %}
 			{% endif %}
 
@@ -117,7 +118,7 @@ removed from all repositories.</p>
 				removed from
 
 				{% for repo in entry.data.repos_removed %}
-					{% if loop.index0 %}, {% endif %}{{ macros.repository_link(repo) }}
+					{% if loop.index0 %}, {% endif %}{{ repository_link(repo) }}
 				{%- endfor %}
 			{% endif %}
 		{%- elif entry.type == 'history_end' -%}
@@ -128,7 +129,7 @@ removed from all repositories.</p>
 				, last repositor{% if entry.data.last_repos|length==1 %}y was{% else %}ies were{% endif %}
 
 				{% for repo in entry.data.last_repos %}
-					{% if loop.index0 %}, {% endif %}{{ macros.repository_link(repo) }}
+					{% if loop.index0 %}, {% endif %}{{ repository_link(repo) }}
 				{%- endfor %}
 			{% endif %}
 			</b>

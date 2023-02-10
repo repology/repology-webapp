@@ -1,5 +1,5 @@
 {% extends "project/_base.html" %}
-{% import "_macros/cpes.html" as mcpes %}
+{% from "_macros/cpes.html" import cpe_components %}
 
 {% block title %}{{ name }} vulnerabilities - Repology{% endblock %}
 {% block header %}Vulnerabilities for <strong>{{ name }}</strong>{% endblock %}
@@ -37,7 +37,7 @@
 				<span class="cell-subitem" title="Published date">{{ cveagg.published }}</span>
 				<span class="cell-subitem" title="Last modified date">{{ cveagg.last_modified }}</span>
 			</td>
-			<td class="minimal-column">{{ mcpes.panels(cveagg) }}</td>
+			<td class="minimal-column">{{ cpe_components(cveagg) }}</td>
 			<td class="text-left">
 			{%- for range in version_ranges -%}
 				{%- if not loop.first %} {% endif -%}

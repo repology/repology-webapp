@@ -1,6 +1,6 @@
 {% extends "_base.html" %}
-{% import "macros.html" as macros %}
-{% import "_macros/projects_table.html" as projects_table %}
+{% from "_macros/projects_table.html" import projects_table %}
+{% from "_macros/time.html" import format_absolute_time, format_time_interval, timezone_abbr %}
 
 {% block title %}Gone project {{ name }} - Repology{% endblock %}
 {% block header %}Gone project <strong>{{ name }}</strong>{% endblock %}
@@ -9,7 +9,7 @@
 <div class="container">
 
 <div class="alert alert-warning" role="alert">
-	<p>Sorry, but Repology no longer knows project <strong>{{ name }}</strong>{% if metapackage.orphaned_at %} since {{ macros.format_absolute_time(metapackage.orphaned_at) }}{{ macros.timezone_abbr() }} ({{ macros.format_time_interval(metapackage.orphaned_ago) }} ago){% endif %}.</p>
+	<p>Sorry, but Repology no longer knows project <strong>{{ name }}</strong>{% if metapackage.orphaned_at %} since {{ format_absolute_time(metapackage.orphaned_at) }}{{ timezone_abbr() }} ({{ format_time_interval(metapackage.orphaned_ago) }} ago){% endif %}.</p>
 	<p>Some of the reasons which may have caused this:</p>
 	<ul>
 		<li>You're looking for package name as it's spelled in some repository, while Repology normalizes project names and may spell them differently.</li>
@@ -30,7 +30,7 @@
 </div>
 
 {% if metapackages %}
-{{ projects_table.projects_table(metapackages, metapackagedata, target_project_endpoint=request.endpoint) }}
+{{ projects_table(metapackages, metapackagedata, target_project_endpoint=request.endpoint) }}
 {% endif %}
 
 </div>

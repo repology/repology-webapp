@@ -1,9 +1,9 @@
 {% extends "repositories/_base.html" %}
-{% import "macros.html" as macros %}
-{% import "_macros/autorefresh.html" as _autorefresh with context %}
+{% from "_macros/autorefresh.html" import autorefresh_toggler, enable_autorefresh with context %}
+{% from "_macros/time.html" import format_time_interval_short %}
 
 {% block extrameta %}
-{{ _autorefresh.meta(10) }}
+{{ enable_autorefresh(10) }}
 {% endblock %}
 
 {% block title %}Update status - Repology{% endblock %}
@@ -11,7 +11,7 @@
 
 {% macro update_run_info(run_id, ago, errors, warnings) -%}
 {%- if run_id -%}
-	<b><a href="{{ url_for('log', run_id=run_id) }}" rel="nofollow">{{ macros.format_time_interval_short(ago) }}</a> ago</b>
+	<b><a href="{{ url_for('log', run_id=run_id) }}" rel="nofollow">{{ format_time_interval_short(ago) }}</a> ago</b>
 	{%- if errors %}, <span class="text-danger">{{ errors }} err</span>{% endif -%}
 	{%- if warnings %}, <span class="text-warning">{{ warnings }} warn</span>{% endif -%}
 {%- else -%}
@@ -24,7 +24,7 @@
 
 <p>A brief explanation of update process: each repository is updated in two phases: <em>fetch</em> (⬊), which only involves downloading new data, then <em>parse</em> (⬈), which involves converting upstream format into Repology packages and applying transformation rules. Each phase may fail independently. Also, fetch phase may return no new data (⬂) (e.g. HTTP 403 not modified, no new git commits etc.), in which case parse phase may be skipped as long as the ruleset hasn't changed either. Note that actual database update happens only after trying to fetch and parse all the repositories, so there's additional delay between times shown on this page and actual website update.</p>
 
-{{ _autorefresh.toggler() }}
+{{ autorefresh_toggler() }}
 
 <table class="table table-striped">
 	<thead>

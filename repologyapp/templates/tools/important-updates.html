@@ -1,5 +1,5 @@
 {% extends "_base.html" %}
-{% import "macros.html" as macros %}
+{% from "_macros/time.html" import format_time_interval %}
 
 {% block title %}Important updates - Repology{% endblock %}
 {% block header %}Important updates{% endblock %}
@@ -32,7 +32,7 @@
 				{%- endfor -%}
 			</td>
 			<td class="text-nowrap minimal-column">
-				{{- macros.format_time_interval(update.age) -}}
+				{{- format_time_interval(update.age) -}}
 			</td>
 		</tr>
 	{% endfor %}

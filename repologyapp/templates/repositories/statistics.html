@@ -1,9 +1,9 @@
 {% extends "repositories/_base.html" %}
-{% import "macros.html" as macros %}
-{% import "_macros/autorefresh.html" as _autorefresh with context %}
+{% from "_macros/autorefresh.html" import autorefresh_toggler, enable_autorefresh with context %}
+{% from "_macros/numeric.html" import safe_percent %}
 
 {% block extrameta %}
-{{ _autorefresh.meta(3600 + randrange(60)) }}
+{{ enable_autorefresh(3600 + randrange(60)) }}
 {% endblock %}
 
 {% block title %}Repository statistics - Repology{% endblock %}
@@ -35,7 +35,7 @@
 
 	<p>Note that sum of columns does not need to match total count, as there may be packages with different status for a single project in a repository. Percentages are also calculated differently.</p>
 
-	{{ _autorefresh.toggler() }}
+	{{ autorefresh_toggler() }}
 </div>
 
 <div class="table-responsive">
@@ -82,7 +82,7 @@
 				</a>
 			</td>
 			<td class="text-center version-cell version-big version-newest">
-				{{- macros.safe_percent(repostat.num_metapackages_newest, repostat.num_metapackages_comparable) -}}
+				{{- safe_percent(repostat.num_metapackages_newest, repostat.num_metapackages_comparable) -}}
 			</td>
 
 			<td class="text-center version-cell version-big version-outdated">
@@ -91,7 +91,7 @@
 				</a>
 			</td>
 			<td class="text-center version-cell version-big version-outdated">
-				{{- macros.safe_percent(repostat.num_metapackages_outdated, repostat.num_metapackages_comparable) -}}
+				{{- safe_percent(repostat.num_metapackages_outdated, repostat.num_metapackages_comparable) -}}
 			</td>
 
 			<td class="text-center version-cell version-big version-unique">
@@ -107,7 +107,7 @@
 			{%- if repometadata[repostat.name].shadow -%}
 				<span title="This is a shadow repo, e.g. unique packages in it are ignored">n/a</span>
 			{%- else -%}
-				{{ macros.safe_percent(repostat.num_metapackages_unique, repostat.num_metapackages) }}
+				{{ safe_percent(repostat.num_metapackages_unique, repostat.num_metapackages) }}
 			{%- endif -%}
 			</td>
 
@@ -117,7 +117,7 @@
 				</a>
 			</td>
 			<td class="text-center version-cell version-big version-ignored">
-				{{- macros.safe_percent(repostat.num_metapackages_problematic, repostat.num_metapackages) -}}
+				{{- safe_percent(repostat.num_metapackages_problematic, repostat.num_metapackages) -}}
 			</td>
 
 			<td class="text-center{% if repostat.num_metapackages_vulnerable %} vulnerable-cell{% endif %}">
@@ -126,7 +126,7 @@
 				</a>
 			</td>
 			<td class="text-center{% if repostat.num_metapackages_vulnerable %} vulnerable-cell{% endif %}">
-				{{- macros.safe_percent(repostat.num_metapackages_vulnerable, repostat.num_metapackages, 2) -}}
+				{{- safe_percent(repostat.num_metapackages_vulnerable, repostat.num_metapackages, 2) -}}
 			</td>
 
 			<td class="text-center">
