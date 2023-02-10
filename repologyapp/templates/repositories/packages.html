@@ -1,8 +1,8 @@
 {% extends "repositories/_base.html" %}
-{% import "_macros/autorefresh.html" as _autorefresh with context %}
+{% from "_macros/autorefresh.html" import autorefresh_toggler, enable_autorefresh with context %}
 
 {% block extrameta %}
-{{ _autorefresh.meta(3600 + randrange(60)) }}
+{{ enable_autorefresh(3600 + randrange(60)) }}
 {% endblock %}
 
 {% block title %}Raw repository package counts - Repology{% endblock %}
@@ -14,7 +14,7 @@
 <div class="clearfix">
 	<p>Total individual packages known to repology: <b>{{ counts.num_packages }}</b>.</p>
 
-	{{ _autorefresh.toggler() }}
+	{{ autorefresh_toggler() }}
 </div>
 
 {% include "_includes/versionclass/legend.html" %}

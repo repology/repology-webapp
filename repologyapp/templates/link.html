@@ -1,6 +1,6 @@
 {% extends "_base.html" %}
-{% import "macros.html" as macros %}
-{% import "_macros/links.html" as mlinks %}
+{% from "_macros/links.html" import format_link_status_code, format_link_suggestions %}
+{% from "_macros/time.html" import format_absolute_time_sec, format_time_interval %}
 
 {% block extrameta %}
 	<meta name="robots" content="noindex">
@@ -14,11 +14,11 @@
 
 <ul class="list-unstyled">
 	<li>URL: <b><a href="{{ linkinfo.url }}">{{ linkinfo.url }}</a></b> (<a href="{{ 'https://web.archive.org/web/*/' + linkinfo.url }}">see on archive.org</a>)</li>
-	<li>First seen: <b>{{ macros.format_absolute_time_sec(linkinfo.first_extracted) }}</b> (<b>{{ macros.format_time_interval(now() - linkinfo.first_extracted) }} ago</b>)</li>
+	<li>First seen: <b>{{ format_absolute_time_sec(linkinfo.first_extracted) }}</b> (<b>{{ format_time_interval(now() - linkinfo.first_extracted) }} ago</b>)</li>
 	{% if linkinfo.last_checked is not none %}
 	<li>Last checked:
-		<b>{{ macros.format_absolute_time_sec(linkinfo.last_checked) }}</b>
-		(<b>{{ macros.format_time_interval(now() - linkinfo.last_checked) }} ago</b>)</li>
+		<b>{{ format_absolute_time_sec(linkinfo.last_checked) }}</b>
+		(<b>{{ format_time_interval(now() - linkinfo.last_checked) }} ago</b>)</li>
 	{% else %}
 	<li>Not yet checked</li>
 	{% endif %}
@@ -31,16 +31,16 @@
 <ul class="list-unstyled">
 	<li>Last success:
 	{% if linkinfo.ipv6_last_success is not none %}
-		<b>{{ macros.format_absolute_time_sec(linkinfo.ipv6_last_success) }}</b>
-		(<b>{{ macros.format_time_interval(now() - linkinfo.ipv6_last_success) }} ago</b>)
+		<b>{{ format_absolute_time_sec(linkinfo.ipv6_last_success) }}</b>
+		(<b>{{ format_time_interval(now() - linkinfo.ipv6_last_success) }} ago</b>)
 	{% else %}
 		<b>never</b>
 	{% endif %}
 	</li>
 	<li>Last failure:
 	{% if linkinfo.ipv6_last_failure is not none %}
-		<b>{{ macros.format_absolute_time_sec(linkinfo.ipv6_last_failure) }}</b>
-		(<b>{{ macros.format_time_interval(now() - linkinfo.ipv6_last_failure) }} ago</b>)
+		<b>{{ format_absolute_time_sec(linkinfo.ipv6_last_failure) }}</b>
+		(<b>{{ format_time_interval(now() - linkinfo.ipv6_last_failure) }} ago</b>)
 	{% else %}
 		<b>never</b>
 	{% endif %}
@@ -53,8 +53,8 @@
 	{% elif linkinfo.ipv6_success %}
 		<b class="link-ok">OK ({{ linkinfo.ipv6_status_code }})</b>
 	{% else %}
-		<b class="link-error">{{ mlinks.format_link_status_code(linkinfo.ipv6_status_code) }}</b>
-		{{ mlinks.format_link_suggestions(linkinfo.ipv6_status_code, linkinfo.url) }}
+		<b class="link-error">{{ format_link_status_code(linkinfo.ipv6_status_code) }}</b>
+		{{ format_link_suggestions(linkinfo.ipv6_status_code, linkinfo.url) }}
 	{% endif %}
 	</li>
 </ul>
@@ -67,16 +67,16 @@
 <ul class="list-unstyled">
 	<li>Last success:
 	{% if linkinfo.ipv4_last_success is not none %}
-		<b>{{ macros.format_absolute_time_sec(linkinfo.ipv4_last_success) }}</b>
-		(<b>{{ macros.format_time_interval(now() - linkinfo.ipv4_last_success) }} ago</b>)
+		<b>{{ format_absolute_time_sec(linkinfo.ipv4_last_success) }}</b>
+		(<b>{{ format_time_interval(now() - linkinfo.ipv4_last_success) }} ago</b>)
 	{% else %}
 		<b>never</b>
 	{% endif %}
 	</li>
 	<li>Last failure:
 	{% if linkinfo.ipv4_last_failure is not none %}
-		<b>{{ macros.format_absolute_time_sec(linkinfo.ipv4_last_failure) }}</b>
-		(<b>{{ macros.format_time_interval(now() - linkinfo.ipv4_last_failure) }} ago</b>)
+		<b>{{ format_absolute_time_sec(linkinfo.ipv4_last_failure) }}</b>
+		(<b>{{ format_time_interval(now() - linkinfo.ipv4_last_failure) }} ago</b>)
 	{% else %}
 		<b>never</b>
 	{% endif %}
@@ -89,8 +89,8 @@
 	{% elif linkinfo.ipv4_success %}
 		<b class="link-ok">OK ({{ linkinfo.ipv4_status_code }})</b>
 	{% else %}
-		<b class="link-error">{{ mlinks.format_link_status_code(linkinfo.ipv4_status_code) }}</b>
-		{{ mlinks.format_link_suggestions(linkinfo.ipv4_status_code, linkinfo.url) }}
+		<b class="link-error">{{ format_link_status_code(linkinfo.ipv4_status_code) }}</b>
+		{{ format_link_suggestions(linkinfo.ipv4_status_code, linkinfo.url) }}
 	{% endif %}
 	</li>
 </ul>

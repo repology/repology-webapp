@@ -1,6 +1,6 @@
 {% extends "security/_base.html" %}
-{% import "macros.html" as _macros %}
-{% import "_macros/autorefresh.html" as _autorefresh with context %}
+{% from "_macros/autorefresh.html" import autorefresh_toggler with context %}
+{% from "_macros/time.html" import format_absolute_time, timezone_abbr %}
 
 {% block title %}Recent CVEs - Repology{% endblock %}
 {% block header %}Recent CVEs{% endblock %}
@@ -11,7 +11,7 @@
 <p>This is a list of recently published (in <a href="https://nvd.nist.gov/">NVD</a>) vulnerabilities linked to Repology projects. You may see vulnerabilities for a given project under <b>CVEs</b> tab (only present when there are matching vulnerabilities), and missing bindings may be reported via <b>Report</b> tab.</p>
 <p><span class="bg-success">Highlighted</span> entries indicate matches due to recently (&lt;1 week ago) added <a href="{{ url_for('security_recent_cpes') }}">CPE bindings</a>.</p>
 
-{{ _autorefresh.toggler() }}
+{{ autorefresh_toggler() }}
 
 {% if cves %}
 <p><b>{{ cves|length }}</b> CVE(s) on this page, latest first</p>
@@ -20,7 +20,7 @@
 	<thead>
 		<tr>
 			<th class="minimal-column">CVE</th>
-			<th class="minimal-column">Published{{ _macros.timezone_abbr() }}</th>
+			<th class="minimal-column">Published{{ timezone_abbr() }}</th>
 			<th>Project(s)</th>
 		</tr>
 	</thead>
@@ -28,7 +28,7 @@
 	{% for cve in cves %}
 		<tr{% if cve.recent %} class="success"{% endif %}>
 			<td class="minimal-column"><a href="https://nvd.nist.gov/vuln/detail/{{ cve.cve_id }}">{{ cve.cve_id }}</a></td>
-			<td class="minimal-column">{{ _macros.format_absolute_time(cve.published) }}</td>
+			<td class="minimal-column">{{ format_absolute_time(cve.published) }}</td>
 			<td>
 			{% for effname in cve.effnames %}
 				<a href="{{ url_for('project_versions', name=effname) }}">{{ effname }}</a>

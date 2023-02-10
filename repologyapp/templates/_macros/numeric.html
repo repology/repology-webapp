@@ -1,0 +1,9 @@
+{%- macro safe_percent(value, total, round=1) -%}
+	{%- if total <= 0 -%}
+		-
+	{%- elif round > 0 -%}
+		{{ (value/total*100.0)|round(round) }}%
+	{%- else -%}
+		{{ (value/total*100.0)|int }}%
+	{%- endif -%}
+{%- endmacro -%}

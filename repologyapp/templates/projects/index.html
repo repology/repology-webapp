@@ -1,5 +1,5 @@
 {% extends "_base.html" %}
-{% import "_macros/projects_table.html" as projects_table %}
+{% from "_macros/projects_table.html" import projects_table %}
 
 {% block title %}Projects list - Repology{% endblock %}
 {% block header %}Projects{% endblock %}
@@ -153,7 +153,7 @@
 
 {{ pagination() }}
 
-{{ projects_table.projects_table(metapackages, metapackagedata, repo, maintainer) }}
+{{ projects_table(metapackages, metapackagedata, repo, maintainer) }}
 
 {{ pagination() }}
 

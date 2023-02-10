@@ -1,5 +1,5 @@
 {% extends "_base.html" %}
-{% import "macros.html" as macros %}
+{% from "_macros/time.html" import format_time_interval %}
 
 {% block title %}Maintainers turnover - Repology{% endblock %}
 {% block header %}Maintainers turnover{% endblock %}
@@ -20,7 +20,7 @@
 			<tbody>
 			{% for maintainer in added %}
 				<tr>
-					<td class="text-nowrap">{{ macros.format_time_interval(maintainer.ago) }} ago</td>
+					<td class="text-nowrap">{{ format_time_interval(maintainer.ago) }} ago</td>
 					<td>
 						<a href="{{ url_for("maintainer", maintainer=maintainer.maintainer) }}">{{ maintainer.maintainer }}</a>
 					</td>
@@ -41,7 +41,7 @@
 			<tbody>
 			{% for maintainer in removed %}
 				<tr>
-					<td class="text-nowrap">{{ macros.format_time_interval(maintainer.ago) }} ago</td>
+					<td class="text-nowrap">{{ format_time_interval(maintainer.ago) }} ago</td>
 					<td>{{ maintainer.maintainer }}</td>
 				</tr>
 			{% endfor %}

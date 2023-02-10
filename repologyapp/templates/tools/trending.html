@@ -1,5 +1,5 @@
 {% extends "_base.html" %}
-{% import "macros.html" as macros %}
+{% from "_macros/time.html" import format_time_interval %}
 
 {% block title %}Trending projects - Repology{% endblock %}
 {% block header %}Trending projects{% endblock %}
@@ -33,7 +33,7 @@
 					{%- endif -%}
 					</td>
 					<td>
-						{{- macros.format_time_interval(project.age_since_last_change) -}}
+						{{- format_time_interval(project.age_since_last_change) -}}
 					</td>
 				</tr>
 			{% endfor %}

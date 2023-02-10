@@ -1,5 +1,5 @@
 {% extends "admin/_base.html" %}
-{% import "_macros/cpes.html" as mcpes %}
+{% from "_macros/cpes.html" import cpe_components %}
 
 {% block title %}Manual CPE admin - Repology{% endblock %}
 {% block header %}Manual CPE admin{% endblock %}
@@ -56,7 +56,7 @@
 	{% for cpe in cpes %}
 		<tr>
 			<td class="minimal-column"><a href="{{ url_for('project_versions', name=cpe.effname) }}">{{ cpe.effname }}</a></td>
-			<td class="minimal-column">{{ mcpes.panels(cpe) }}</td>
+			<td class="minimal-column">{{ cpe_components(cpe) }}</td>
 			<td class="text-center minimal-column">
 			{%- if cpe.has_alive_project -%}
 				<span class="label label-success">alive</span>

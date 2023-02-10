@@ -1,6 +1,6 @@
 {% extends "_base.html" %}
-{% import "_macros/links.html" as mlinks %}
-{% import "_macros/cpes.html" as mcpes %}
+{% from "_macros/cpes.html" import cpe_components %}
+{% from "_macros/links.html" import format_link_status_code %}
 
 {% block title %}Problems{% if maintainer %} for {{ maintainer}}{% endif %} in {{ repometadata[repo].desc }} - Repology{% endblock %}
 {% block header %}Problems{% if maintainer %} for <strong>{{ maintainer}}</strong>{% endif %} in <strong>{{ repometadata[repo].desc }}</strong>{% endblock %}
@@ -61,7 +61,7 @@
 			{%- endif -%}
 			<td class="text-left">
 			{% if problem.type == 'homepage_dead' %}
-				Homepage link <code>{{ problem.data.url }}</code> is <a href="{{ url_for('link', url=problem.data.url) }}">dead</a> (<b class="link-error">{{ mlinks.format_link_status_code(problem.data.code) }}</b>)
+				Homepage link <code>{{ problem.data.url }}</code> is <a href="{{ url_for('link', url=problem.data.url) }}">dead</a> (<b class="link-error">{{ format_link_status_code(problem.data.code) }}</b>)
 				for more than a month and should be replaced by alive link (see other packages for hints, or link to <a href="https://archive.org/">archive.org</a> as a last resort).
 			{% elif problem.type == 'homepage_permanent_https_redirect' %}
 				Homepage link <code>{{ problem.data.url }}</code> is a permanent redirect to its HTTPS counterpart <code>{{ problem.data.target }}</code> and should be updated.
@@ -80,12 +80,12 @@
 				The link should be updated to <a href="https://metacpan.org/">MetaCPAN</a> (probably along with download URLs).
 				See <a href="https://www.perl.com/article/saying-goodbye-to-search-cpan-org/">https://www.perl.com/article/saying-goodbye-to-search-cpan-org/</a> for details.
 			{% elif problem.type == 'cpe_unreferenced' %}
-				CPE information defined for the package:<div>{{ mcpes.panels(problem.data.cpe) }}</div>was not found neither among known CVEs nor in NVD CPE dictionary, so it may be invalid.
+				CPE information defined for the package:<div>{{ cpe_components(problem.data.cpe) }}</div>was not found neither among known CVEs nor in NVD CPE dictionary, so it may be invalid.
 				{% if problem.data.suggestions %}
 				Suggested CPEs (as per known <a href="{{ url_for('project_cves', name=problem.effname) }}">CVEs</a>):
 				<ul class="list-unstyled">
 				{% for suggestion in problem.data.suggestions %}
-					<li>{{ mcpes.panels(suggestion) }}</li>
+					<li>{{ cpe_components(suggestion) }}</li>
 				{% endfor %}
 				</ul>
 				{% endif %}
@@ -95,12 +95,12 @@
 				Suggested CPEs (as per known <a href="{{ url_for('project_cves', name=problem.effname) }}">CVEs</a>):
 				<ul class="list-unstyled">
 				{% for suggestion in problem.data.suggestions %}
-					<li>{{ mcpes.panels(suggestion) }}</li>
+					<li>{{ cpe_components(suggestion) }}</li>
 				{% endfor %}
 				</ul>
 				{% endif %}
 			{% elif problem.type == 'download_dead' %}
-				Download link <code>{{ problem.data.url }}</code> is <a href="{{ url_for('link', url=problem.data.url) }}">dead</a> (<b class="link-error">{{ mlinks.format_link_status_code(problem.data.code) }}</b>)
+				Download link <code>{{ problem.data.url }}</code> is <a href="{{ url_for('link', url=problem.data.url) }}">dead</a> (<b class="link-error">{{ format_link_status_code(problem.data.code) }}</b>)
 				for more than a month and should be replaced by alive link (see other packages for hints).
 			{% elif problem.type == 'download_permanent_https_redirect' %}
 				Download link <code>{{ problem.data.url }}</code> is a permanent redirect to its HTTPS counterpart <code>{{ problem.data.target }}</code> and should be updated.

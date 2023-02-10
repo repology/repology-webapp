@@ -76,3 +76,11 @@
 	{%- elif code == 26 %}Package build status
 	{%- else %}Other{% endif -%}
 {%- endmacro -%}
+
+{%- macro repository_link(repo) -%}
+	{%- if repo in repometadata.active_names() -%}
+		<a href="{{ url_for('repository', repo=repo) }}">{{ repometadata[repo].desc }}</a>
+	{%- else -%}
+		<span class="legacy-repository">{{ repometadata[repo].desc }}</span>
+	{%- endif -%}
+{%- endmacro -%}
