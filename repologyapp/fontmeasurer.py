@@ -20,12 +20,9 @@ from dataclasses import dataclass
 import PIL.ImageFont
 
 
-_Dimensions = tuple[int, int]
-
-
 @dataclass
 class _CacheEntry:
-    dimensions: _Dimensions
+    width: int
     generation: int
 
 
@@ -35,21 +32,21 @@ class FontMeasurer:
     _maxcachesize: int
     _generation: int
 
-    def __init__(self, fontpath: str, fontsize: int, maxcachesize: int = 1000) -> None:
+    def __init__(self, fontpath: str, fontsize: int, maxcachesize: int = 2048) -> None:
         self._font = PIL.ImageFont.truetype(fontpath, fontsize)
         self._cache = {}
         self._maxcachesize = maxcachesize
         self._generation = 0
 
-    def get_text_dimensions(self, text: str) -> tuple[int, int]:
+    def get_text_width(self, text: str) -> int:
         self._generation += 1
 
         if text in self._cache:
             item = self._cache[text]
             item.generation = self._generation
-            return item.dimensions
+            return item.width
 
-        dimensions: _Dimensions = self._font.getsize(text)
+        width = int(self._font.getlength(text))
 
         if len(self._cache) >= self._maxcachesize:
             # if cache is full, remove at least 10% LRU entries
@@ -59,6 +56,6 @@ class FontMeasurer:
                 if self._cache[key].generation < last_generation:
                     del self._cache[key]
 
-        self._cache[text] = _CacheEntry(dimensions, self._generation)
+        self._cache[text] = _CacheEntry(width, self._generation)
 
-        return dimensions
+        return width

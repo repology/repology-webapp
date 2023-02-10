@@ -40,4 +40,4 @@ def get_text_width(text: Any, fontsize: int, bold: bool = False) -> int:
     if key not in _fontmeasurers:
         _fontmeasurers[key] = FontMeasurer(fontpath, fontsize)
 
-    return _fontmeasurers[key].get_text_dimensions(str(text))[0]
+    return _fontmeasurers[key].get_text_width(str(text))

@@ -29,13 +29,13 @@ def font_measurer():
 
 
 def test_fontmeasurer(font_measurer):
-    first_result = font_measurer.get_text_dimensions('The quick brown fox jumps over the lazy dog')
-    cached_result = font_measurer.get_text_dimensions('The quick brown fox jumps over the lazy dog')
+    first_result = font_measurer.get_text_width('The quick brown fox jumps over the lazy dog')
+    cached_result = font_measurer.get_text_width('The quick brown fox jumps over the lazy dog')
 
     assert first_result == cached_result
 
-    # I've got 254 on FreeBSD and 258 on Ubuntu, I believe there
-    # are fluctuations because of freetype hinting settings
+    # I've got 257 on FreeBSD and 258 on Ubuntu, I believe there
+    # may be some fluctuations because of freetype hinting settings
     #
     # We currently use 6 pixel padding for badge texts. I'd say
     # that for center-aligned text we can tolerate fluctuations
@@ -46,5 +46,7 @@ def test_fontmeasurer(font_measurer):
     # Note also that real strings will be usually shorter than
     # this example
 
-    assert first_result[0] >= 254 - 6
-    assert first_result[0] <= 258 + 6
+    expected_widths = [257, 258]
+
+    assert min(expected_widths) - 6 <= first_result
+    assert first_result <= max(expected_widths) + 6
