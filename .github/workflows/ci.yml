@@ -53,8 +53,9 @@ jobs:
           psql -U repology_test < testdata/repology_test.sql
       - name: Update repology config
         run: |
-          echo "BADGE_FONT = '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf'" >> $REPOLOGY_CONFIG
-          echo "BADGE_FONT_BOLD = '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf'" >> $REPOLOGY_CONFIG
+          # https://packages.ubuntu.com/kinetic/all/fonts-dejavu-core/filelist
+          echo "BADGE_FONT = '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'" >> $REPOLOGY_CONFIG
+          echo "BADGE_FONT_BOLD = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'" >> $REPOLOGY_CONFIG
       - name: Test all target
         run: make
       - name: Check with flake8
