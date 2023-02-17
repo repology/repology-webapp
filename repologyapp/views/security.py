@@ -27,6 +27,8 @@ from repologyapp.view_registry import Response, ViewRegistrar
 
 @ViewRegistrar('/security/recent-cves')
 def security_recent_cves() -> Response:
+    autorefresh = flask.request.args.to_dict().get('autorefresh')
+
     return flask.render_template(
         'security/recent-cves.html',
         cves=cache(
@@ -35,13 +37,17 @@ def security_recent_cves() -> Response:
                 max_age=datetime.timedelta(days=config['RECENT_CVES_MAX_AGE_DAYS']),
                 limit=config['RECENT_CVES_MAX_COUNT']
             )
-        )
+        ),
+        autorefresh=autorefresh
     )
 
 
 @ViewRegistrar('/security/recent-cpes')
 def security_recent_cpes() -> Response:
+    autorefresh = flask.request.args.to_dict().get('autorefresh')
+
     return flask.render_template(
         'security/recent-cpes.html',
-        cpes=get_db().get_recent_cpes(limit=config['RECENT_CPES_MAX_COUNT'])
+        cpes=get_db().get_recent_cpes(limit=config['RECENT_CPES_MAX_COUNT']),
+        autorefresh=autorefresh
     )

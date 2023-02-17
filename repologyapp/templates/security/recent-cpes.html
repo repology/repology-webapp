@@ -1,7 +1,11 @@
 {% extends "security/_base.html" %}
-{% from "_macros/autorefresh.html" import autorefresh_toggler with context %}
+{% from "_macros/autorefresh.html" import autorefresh_toggler, enable_autorefresh with context %}
 {% from "_macros/cpes.html" import cpe_components %}
 {% from "_macros/time.html" import format_absolute_time, timezone_abbr %}
+
+{% block extrameta %}
+	{{ enable_autorefresh(3600 + randrange(60)) }}
+{% endblock %}
 
 {% block title %}Recent CPE bindings - Repology{% endblock %}
 {% block header %}Recent CPE bindings{% endblock %}
