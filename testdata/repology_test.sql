@@ -1725,7 +1725,7 @@ COPY public.links (id, url, refcount, priority, first_extracted, orphaned_since,
 40	https://slackbuilds.org/slackbuilds/14.2/development/kforth/kforth.SlackBuild	1	f	2022-04-11 18:48:40.0655+03	\N	2022-04-11 18:48:40.0655+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
 43	http://download.virtualbox.org/virtualbox/5.0.30/VirtualBox-5.0.30.tar.bz2	1	f	2022-04-11 18:48:40.0655+03	\N	2022-04-11 18:48:40.0655+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
 9	https://sourceforge.net/projects/chromium-bsu/	1	f	2022-04-11 18:48:40.0655+03	\N	2022-04-11 18:48:40.0655+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-15	http://search.cpan.org/dist/Acme-Brainfuck/	1	f	2022-04-11 18:48:40.0655+03	\N	2022-04-11 18:48:40.0655+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+15	https://metacpan.org/dist/Acme-Brainfuck/	1	f	2022-04-11 18:48:40.0655+03	\N	2022-04-11 18:48:40.0655+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
 79	https://cgit.freebsd.org/ports/plain/sysutils/kiconvtool/Makefile	1	f	2022-04-11 18:48:40.0655+03	\N	2022-04-11 18:48:40.0655+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
 48	http://www.zlib.net/	1	f	2022-04-11 18:48:40.0655+03	\N	2022-04-11 18:48:40.0655+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
 26	http://www.vorbis.com/	1	f	2022-04-11 18:48:40.0655+03	\N	2022-04-11 18:48:40.0655+03	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
@@ -1990,7 +1990,7 @@ COPY public.packages (id, repo, family, subrepo, name, srcname, binname, binname
 --
 
 COPY public.problems (package_id, repo, name, effname, maintainer, type, data) FROM stdin;
-11	cpan	Acme-Brainfuck	perl:acme-brainfuck	jaldhar@cpan	homepage_discontinued_cpan	{"url": "http://search.cpan.org/dist/Acme-Brainfuck/"}
+11	cpan	Acme-Brainfuck	perl:acme-brainfuck	jaldhar@cpan	homepage_discontinued_cpan	{"url": "https://metacpan.org/dist/Acme-Brainfuck/"}
 \.
 
 
