@@ -27,7 +27,7 @@ def test_garbage():
 
 
 def test_cpan():
-    assert maintainer_to_links('foo@cpan') == ['http://search.cpan.org/~foo']
+    assert maintainer_to_links('foo@cpan') == ['https://metacpan.org/author/foo']
 
 
 def test_aur():

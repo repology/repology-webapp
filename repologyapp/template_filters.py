@@ -31,7 +31,7 @@ def maintainer_to_links(maintainer: str) -> list[str]:
         name, domain = maintainer.split('@', 1)
 
         if domain == 'cpan':
-            links.append('http://search.cpan.org/~' + name)
+            links.append('https://metacpan.org/author/' + name)
         elif domain == 'aur':
             links.append('https://aur.archlinux.org/account/' + name)
         elif domain in ('altlinux.org', 'altlinux.ru'):
