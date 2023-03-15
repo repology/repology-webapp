@@ -67,6 +67,10 @@ def badge_vertical_allrepos(name: str) -> Response:
 
     header = args.get('header')
     minversion = args.get('minversion')
+    try:
+        minwidth = max(60, int(args.get('minwidth')))
+    except:
+        minwidth = 60
 
     repo_filter = RepositoryFilter(args)
 
@@ -85,7 +89,7 @@ def badge_vertical_allrepos(name: str) -> Response:
 
             cells.append([
                 BadgeCell(repometadata[reponame]['desc'], align='r'),
-                BadgeCell(version, color=color, truncate=13, minwidth=60)
+                BadgeCell(version, color=color, truncate=13, minwidth=minwidth)
             ])
 
     try:
