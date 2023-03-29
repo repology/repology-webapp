@@ -34,7 +34,6 @@ def api_v1_package_to_json(package: PackageDataDetailed) -> dict[str, Any]:
             'repo',
             'subrepo',
 
-            'name',
             'srcname',
             'binname',
             'visiblename',

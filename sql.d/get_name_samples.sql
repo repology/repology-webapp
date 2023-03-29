@@ -31,7 +31,6 @@ FROM (
 			effname,
 			projectname_seed,
 			trackname,
-			name,
 			srcname,
 			binname,
 			(
@@ -43,7 +42,6 @@ FROM (
 							effname,
 							projectname_seed,
 							trackname,
-							name,
 							srcname,
 							binname
 						)

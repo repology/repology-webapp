@@ -59,7 +59,6 @@
 			<td class="text-center">{% if 11 in link_types or 12 in link_types %}✔{% endif %}</td>
 			<td class="text-center">{% if 13 in link_types or 14 in link_types %}✔{% endif %}</td>
 			<td class="text-center">
-				{%- if 'name' in fields %}<abbr title="generic name (deprecated)" class="text-danger">n</abbr>{% endif -%}
 				{%- if 'srcname' in fields %}<abbr title="source (package) name">s</abbr>{% endif -%}
 				{%- if 'binname' in fields %}<abbr title="binary (package) name">b</abbr>{% endif -%}
 				{%- if 'binnames' in fields %}<abbr title="binary (package) names taken from source packages">B</abbr>{% endif -%}

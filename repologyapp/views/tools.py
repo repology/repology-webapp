@@ -74,18 +74,6 @@ _EXTRA_ALLOWED_ARGS = {
 }
 
 
-# These are repository families for which it's not yet decided
-# which of name/srcname/binname fields should be used and how.
-# For these project-by tool is disallowed (to avoid massive link
-# breakage on name field handling changes, but we can process
-# any of these repo on request, decide on name field handling
-# and allow corresponding family in project-by.
-_DISALLOWED_FAMILIES = {
-    'ravenports',
-    'slackware',
-}
-
-
 @ViewRegistrar('/tools/project-by')
 def tool_project_by() -> Response:
     repo = flask.request.args.get('repo')
@@ -105,8 +93,6 @@ def tool_project_by() -> Response:
     if repo and name_type and target_page:
         if repo not in repometadata.active_names():
             return (flask.render_template('tools/project-by/failed.html', reason='no_repo'), 404)
-        elif repometadata[repo]['family'] in _DISALLOWED_FAMILIES:
-            return (flask.render_template('tools/project-by/failed.html', reason='disallowed_repo'), 403)
         elif name:
             targets = []
 
@@ -150,7 +136,6 @@ def tool_project_by() -> Response:
         'tools/project-by.html',
         allowed_target_pages=_ALLOWED_TARGET_PAGES,
         template_url=template_url,
-        disallowed_families=_DISALLOWED_FAMILIES,
     )
 
 

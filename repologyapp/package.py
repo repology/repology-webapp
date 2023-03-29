@@ -199,7 +199,6 @@ class PackageDataSummarizable(PackageDataMinimal):
 class PackageDataDetailed(PackageDataSummarizable):
     subrepo: str | None
 
-    name: str | None
     srcname: str | None
     binname: str | None
     trackname: str | None

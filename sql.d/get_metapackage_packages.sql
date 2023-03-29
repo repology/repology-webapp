@@ -45,7 +45,6 @@ SELECT
 {%   if detailed %},
 	subrepo,
 
-	name,
 	srcname,
 	binname,
 	trackname,

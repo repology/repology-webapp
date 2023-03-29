@@ -17,8 +17,6 @@
 	but it has failed
 	{% if reason == 'no_repo' %}
 	because the specified repository is not known to Repology. Either the identifier is misspelled, or the repository was removed from Repology.
-	{% elif reason == 'disallowed_repo' %}
-	because the specified repository is not yet supported for this kind of redirects. Please submit an <a href="{{ config['REPOLOGY_WEBAPP_REPO_URL'] }}/issues">issue</a> if you need support for this repository.
 	{% elif reason == 'no_package' %}
 	because the specified package name was not found.
 	{% endif %}
