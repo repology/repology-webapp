@@ -81,7 +81,6 @@ _EXTRA_ALLOWED_ARGS = {
 # any of these repo on request, decide on name field handling
 # and allow corresponding family in project-by.
 _DISALLOWED_FAMILIES = {
-    'nix',
     'ravenports',
     'slackware',
 }
