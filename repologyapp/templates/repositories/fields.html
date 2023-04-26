@@ -54,6 +54,7 @@
 			</td>
 			<td class="text-center">
 				{%- if 7 in link_types or 9 in link_types or 10 in link_types %}✔
+				{%- elif repometadata[reponame].type != 'repository' %}-
 				{%- else %}<span class="text-danger" title="Repository must provide link to package sources">✘</span>{% endif -%}
 			</td>
 			<td class="text-center">{% if 11 in link_types or 12 in link_types %}✔{% endif %}</td>
