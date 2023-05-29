@@ -96,7 +96,7 @@
 			<p>Will <b>not</b> split:</p>
 			<ul>
 				<li>Legacy or ESR branches of the same project.</li>
-				<li><code>*-unclassified</code> projects - these need homepage information to be split and will be split automatically as soon as homepage information is available.</li>
+				<li><code>*-unclassified</code> projects which lack valid homepage information.</li>
 			</ul>
 		</div>
 	</div>
@@ -107,10 +107,10 @@
 			Please list them in the comment field, as well as suggested target name.</p>
 			<p>Will <b>not</b> merge:</p>
 			<ul>
-				<li>Modules (e.g. python) without consistent prefix (e.g. <code>python-</code> or <code>python3-</code>) (common problem for Slackbuilds and Debian source packages).</li>
+				<li>Modules (e.g. python) without consistent prefix (such as <code>python-</code> or <code>python3-</code>) (common problem for Slackbuilds and Debian source packages).</li>
 				<li><code>go:*</code> packages, which have no official naming scheme.</li>
-				<li>Packages with incorrect names (which should be renamed in repositories instead).</li>
-				<li>Lots of package variants (common for AUR and Nix) - repositories are expected to convey master project name for these.</li>
+				<li>Packages with incorrect names (should be renamed in repositories instead).</li>
+				<li>Lots of package variants (common for AUR and Nix) - repositories are expected to provide master project name for these.</li>
 			</ul>
 		</div>
 	</div>
