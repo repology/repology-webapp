@@ -493,6 +493,9 @@ def project_report(name: str) -> Response:
         if comment and '<a href' in comment:
             errors.append('spammers not welcome, HTML not allowed')
 
+        if comment and 'า' in comment:  # thai spam
+            errors.append('spammers not welcome, HTML not allowed')
+
         if need_verignore and need_split and need_merge and need_vuln and not comment:
             errors.append('spammers not welcome')
 
