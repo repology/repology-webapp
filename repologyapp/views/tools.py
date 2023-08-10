@@ -145,14 +145,14 @@ def trending() -> Response:
         'tools/trending.html',
         trending=cache(
             'trending-positive',
-            lambda: get_db().get_trending_projects(  # type: ignore  # https://github.com/python/mypy/issues/9590
+            lambda: get_db().get_trending_projects(
                 timedelta(days=31),
                 config['TRENDING_PER_PAGE']
             )
         ),
         declining=cache(
             'trending-negative',
-            lambda: get_db().get_trending_projects(  # type: ignore  # https://github.com/python/mypy/issues/9590
+            lambda: get_db().get_trending_projects(
                 timedelta(days=91),
                 config['TRENDING_PER_PAGE'],
                 negative=True
@@ -167,7 +167,7 @@ def important_updates() -> Response:
         'tools/important-updates.html',
         updates=cache(
             'recent-updates-1d-100',
-            lambda: get_db().get_important_updates(  # type: ignore  # https://github.com/python/mypy/issues/9590
+            lambda: get_db().get_important_updates(
                 timedelta(days=1),
                 100
             )

@@ -301,7 +301,7 @@ def project_information(name: str) -> Response:
             # sort links by url
             slice_name: sorted(
                 _families_to_spreads(families_by_link_key).items(),
-                key=lambda l: links[l[0][0]]['url'].lower()  # type: ignore
+                key=lambda l: links[l[0][0]]['url'].lower()
             )
             for slice_name, families_by_link_key in link_families_by_slice_by_id.items()
         }

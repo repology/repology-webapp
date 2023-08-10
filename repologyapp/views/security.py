@@ -33,7 +33,7 @@ def security_recent_cves() -> Response:
         'security/recent-cves.html',
         cves=cache(
             'recent-cves',
-            lambda: get_db().get_recent_cves(  # type: ignore  # https://github.com/python/mypy/issues/9590
+            lambda: get_db().get_recent_cves(
                 max_age=datetime.timedelta(days=config['RECENT_CVES_MAX_AGE_DAYS']),
                 limit=config['RECENT_CVES_MAX_COUNT']
             )

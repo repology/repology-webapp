@@ -91,12 +91,12 @@ def graph_total_generic(getvalue: Callable[[Any], float], color: str, suffix: st
 
 @ViewRegistrar('/graph/repo/<repo>/projects_total.svg')
 def graph_repo_projects_total(repo: str) -> Response:
-    return graph_repo_generic(repo, lambda s: s['num_metapackages'], '#000000')  # type: ignore
+    return graph_repo_generic(repo, lambda s: s['num_metapackages'], '#000000')
 
 
 @ViewRegistrar('/graph/repo/<repo>/projects_newest.svg')
 def graph_repo_projects_newest(repo: str) -> Response:
-    return graph_repo_generic(repo, lambda s: s['num_metapackages_newest'], '#5cb85c')  # type: ignore
+    return graph_repo_generic(repo, lambda s: s['num_metapackages_newest'], '#5cb85c')
 
 
 @ViewRegistrar('/graph/repo/<repo>/projects_newest_percent.svg')
@@ -106,7 +106,7 @@ def graph_repo_projects_newest_percent(repo: str) -> Response:
 
 @ViewRegistrar('/graph/repo/<repo>/projects_outdated.svg')
 def graph_repo_projects_outdated(repo: str) -> Response:
-    return graph_repo_generic(repo, lambda s: s['num_metapackages_outdated'], '#d9534f')  # type: ignore
+    return graph_repo_generic(repo, lambda s: s['num_metapackages_outdated'], '#d9534f')
 
 
 @ViewRegistrar('/graph/repo/<repo>/projects_outdated_percent.svg')
@@ -116,27 +116,27 @@ def graph_repo_projects_outdated_percent(repo: str) -> Response:
 
 @ViewRegistrar('/graph/repo/<repo>/projects_unique.svg')
 def graph_repo_projects_unique(repo: str) -> Response:
-    return graph_repo_generic(repo, lambda s: s['num_metapackages_unique'], '#5bc0de')  # type: ignore
+    return graph_repo_generic(repo, lambda s: s['num_metapackages_unique'], '#5bc0de')
 
 
 @ViewRegistrar('/graph/repo/<repo>/projects_unique_percent.svg')
 def graph_repo_projects_unique_percent(repo: str) -> Response:
-    return graph_repo_generic(repo, lambda s: s['num_metapackages_unique'] / s['num_metapackages'] * 100.0, '#5bc0de', '%')  # type: ignore
+    return graph_repo_generic(repo, lambda s: s['num_metapackages_unique'] / s['num_metapackages'] * 100.0, '#5bc0de', '%')
 
 
 @ViewRegistrar('/graph/repo/<repo>/projects_problematic.svg')
 def graph_repo_projects_problematic(repo: str) -> Response:
-    return graph_repo_generic(repo, lambda s: s['num_metapackages_problematic'], '#808080')  # type: ignore
+    return graph_repo_generic(repo, lambda s: s['num_metapackages_problematic'], '#808080')
 
 
 @ViewRegistrar('/graph/repo/<repo>/projects_problematic_percent.svg')
 def graph_repo_projects_problematic_percent(repo: str) -> Response:
-    return graph_repo_generic(repo, lambda s: s['num_metapackages_problematic'] / s['num_metapackages'] * 100.0, '#808080', '%')  # type: ignore
+    return graph_repo_generic(repo, lambda s: s['num_metapackages_problematic'] / s['num_metapackages'] * 100.0, '#808080', '%')
 
 
 @ViewRegistrar('/graph/repo/<repo>/projects_vulnerable.svg')
 def graph_repo_projects_vulnerable(repo: str) -> Response:
-    return graph_repo_generic(repo, lambda s: s['num_metapackages_vulnerable'], '#ff0000')  # type: ignore
+    return graph_repo_generic(repo, lambda s: s['num_metapackages_vulnerable'], '#ff0000')
 
 
 @ViewRegistrar('/graph/repo/<repo>/projects_vulnerable_percent.svg')
@@ -146,39 +146,39 @@ def graph_repo_projects_vulnerable_percent(repo: str) -> Response:
 
 @ViewRegistrar('/graph/repo/<repo>/problems.svg')
 def graph_repo_problems(repo: str) -> Response:
-    return graph_repo_generic(repo, lambda s: s['num_problems'], '#c00000')  # type: ignore
+    return graph_repo_generic(repo, lambda s: s['num_problems'], '#c00000')
 
 
 @ViewRegistrar('/graph/repo/<repo>/problems_per_metapackage.svg')
 def graph_repo_problems_per_metapackage(repo: str) -> Response:
-    return graph_repo_generic(repo, lambda s: s['num_problems'] / s['num_metapackages'], '#c00000')  # type: ignore
+    return graph_repo_generic(repo, lambda s: s['num_problems'] / s['num_metapackages'], '#c00000')
 
 
 @ViewRegistrar('/graph/repo/<repo>/maintainers.svg')
 def graph_repo_maintainers(repo: str) -> Response:
-    return graph_repo_generic(repo, lambda s: s['num_maintainers'], '#c000c0')  # type: ignore
+    return graph_repo_generic(repo, lambda s: s['num_maintainers'], '#c000c0')
 
 
 @ViewRegistrar('/graph/repo/<repo>/packages_per_maintainer.svg')
 def graph_repo_packages_per_maintainer(repo: str) -> Response:
-    return graph_repo_generic(repo, lambda s: s['num_packages'] / s['num_maintainers'], '#c000c0')  # type: ignore
+    return graph_repo_generic(repo, lambda s: s['num_packages'] / s['num_maintainers'], '#c000c0')
 
 
 @ViewRegistrar('/graph/total/packages.svg')
 def graph_total_packages() -> Response:
-    return graph_total_generic(lambda s: s['num_packages'], '#000000')  # type: ignore
+    return graph_total_generic(lambda s: s['num_packages'], '#000000')
 
 
 @ViewRegistrar('/graph/total/projects.svg')
 def graph_total_projects() -> Response:
-    return graph_total_generic(lambda s: s['num_metapackages'], '#000000')  # type: ignore
+    return graph_total_generic(lambda s: s['num_metapackages'], '#000000')
 
 
 @ViewRegistrar('/graph/total/maintainers.svg')
 def graph_total_maintainers() -> Response:
-    return graph_total_generic(lambda s: s['num_maintainers'], '#c000c0')  # type: ignore
+    return graph_total_generic(lambda s: s['num_maintainers'], '#c000c0')
 
 
 @ViewRegistrar('/graph/total/problems.svg')
 def graph_total_problems() -> Response:
-    return graph_total_generic(lambda s: s['num_problems'], '#c00000')  # type: ignore
+    return graph_total_generic(lambda s: s['num_problems'], '#c00000')

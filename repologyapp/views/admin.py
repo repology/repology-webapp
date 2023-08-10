@@ -84,12 +84,12 @@ def admin_reports_generic(report_getter: Callable[[], dict[str, Any]]) -> Respon
 
 @ViewRegistrar('/admin/reports/unprocessed/', methods=['GET', 'POST'])
 def admin_reports_unprocessed() -> Response:
-    return admin_reports_generic(lambda: get_db().get_unprocessed_reports(limit=config['REPORTS_PER_PAGE']))  # type: ignore
+    return admin_reports_generic(lambda: get_db().get_unprocessed_reports(limit=config['REPORTS_PER_PAGE']))
 
 
 @ViewRegistrar('/admin/reports/recent/', methods=['GET', 'POST'])
 def admin_reports_recent() -> Response:
-    return admin_reports_generic(lambda: get_db().get_recently_updated_reports(limit=config['REPORTS_PER_PAGE']))  # type: ignore
+    return admin_reports_generic(lambda: get_db().get_recently_updated_reports(limit=config['REPORTS_PER_PAGE']))
 
 
 @ViewRegistrar('/admin/updates')

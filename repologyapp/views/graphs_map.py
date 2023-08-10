@@ -184,8 +184,8 @@ def graph_map_repo_size_fresh() -> Response:
 
     return _map_repo_generic(
         # XXX: to fix following type ignores, repometadata should be converted into dataclass
-        getx=lambda repo: repo['num_metapackages'],  # type: ignore
-        gety=lambda repo: repo['num_metapackages_newest'],  # type: ignore
+        getx=lambda repo: repo['num_metapackages'],
+        gety=lambda repo: repo['num_metapackages_newest'],
         namex='Number of packages in repository',
         namey='Number of fresh packages in repository',
         xlimit=xlimit,
@@ -199,8 +199,8 @@ def graph_map_repo_size_fresh_nonunique() -> Response:
     xlimit, ylimit = _parse_limits()
 
     return _map_repo_generic(
-        getx=lambda repo: repo['num_metapackages_newest'] + repo['num_metapackages_outdated'],  # type: ignore
-        gety=lambda repo: repo['num_metapackages_newest'],  # type: ignore
+        getx=lambda repo: repo['num_metapackages_newest'] + repo['num_metapackages_outdated'],
+        gety=lambda repo: repo['num_metapackages_newest'],
         namex='Number of non-unique packages in repository',
         namey='Number of fresh packages in repository',
         xlimit=xlimit,
@@ -214,8 +214,8 @@ def graph_map_repo_size_freshness() -> Response:
     xlimit, ylimit = _parse_limits()
 
     return _map_repo_generic(
-        getx=lambda repo: repo['num_metapackages'],  # type: ignore
-        gety=lambda repo: 100.0 * repo['num_metapackages_newest'] / repo['num_metapackages'] if repo['num_metapackages'] else 0.0,  # type: ignore
+        getx=lambda repo: repo['num_metapackages'],
+        gety=lambda repo: 100.0 * repo['num_metapackages_newest'] / repo['num_metapackages'] if repo['num_metapackages'] else 0.0,
         namex='Number of packages in repository',
         namey='Percentage of fresh packages',
         unity='%',
