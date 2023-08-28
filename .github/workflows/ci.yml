@@ -22,7 +22,7 @@ jobs:
         run: |
           mkdir _libversion
           cd _libversion
-          wget -qO- https://github.com/repology/libversion/archive/master.tar.gz | tar -xzf- --strip-components 1
+          curl -sL https://github.com/repology/libversion/archive/master.tar.gz | tar -xzf- --strip-components 1
           cmake .
           make
           sudo make install
@@ -31,7 +31,7 @@ jobs:
         run: |
           mkdir _postgresql-libversion
           cd _postgresql-libversion
-          wget -qO- https://github.com/repology/postgresql-libversion/archive/master.tar.gz | tar -xzf- --strip-components 1
+          curl -sL https://github.com/repology/postgresql-libversion/archive/master.tar.gz | tar -xzf- --strip-components 1
           make
           sudo make install
       - name: Install python dependencies
