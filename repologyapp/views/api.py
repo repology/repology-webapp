@@ -54,6 +54,8 @@ def api_v1_package_to_json(package: PackageDataDetailed) -> dict[str, Any]:
         output['summary'] = package.comment
     if package.category:
         output['categories'] = [package.category]
+    if package.flags & PackageFlags.VULNERABLE:
+        output['vulnerable'] = True
 
     output['status'] = PackageStatus.as_string(package.versionclass)
     output['origversion'] = package.rawversion if package.rawversion != package.version else None
