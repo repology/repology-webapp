@@ -24,7 +24,7 @@ import flask
 from repologyapp.config import config
 from repologyapp.db import get_db
 from repologyapp.metapackages import MetapackagesFilterInfo, packages_to_metapackages
-from repologyapp.package import PackageDataDetailed, PackageStatus
+from repologyapp.package import PackageDataDetailed, PackageFlags, PackageStatus
 from repologyapp.view_registry import Response, ViewRegistrar
 
 
