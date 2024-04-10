@@ -512,8 +512,14 @@ def project_report(name: str) -> Response:
                 comment
             )
 
-            flask.flash('Report for {} added successfully and will be processed in a few days, thank you!'.format(name), 'success')
-            return flask.redirect(flask.url_for('metapackage_report', name=name))
+            if flask.request.remote_addr == 'XXX':
+                # notification for contributors submitting a lot of reports, substitude IP instead of XXX
+                # TODO: set address from config
+                flask.flash("Report for {} added successfully and will be processed in a few days, thank you! But hey, if you plan to submit report for all problems in your repository I probably won't be able to process these. Please consider submitting PRs to ruleset (preferrably in batches of 10 rules or so) instead.".format(name), 'danger')
+            else:
+                flask.flash('Report for {} added successfully and will be processed in a few days, thank you!'.format(name), 'success')
+
+            return flask.redirect(flask.url_for('project_report', name=name))
 
     return flask.render_template(
         'project/report.html',
