@@ -58,7 +58,7 @@
 				{%- else %}<span class="text-danger" title="Repository must provide link to package sources">✘</span>{% endif -%}
 			</td>
 			<td class="text-center">{% if 11 in link_types or 12 in link_types %}✔{% endif %}</td>
-			<td class="text-center">{% if 13 in link_types or 14 in link_types %}✔{% endif %}</td>
+			<td class="text-center">{% if 13 in link_types or 14 in link_types or 27 in link_types %}✔{% endif %}</td>
 			<td class="text-center">
 				{%- if 'srcname' in fields %}<abbr title="source (package) name">s</abbr>{% endif -%}
 				{%- if 'binname' in fields %}<abbr title="binary (package) name">b</abbr>{% endif -%}
