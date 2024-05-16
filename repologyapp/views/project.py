@@ -178,7 +178,7 @@ def _link_type_to_slice_name(link_type: int) -> str | None:
     match link_type:
         case LinkType.UPSTREAM_HOMEPAGE | LinkType.PROJECT_HOMEPAGE:
             return 'homepages'
-        case LinkType.UPSTREAM_DOWNLOAD | LinkType.PROJECT_DOWNLOAD:
+        case LinkType.UPSTREAM_DOWNLOAD | LinkType.PROJECT_DOWNLOAD | LinkType.UPSTREAM_DOWNLOAD_PAGE:
             return 'downloads'
         case LinkType.UPSTREAM_ISSUE_TRACKER:
             return 'issues'
