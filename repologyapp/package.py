@@ -173,6 +173,7 @@ class LinkType:
     PACKAGE_STATISTICS: ClassVar[int] = 25
     PACKAGE_BUILD_STATUS: ClassVar[int] = 26
     PACKAGE_BUILD_LOGS: ClassVar[int] = 27
+    UPSTREAM_DOWNLOAD_PAGE: ClassVar[int] = 28
     OTHER: ClassVar[int] = 99
 
 
