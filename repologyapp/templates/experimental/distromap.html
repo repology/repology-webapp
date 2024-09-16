@@ -15,7 +15,7 @@ as a pair of package name sets per project, or it is expanded via
 cartesian product into all possible package name pairs.
 </p>
 
-<form class="form-horizontal" action="{{ url_for('api_experimental_distromap') }}" method="GET">
+<form class="form-horizontal" action="{{ url_for(endpoint='api_experimental_distromap') }}" method="GET">
 	<div class="form-group">
 		<label for="fromrepo" class="col-sm-2 control-label">From repo</label>
 		<div class="col-sm-8">

@@ -2,7 +2,7 @@
 
 {% block preheader %}
 <div class="btn-group pageheader-right">
-	<a href="{{ url_for("security_recent_cves") }}" class="btn btn-default{% if request.endpoint == "security_recent_cves" %} active{% endif %}">Recent CVEs</a>
-	<a href="{{ url_for("security_recent_cpes") }}" class="btn btn-default{% if request.endpoint == "security_recent_cpes" %} active{% endif %}">CPE bindings</a>
+	<a href="{{ url_for(endpoint="security_recent_cves") }}" class="btn btn-default{% if request.endpoint == "security_recent_cves" %} active{% endif %}">Recent CVEs</a>
+	<a href="{{ url_for(endpoint="security_recent_cpes") }}" class="btn btn-default{% if request.endpoint == "security_recent_cpes" %} active{% endif %}">CPE bindings</a>
 </div>
 {% endblock %}

@@ -13,7 +13,7 @@
 <div class="container">
 
 <p>This is a list of recently published (in <a href="https://nvd.nist.gov/">NVD</a>) vulnerabilities linked to Repology projects. You may see vulnerabilities for a given project under <b>CVEs</b> tab (only present when there are matching vulnerabilities), and missing bindings may be reported via <b>Report</b> tab.</p>
-<p><span class="bg-success">Highlighted</span> entries indicate matches due to recently (&lt;1 week ago) added <a href="{{ url_for('security_recent_cpes') }}">CPE bindings</a>.</p>
+<p><span class="bg-success">Highlighted</span> entries indicate matches due to recently (&lt;1 week ago) added <a href="{{ url_for(endpoint='security_recent_cpes') }}">CPE bindings</a>.</p>
 
 {{ autorefresh_toggler() }}
 
@@ -35,7 +35,7 @@
 			<td class="minimal-column">{{ format_absolute_time(cve.published) }}</td>
 			<td>
 			{% for effname in cve.effnames %}
-				<a href="{{ url_for('project_versions', name=effname) }}">{{ effname }}</a>
+				<a href="{{ url_for(endpoint='project_versions', name=effname) }}">{{ effname }}</a>
 			{% endfor %}
 			</td>
 		</tr>

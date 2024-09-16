@@ -26,10 +26,10 @@
 	<tbody>
 	{% for repo in repos %}
 		<tr id="{{ repo.name }}">
-			<td class="text-right"><a href="{{ url_for('repository', repo=repo.name) }}">{{ repometadata[repo.name].desc }}</a></td>
+			<td class="text-right"><a href="{{ url_for(endpoint='repository', repo=repo.name) }}">{{ repometadata[repo.name].desc }}</a></td>
 
 			{% if repo.fetch_duration and repo.fetch_utime %}
-			<td class="text-center"><b><a href="{{ url_for('log', run_id=repo.fetch_run_id) }}">{{ format_time_interval_short(repo.fetch_duration) }}</a></b></td>
+			<td class="text-center"><b><a href="{{ url_for(endpoint='log', run_id=repo.fetch_run_id) }}">{{ format_time_interval_short(repo.fetch_duration) }}</a></b></td>
 			<td class="text-center"><b>{{ format_time_interval_short(repo.fetch_utime + repo.fetch_stime) }}</b> (<b>{{ (100.0 * (repo.fetch_utime + repo.fetch_stime) / repo.fetch_duration) | int }}</b>%)</td>
 			<td class="text-center">{% if not repo.fetch_maxrss_reliable %}<{{ (repo.fetch_maxrss / 1024.0) | round(2) }}{% else %}<b>{{ (repo.fetch_maxrss_reliable / 1024.0) | round(2) }}</b>{% endif %}MB</td>
 			{% else %}
@@ -39,7 +39,7 @@
 			{% endif %}
 
 			{% if repo.parse_duration and repo.parse_utime %}
-			<td class="text-center"><b><a href="{{ url_for('log', run_id=repo.parse_run_id) }}">{{ format_time_interval_short(repo.parse_duration) }}</a></b></td>
+			<td class="text-center"><b><a href="{{ url_for(endpoint='log', run_id=repo.parse_run_id) }}">{{ format_time_interval_short(repo.parse_duration) }}</a></b></td>
 			<td class="text-center"><b>{{ format_time_interval_short(repo.parse_utime + repo.parse_stime) }}</b> (<b>{{ (100.0 * (repo.parse_utime + repo.parse_stime) / repo.parse_duration) | int }}</b>%)</td>
 			<td class="text-center">{% if not repo.parse_maxrss_reliable %}<{{ (repo.parse_maxrss / 1024.0) | round(2) }}{% else %}<b>{{ (repo.parse_maxrss_reliable / 1024.0) | round(2) }}</b>{% endif %}MB</td>
 			{% else %}

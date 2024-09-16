@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<sitemap><loc>{{ REPOLOGY_HOME }}{{ url_for('sitemap_main') }}</loc></sitemap>
-<sitemap><loc>{{ REPOLOGY_HOME }}{{ url_for('sitemap_repositories') }}</loc></sitemap>
-<sitemap><loc>{{ REPOLOGY_HOME }}{{ url_for('sitemap_maintainers') }}</loc></sitemap>
+<sitemap><loc>{{ REPOLOGY_HOME }}{{ url_for(endpoint='sitemap_main') }}</loc></sitemap>
+<sitemap><loc>{{ REPOLOGY_HOME }}{{ url_for(endpoint='sitemap_repositories') }}</loc></sitemap>
+<sitemap><loc>{{ REPOLOGY_HOME }}{{ url_for(endpoint='sitemap_maintainers') }}</loc></sitemap>
 {% for page in range(num_projects_pages) %}
-<sitemap><loc>{{ REPOLOGY_HOME }}{{ url_for('sitemap_projects', page=page) }}</loc></sitemap>
+<sitemap><loc>{{ REPOLOGY_HOME }}{{ url_for(endpoint='sitemap_projects', page=page) }}</loc></sitemap>
 {% endfor %}
 </sitemapindex>

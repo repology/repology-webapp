@@ -10,18 +10,18 @@
 {% block extrameta %}
 {% endblock %}
 	<title>{% block title %}Repology{% endblock %}</title>
-	<link rel="stylesheet" href="{{ url_for("static", filename="bootstrap.min.v3.3.7.css") }}">
-	<link rel="stylesheet" href="{{ url_for("static", filename="repology.v21.css") }}">
-	<link rel="icon" href="{{ url_for("static", filename="repology.v1.ico") }}" sizes="16x16 32x32 64x64" type="image/x-icon">
-	<link rel="search" type="application/opensearchdescription+xml" title="Repology packages" href="{{ url_for("opensearch_project") }}">
-	<link rel="search" type="application/opensearchdescription+xml" title="Repology maintainers" href="{{ url_for("opensearch_maintainer") }}">
+	<link rel="stylesheet" href="{{ url_for_static(file="bootstrap.min.v3.3.7.css") }}">
+	<link rel="stylesheet" href="{{ url_for_static(file="repology.v21.css") }}">
+	<link rel="icon" href="{{ url_for_static(file="repology.v1.ico") }}" sizes="16x16 32x32 64x64" type="image/x-icon">
+	<link rel="search" type="application/opensearchdescription+xml" title="Repology packages" href="{{ url_for(endpoint="opensearch_project") }}">
+	<link rel="search" type="application/opensearchdescription+xml" title="Repology maintainers" href="{{ url_for(endpoint="opensearch_maintainer") }}">
 </head>
 <body>
 
 {% if now().month == 6 and now().day == 6 and ':' not in request.environ.REMOTE_ADDR and request.endpoint != 'index' %}
 <div class="site-alert-outer">
 	<div class="container site-alert-inner">
-		<img src="{{ url_for("static", filename="ipv6.v1.svg") }}" alt="IPv6 logo" height="64">
+		<img src="{{ url_for_static(file="ipv6.v1.svg") }}" alt="IPv6 logo" height="64">
 		<p>You are connected to Repology using legacy IPv4 protocol.
 		Due to <a href="https://en.wikipedia.org/wiki/IPv6#IPv4_address_exhaustion">IPv4 address exhaustion</a>
 		it may become too expensive or impossible for Repology to support IPv4 in the nearest future.
@@ -39,26 +39,26 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="{{ url_for("index") }}">
-				<img alt="Repology" src="{{ url_for("static", filename="repology40x40.v1.png") }}" width="40" height="40">
+			<a class="navbar-brand" href="{{ url_for(endpoint="index") }}">
+				<img alt="Repology" src="{{ url_for_static(file="repology40x40.v1.png") }}" width="40" height="40">
 			</a>
 		</div>
 
 		<div class="collapse navbar-collapse" id="repology-navbar-collapse">
 			<ul class="nav navbar-nav">
-				<li{% if endpoint_like('projects', 'project_*') %} class="active"{% endif %}><a href="{{ url_for('projects') }}">Projects</a></li>
-				<li{% if endpoint_like('maintainers', 'maintainer') %} class="active"{% endif %}><a href="{{ url_for('maintainers') }}">Maintainers</a></li>
-				<li{% if endpoint_like('repositories_*', 'repository') %} class="active"{% endif %}><a href="{{ url_for('repositories_statistics') }}">Repositories</a></li>
-				<li{% if endpoint_like('tools', 'tool_*', 'trending') %} class="active"{% endif %}><a href="{{ url_for('tools') }}">Tools</a></li>
-				<li{% if endpoint_like('security_*') %} class="active"{% endif %}><a href="{{ url_for('security_recent_cves') }}">Security</a></li>
-				{% if session.admin %}<li{% if endpoint_like('admin', 'admin_*') %} class="active"{% endif %}><a href="{{ url_for('admin') }}">Admin</a></li>{% endif %}
+				<li{% if endpoint_like('projects', 'project_*') %} class="active"{% endif %}><a href="{{ url_for(endpoint='projects') }}">Projects</a></li>
+				<li{% if endpoint_like('maintainers', 'maintainer') %} class="active"{% endif %}><a href="{{ url_for(endpoint='maintainers') }}">Maintainers</a></li>
+				<li{% if endpoint_like('repositories_*', 'repository') %} class="active"{% endif %}><a href="{{ url_for(endpoint='repositories_statistics') }}">Repositories</a></li>
+				<li{% if endpoint_like('tools', 'tool_*', 'trending') %} class="active"{% endif %}><a href="{{ url_for(endpoint='tools') }}">Tools</a></li>
+				<li{% if endpoint_like('security_*') %} class="active"{% endif %}><a href="{{ url_for(endpoint='security_recent_cves') }}">Security</a></li>
+				{% if session.admin %}<li{% if endpoint_like('admin', 'admin_*') %} class="active"{% endif %}><a href="{{ url_for(endpoint='admin') }}">Admin</a></li>{% endif %}
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				{% if session.experimental %}
-				<li{% if endpoint_like('experimental') %} class="active"{% endif %}><a href="{{ url_for('experimental') }}">Experimental</a></li>
+				<li{% if endpoint_like('experimental') %} class="active"{% endif %}><a href="{{ url_for(endpoint='experimental') }}">Experimental</a></li>
 				{% endif %}
-				<li{% if endpoint_like('news') %} class="active"{% endif %}><a href="{{ url_for('news') }}">News</a></li>
-				<li{% if endpoint_like('docs', 'docs_*', 'api_v1') %} class="active"{% endif %}><a href="{{ url_for('docs') }}">Docs</a></li>
+				<li{% if endpoint_like('news') %} class="active"{% endif %}><a href="{{ url_for(endpoint='news') }}">News</a></li>
+				<li{% if endpoint_like('docs', 'docs_*', 'api_v1') %} class="active"{% endif %}><a href="{{ url_for(endpoint='docs') }}">Docs</a></li>
 			</ul>
 		</div>
 	</div>
@@ -102,10 +102,10 @@
 	</div>
 </footer>
 
-<script src="{{ url_for("static", filename="jquery-3.7.1.min.js") }}"></script>
-<script src="{{ url_for("static", filename="bootstrap.min.v3.3.7.js") }}"></script>
-<script src="{{ url_for("static", filename="moment.min.v2.29.2.js") }}"></script>
-<script src="{{ url_for("static", filename="repology.v2.js") }}"></script>
+<script src="{{ url_for_static(file="jquery-3.7.1.min.js") }}"></script>
+<script src="{{ url_for_static(file="bootstrap.min.v3.3.7.js") }}"></script>
+<script src="{{ url_for_static(file="moment.min.v2.29.2.js") }}"></script>
+<script src="{{ url_for_static(file="repology.v2.js") }}"></script>
 
 </body>
 </html>

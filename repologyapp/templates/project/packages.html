@@ -21,7 +21,7 @@
 		<div class="panel panel-version-{{ package.versionclass|css_for_versionclass }}">
 			<div class="panel-heading">
 				<div class="package-repository">
-				<a class="panel-heading-link" href="{{ url_for('repository', repo=package.repo) }}">{{ repometadata[package.repo].desc }}</a>
+				<a class="panel-heading-link" href="{{ url_for(endpoint='repository', repo=package.repo) }}">{{ repometadata[package.repo].desc }}</a>
 				{%- if package.subrepo -%}
 					<br><sup>{{ package.subrepo }}</sup>
 				{%- endif -%}
@@ -40,7 +40,7 @@
 						{%- if is_fixed %} title="Normalized from &quot;{{ package.origversion }}&quot;"{% endif -%}
 					>
 						{{- package.version -}}
-						{%- if is_vulnerable %} <a href="{{ url_for('project_cves', name=name, version=package.version) }}"><img src="{{ url_for("static", filename="vulnerable.v1.svg") }}" alt="Potentially vulnerable"></a>{% endif -%}
+						{%- if is_vulnerable %} <a href="{{ url_for(endpoint='project_cves', name=name, version=package.version) }}"><img src="{{ url_for_static(file="vulnerable.v1.svg") }}" alt="Potentially vulnerable"></a>{% endif -%}
 					</span>
 					{%- if package.rawversion != package.version %} ({{ package.rawversion }}){% endif -%}
 					{%- if is_recalled %} (recalled){% endif -%}
@@ -56,7 +56,7 @@
 				<li class="list-group-item"><b>Maintainer{% if package.maintainers|length > 1 %}s{% endif %}:</b>
 					<ul class="list-package-details">
 					{% for maintainer in package.maintainers %}
-						<li><a href="{{ url_for('maintainer', maintainer=maintainer) }}">{{ maintainer }}</a></li>
+						<li><a href="{{ url_for(endpoint='maintainer', maintainer=maintainer) }}">{{ maintainer }}</a></li>
 					{% endfor %}
 					</ul>
 				</li>

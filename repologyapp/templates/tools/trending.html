@@ -27,9 +27,9 @@
 					{%- endif -%}
 					</td>
 					<td>{#--#}
-						<a href="{{ url_for('project_versions', name=project.effname) }}">{{ project.effname }}</a>
+						<a href="{{ url_for(endpoint='project_versions', name=project.effname) }}">{{ project.effname }}</a>
 					{%- if project.has_related -%}
-						<a href="{{ url_for('project_related', name=project.effname) }}">∗</a>
+						<a href="{{ url_for(endpoint='project_related', name=project.effname) }}">∗</a>
 					{%- endif -%}
 					</td>
 					<td>

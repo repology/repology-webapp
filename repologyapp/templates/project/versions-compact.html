@@ -18,7 +18,7 @@
 {% if reponame in versions %}
 	<tr id="{{ reponame }}">
 		<td class="text-right minimal-column">
-			<a href="{{ url_for('repository', repo=reponame) }}">{{ repometadata[reponame].desc }}</a>
+			<a href="{{ url_for(endpoint='repository', repo=reponame) }}">{{ repometadata[reponame].desc }}</a>
 		</td>
 		<td>
 		{% for version in versions[reponame] %}

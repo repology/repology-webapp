@@ -24,7 +24,7 @@
 <p>Repology uses a set of manually edited rules to resolve these cases. You may submit a change to the <a href="https://github.com/repology/repology-rules">ruleset</a> directly or use this form to suggest an improvement to the ruleset. Please only use this for problems which may be fixed by the ruleset (which are basically problems listed above).</p>
 
 {% else %}{# metapackage and metapackage.num_repos > 0 #}
-<div class="alert alert-warning" role="alert">New reports for this project are disabled as it's no longer known by Repology. <a href="{{ url_for('metapackage', name=name) }}">See</a> possible reasons and directions.</div>
+<div class="alert alert-warning" role="alert">New reports for this project are disabled as it's no longer known by Repology. <a href="{{ url_for(endpoint='metapackage', name=name) }}">See</a> possible reasons and directions.</div>
 {% endif %}{# metapackage and metapackage.num_repos > 0 #}
 
 {% if reports %}
@@ -123,7 +123,7 @@
 		<div class="help-block">
 			<p>
 			{% if has_cves %}
-			Check if there are known older CVEs (vulnerabilities) which are not listed in <a href="{{ url_for("project_cves", name=name) }}">CVEs</a> section for this project.
+			Check if there are known older CVEs (vulnerabilities) which are not listed in <a href="{{ url_for(endpoint="project_cves", name=name) }}">CVEs</a> section for this project.
 			{% else %}
 			Check if there are known older CVEs (vulnerabilities) for this project.
 			{% endif %}

@@ -17,7 +17,7 @@
 				<li>{#-#}
 					<span class="version version-big version-{{ versioninfo.versionclass|css_for_versionclass }}">
 						{{- versioninfo.version -}}
-						{%- if versioninfo.vulnerable %} <a href="{{ url_for('project_cves', name=name, version=versioninfo.version) }}"><img src="{{ url_for("static", filename="vulnerable.v1.svg") }}" alt="Potentially vulnerable"></a>{% endif -%}
+						{%- if versioninfo.vulnerable %} <a href="{{ url_for(endpoint='project_cves', name=name, version=versioninfo.version) }}"><img src="{{ url_for_static(file="vulnerable.v1.svg") }}" alt="Potentially vulnerable"></a>{% endif -%}
 					</span>
 					{%- if versioninfo.numfamilies > 1 %} <b>({{ versioninfo.numfamilies }})</b>{% endif -%}
 				</li>
@@ -38,7 +38,7 @@
 			<h2>Repositories</h2>
 			<ul>
 			{% for reponame in repositories %}
-				<li><a href="{{ url_for('repository', repo=reponame) }}">{{ repometadata[reponame].desc }}</a></li>
+				<li><a href="{{ url_for(endpoint='repository', repo=reponame) }}">{{ repometadata[reponame].desc }}</a></li>
 			{% endfor %}
 			</ul>
 		</section>
@@ -82,7 +82,7 @@
 			<h2>Maintainers</h2>
 			<ul>
 			{% for maintainer, spread in maintainers_spread|dictsort(case_sensitive=True) %}
-				<li><a href="{{ url_for('maintainer', maintainer=maintainer) }}">{{ maintainer }}</a>{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
+				<li><a href="{{ url_for(endpoint='maintainer', maintainer=maintainer) }}">{{ maintainer }}</a>{% if spread > 1 %} <b>({{ spread }})</b>{% endif %}</li>
 			{% endfor %}
 			</ul>
 

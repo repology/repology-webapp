@@ -62,12 +62,12 @@
 	{% for maintainer in maintainers %}
 		<tr>
 			<td class="text-right break-word">
-				<a href="{{ url_for('maintainer', maintainer=maintainer.maintainer) }}">
+				<a href="{{ url_for(endpoint='maintainer', maintainer=maintainer.maintainer) }}">
 					{{- maintainer.maintainer -}}
 				</a>
 			</td>
 			<td class="text-center">
-				<a href="{{ url_for('repository', repo=maintainer.bestrepo) }}">
+				<a href="{{ url_for(endpoint='repository', repo=maintainer.bestrepo) }}">
 					{{- repometadata[maintainer.bestrepo].desc -}}
 				</a>
 				{%- if maintainer.num_repos > 1 -%}
@@ -75,43 +75,43 @@
 				{%- endif %}
 			</td>
 			<td class="text-center total-cell">
-				<a href="{{ url_for('projects', maintainer=maintainer.maintainer, inrepo=maintainer.bestrepo) }}">
+				<a href="{{ url_for(endpoint='projects', maintainer=maintainer.maintainer, inrepo=maintainer.bestrepo) }}">
 					{{- maintainer.bestrepo_num_projects -}}
 				</a>
 			</td>
 			{%- if maintainer.bestrepo_num_projects_newest -%}
 			<td class="text-center version-cell version-big version-newest">
-				<a href="{{ url_for('projects', maintainer=maintainer.maintainer, inrepo=maintainer.bestrepo, newest=1) }}">
+				<a href="{{ url_for(endpoint='projects', maintainer=maintainer.maintainer, inrepo=maintainer.bestrepo, newest=1) }}">
 					{{- maintainer.bestrepo_num_projects_newest -}}
 				</a>
 			</td>
 			<td class="text-center version-cell version-big version-newest">
-				<a href="{{ url_for('projects', maintainer=maintainer.maintainer, inrepo=maintainer.bestrepo, newest=1) }}">
+				<a href="{{ url_for(endpoint='projects', maintainer=maintainer.maintainer, inrepo=maintainer.bestrepo, newest=1) }}">
 					{{- safe_percent(maintainer.bestrepo_num_projects_newest, maintainer.bestrepo_num_projects) -}}
 				</a>
 			</td>
 			{%- else -%}<td class="text-center" colspan="2">-</td>{%- endif -%}
 			{%- if maintainer.bestrepo_num_projects_outdated -%}
 			<td class="text-center version-cell version-big version-outdated">
-				<a href="{{ url_for('projects', maintainer=maintainer.maintainer, inrepo=maintainer.bestrepo, outdated=1) }}">
+				<a href="{{ url_for(endpoint='projects', maintainer=maintainer.maintainer, inrepo=maintainer.bestrepo, outdated=1) }}">
 					{{- maintainer.bestrepo_num_projects_outdated -}}
 				</a>
 			</td>
 			<td class="text-center version-cell version-big version-outdated">
-				<a href="{{ url_for('projects', maintainer=maintainer.maintainer, inrepo=maintainer.bestrepo, outdated=1) }}">
+				<a href="{{ url_for(endpoint='projects', maintainer=maintainer.maintainer, inrepo=maintainer.bestrepo, outdated=1) }}">
 					{{- safe_percent(maintainer.bestrepo_num_projects_outdated, maintainer.bestrepo_num_projects) -}}
 				</a>
 			</td>
 			{%- else -%}<td class="text-center" colspan="2">-</td>{%- endif -%}
 			{%- if maintainer.bestrepo_num_projects_problematic -%}
 			<td class="text-center version-cell version-big version-ignored">
-				<a href="{{ url_for('projects', maintainer=maintainer.maintainer, inrepo=maintainer.bestrepo, problematic=1) }}">
+				<a href="{{ url_for(endpoint='projects', maintainer=maintainer.maintainer, inrepo=maintainer.bestrepo, problematic=1) }}">
 					{{- maintainer.bestrepo_num_projects_problematic -}}
 				</a>
 			</td>
 			{%- else -%}<td class="text-center">-</td>{%- endif -%}
 			<td class="text-center total-cell">
-				<a href="{{ url_for('projects', maintainer=maintainer.maintainer) }}">
+				<a href="{{ url_for(endpoint='projects', maintainer=maintainer.maintainer) }}">
 					{{- maintainer.num_projects -}}
 				</a>
 			</td>
@@ -128,9 +128,9 @@
 	<ul>
 		<li>The maintainer you are looking for no longer maintains any packages.</li>
 		<li>The maintainer you are looking for obfuscates his email in package metadata, so repology cannot parse it.</li>
-		<li>Repology does not support or no longer supports any repositories the maintainer you are looking for is active in. Check <a href="{{ url_for('repositories_statistics') }}">the list</a> of supported repositories.</li>
+		<li>Repology does not support or no longer supports any repositories the maintainer you are looking for is active in. Check <a href="{{ url_for(endpoint='repositories_statistics') }}">the list</a> of supported repositories.</li>
 		<li>The maintainer identifier (email) is misspelled, or have changed.{% if search and '@' in search %} It is quite common for only domain part to change, so try <a href="{{ url_for_self(search=search.split('@')[0]) }}">searching</a> without domain name.{% endif %}</li>
-		<li>Repology is unable or no longer able to parse maintainer information for repositories this maintainer is active in. Check <a href="{{ url_for('repositories_fields') }}">repository support table</a>. This can be fixed if repositories in question setup a more complete dump of information on their packages.</li>
+		<li>Repology is unable or no longer able to parse maintainer information for repositories this maintainer is active in. Check <a href="{{ url_for(endpoint='repositories_fields') }}">repository support table</a>. This can be fixed if repositories in question setup a more complete dump of information on their packages.</li>
 	</ul>
 </div>
 {% endif %}

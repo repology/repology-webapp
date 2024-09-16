@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url><loc>{{ REPOLOGY_HOME }}{{ url_for('docs') }}</loc><changefreq>weekly</changefreq></url>
-<url><loc>{{ REPOLOGY_HOME }}{{ url_for('docs_about') }}</loc><changefreq>weekly</changefreq></url>
-<url><loc>{{ REPOLOGY_HOME }}{{ url_for('docs_requirements') }}</loc><changefreq>weekly</changefreq></url>
-<url><loc>{{ REPOLOGY_HOME }}{{ url_for('api_v1') }}</loc><changefreq>weekly</changefreq></url>
-<url><loc>{{ REPOLOGY_HOME }}{{ url_for('index') }}</loc><changefreq>hourly</changefreq></url>
-<url><loc>{{ REPOLOGY_HOME }}{{ url_for('news') }}</loc><changefreq>daily</changefreq></url>
-<url><loc>{{ REPOLOGY_HOME }}{{ url_for('repositories_statistics') }}</loc><changefreq>hourly</changefreq></url>
-<url><loc>{{ REPOLOGY_HOME }}{{ url_for('trending') }}</loc><changefreq>hourly</changefreq></url>
+<url><loc>{{ REPOLOGY_HOME }}{{ url_for(endpoint='docs') }}</loc><changefreq>weekly</changefreq></url>
+<url><loc>{{ REPOLOGY_HOME }}{{ url_for(endpoint='docs_about') }}</loc><changefreq>weekly</changefreq></url>
+<url><loc>{{ REPOLOGY_HOME }}{{ url_for(endpoint='docs_requirements') }}</loc><changefreq>weekly</changefreq></url>
+<url><loc>{{ REPOLOGY_HOME }}{{ url_for(endpoint='api_v1') }}</loc><changefreq>weekly</changefreq></url>
+<url><loc>{{ REPOLOGY_HOME }}{{ url_for(endpoint='index') }}</loc><changefreq>hourly</changefreq></url>
+<url><loc>{{ REPOLOGY_HOME }}{{ url_for(endpoint='news') }}</loc><changefreq>daily</changefreq></url>
+<url><loc>{{ REPOLOGY_HOME }}{{ url_for(endpoint='repositories_statistics') }}</loc><changefreq>hourly</changefreq></url>
+<url><loc>{{ REPOLOGY_HOME }}{{ url_for(endpoint='trending') }}</loc><changefreq>hourly</changefreq></url>
 </urlset>

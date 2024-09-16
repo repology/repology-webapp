@@ -47,7 +47,7 @@
 	{% for repostat in repostats %}
 		<tr id="{{ repostat.name }}">
 			<th class="text-right">
-				<a href="{{ url_for('repository', repo=repostat.name) }}">{{ repometadata[repostat.name].desc }}</a>
+				<a href="{{ url_for(endpoint='repository', repo=repostat.name) }}">{{ repometadata[repostat.name].desc }}</a>
 			</th>
 
 			<td class="text-center">{{ repostat.num_packages }}</td>

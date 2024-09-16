@@ -21,7 +21,7 @@
 	repometadata[repo].num_metapackages > 0 and
 	repometadata[repo].type == 'repository'
 %}
-<div class="alert alert-danger" role="alert"><p>This repository <a href="{{ url_for('repositories_fields', _anchor=repo) }}">does not provide</a> project <strong>homepage or download links</strong> in a way accessible by Repology. This is critical, because these are used to resolve project name conflicts, e.g. to distinguish similarly named packages of unrelated projects. Because of that, this repository is <strong>subject to removal</strong> in the near future.</p><p>See <a href="{{ url_for('docs_requirements') }}">documentation</a> for a best way to make package metadata available for Repology.</p></div>
+<div class="alert alert-danger" role="alert"><p>This repository <a href="{{ url_for(endpoint='repositories_fields', _anchor=repo) }}">does not provide</a> project <strong>homepage or download links</strong> in a way accessible by Repology. This is critical, because these are used to resolve project name conflicts, e.g. to distinguish similarly named packages of unrelated projects. Because of that, this repository is <strong>subject to removal</strong> in the near future.</p><p>See <a href="{{ url_for(endpoint='docs_requirements') }}">documentation</a> for a best way to make package metadata available for Repology.</p></div>
 {% endif %}
 
 {% if
@@ -31,7 +31,7 @@
 	repometadata[repo].num_metapackages > 0 and
 	repometadata[repo].type == 'repository'
 %}
-<div class="alert alert-danger" role="alert"><p>This repository <a href="{{ url_for('repositories_fields', _anchor=repo) }}">does not provide</a> links to <strong>package recipes or sources</strong> in a way accessible by Repology. This is critical, because one of the goals of Repology is to make the details of how a project is packaged visible to anyone. It makes Repology maintenance harder as it's not possible to easily check where a specific version comes from; it does not allow upstream to check the recipe and improve their software to simplify packaging, or suggest corrections to the maintainer; it does not allow other maintainers to learn new ideas. It may be as well dangerous to users due to lack of transparency. Because of that, this repository is <strong>subject to removal</strong> in the near future.</p><p>See <a href="{{ url_for('docs_requirements') }}">documentation</a> for a best way to make package metadata available for Repology.</p></div>
+<div class="alert alert-danger" role="alert"><p>This repository <a href="{{ url_for(endpoint='repositories_fields', _anchor=repo) }}">does not provide</a> links to <strong>package recipes or sources</strong> in a way accessible by Repology. This is critical, because one of the goals of Repology is to make the details of how a project is packaged visible to anyone. It makes Repology maintenance harder as it's not possible to easily check where a specific version comes from; it does not allow upstream to check the recipe and improve their software to simplify packaging, or suggest corrections to the maintainer; it does not allow other maintainers to learn new ideas. It may be as well dangerous to users due to lack of transparency. Because of that, this repository is <strong>subject to removal</strong> in the near future.</p><p>See <a href="{{ url_for(endpoint='docs_requirements') }}">documentation</a> for a best way to make package metadata available for Repology.</p></div>
 {% endif %}
 
 {% if repometadata[repo].repolinks %}
@@ -87,7 +87,7 @@
 		<div class="panel panel-primary">
 			<div class="panel-heading"><h3>Total</h3></div>
 			<div class="panel-body">
-				<a href="{{ url_for('projects', inrepo=repo) }}">
+				<a href="{{ url_for(endpoint='projects', inrepo=repo) }}">
 					{{ repo_info.num_metapackages|default(0) }}
 				</a>
 			</div>
@@ -97,7 +97,7 @@
 		<div class="panel panel-success">
 			<div class="panel-heading"><h3>Newest</h3></div>
 			<div class="panel-body">
-				<a href="{{ url_for('projects', inrepo=repo, newest=1) }}">
+				<a href="{{ url_for(endpoint='projects', inrepo=repo, newest=1) }}">
 					{{ repo_info.num_metapackages_newest|default(0) }}
 				</a>
 			</div>
@@ -107,7 +107,7 @@
 		<div class="panel panel-danger">
 			<div class="panel-heading"><h3>Outdated</h3></div>
 			<div class="panel-body">
-				<a href="{{ url_for('projects', inrepo=repo, outdated=1) }}">
+				<a href="{{ url_for(endpoint='projects', inrepo=repo, outdated=1) }}">
 					{{ repo_info.num_metapackages_outdated|default(0) }}
 				</a>
 			</div>
@@ -117,7 +117,7 @@
 		<div class="panel panel-info">
 			<div class="panel-heading"><h3>Unique</h3></div>
 			<div class="panel-body">
-				<a href="{{ url_for('projects', inrepo=repo, families=1) }}">
+				<a href="{{ url_for(endpoint='projects', inrepo=repo, families=1) }}">
 					{{ repo_info.num_metapackages_unique|default(0) }}
 				</a>
 			</div>
@@ -130,24 +130,24 @@
 <p>Package filtering in Repology is very flexible, so you can combine all kinds of conditions. But here are some preset queries to start with:</p>
 
 <ul>
-	<li><a href="{{ url_for('projects', inrepo=repo) }}">All packages</a> present in this repository.</li>
-	<li>Packages which are <a href="{{ url_for('projects', inrepo=repo, newest=1) }}">up to date</a> in this repository.</li>
-	<li>Packages which are <a href="{{ url_for('projects', inrepo=repo, outdated=1) }}">outdated</a> in this repository.</li>
-	<li>Packages which are <a href="{{ url_for('projects', inrepo=repo, outdated=1, families_newest='2-') }}">outdated</a> in this repository, but newest in 2+ families. Compared to the previous query this has smaller possibility of false positives.</li>
-	<li>Packages which are <a href="{{ url_for('projects', inrepo=repo, vulnerable=1) }}">potentially vulnerable</a> in this repository.</li>
+	<li><a href="{{ url_for(endpoint='projects', inrepo=repo) }}">All packages</a> present in this repository.</li>
+	<li>Packages which are <a href="{{ url_for(endpoint='projects', inrepo=repo, newest=1) }}">up to date</a> in this repository.</li>
+	<li>Packages which are <a href="{{ url_for(endpoint='projects', inrepo=repo, outdated=1) }}">outdated</a> in this repository.</li>
+	<li>Packages which are <a href="{{ url_for(endpoint='projects', inrepo=repo, outdated=1, families_newest='2-') }}">outdated</a> in this repository, but newest in 2+ families. Compared to the previous query this has smaller possibility of false positives.</li>
+	<li>Packages which are <a href="{{ url_for(endpoint='projects', inrepo=repo, vulnerable=1) }}">potentially vulnerable</a> in this repository.</li>
 </ul>
 <ul>
-	<li>Packages which <a href="{{ url_for('projects', inrepo=repo, problematic=1) }}">have ignored versions</a> in this repository. There may be incorrect versions which needs fixing among these.</li>
-	<li>Packages which are up to date <a href="{{ url_for('projects', inrepo=repo, newest=1, families_newest=1) }}">only in this repository family</a>. There may be incorrect versions which needs fixing among these.</li>
-	<li>Packages which <a href="{{ url_for('projects', inrepo=repo, has_related=1) }}">have related ones</a> (with the same homepage). There may be projects which require merging these.</li>
+	<li>Packages which <a href="{{ url_for(endpoint='projects', inrepo=repo, problematic=1) }}">have ignored versions</a> in this repository. There may be incorrect versions which needs fixing among these.</li>
+	<li>Packages which are up to date <a href="{{ url_for(endpoint='projects', inrepo=repo, newest=1, families_newest=1) }}">only in this repository family</a>. There may be incorrect versions which needs fixing among these.</li>
+	<li>Packages which <a href="{{ url_for(endpoint='projects', inrepo=repo, has_related=1) }}">have related ones</a> (with the same homepage). There may be projects which require merging these.</li>
 </ul>
 <ul>
-	<li>Unique projects present <a href="{{ url_for('projects', inrepo=repo, families=1) }}">only in this repository family</a>.</li>
-	<li>Unique projects present <a href="{{ url_for('projects', inrepo=repo, repos=1) }}">only in this repository</a>.</li>
+	<li>Unique projects present <a href="{{ url_for(endpoint='projects', inrepo=repo, families=1) }}">only in this repository family</a>.</li>
+	<li>Unique projects present <a href="{{ url_for(endpoint='projects', inrepo=repo, repos=1) }}">only in this repository</a>.</li>
 </ul>
 <ul>
-	<li>Project in other repositories <a href="{{ url_for('projects', notinrepo=repo) }}">not present in this one</a>.</li>
-	<li>Popular projects <a href="{{ url_for('projects', notinrepo=repo, families='5-') }}">present in 5+ repository families</a>, but absent in this one - likely good candidates for inclusion.</li>
+	<li>Project in other repositories <a href="{{ url_for(endpoint='projects', notinrepo=repo) }}">not present in this one</a>.</li>
+	<li>Popular projects <a href="{{ url_for(endpoint='projects', notinrepo=repo, families='5-') }}">present in 5+ repository families</a>, but absent in this one - likely good candidates for inclusion.</li>
 </ul>
 
 <h2>Maintainers</h2>
@@ -157,66 +157,66 @@
 {% if repo_info.num_problems %}
 <h2>Problems</h2>
 
-<p>There are <a href="{{ url_for('repository_problems', repo=repo) }}">{{ repo_info.num_problems }} known problems</a> for packages in this repository</p>
+<p>There are <a href="{{ url_for(endpoint='repository_problems', repo=repo) }}">{{ repo_info.num_problems }} known problems</a> for packages in this repository</p>
 {% endif %}
 
 <h2>Badge</h2>
 
-<p><a href="{{ REPOLOGY_HOME }}{{ url_for('repository', repo=repo) }}"><img src="{{ url_for('badge_repository_big', name=name, repo=repo) }}" alt="Repository status"></a></p>
+<p><a href="{{ REPOLOGY_HOME }}{{ url_for(endpoint='repository', repo=repo) }}"><img src="{{ url_for(endpoint='badge_repository_big', name=name, repo=repo) }}" alt="Repository status"></a></p>
 
 <p>Markdown code:</p>
 <pre>
-[![Repository status]({{ REPOLOGY_HOME }}{{ url_for('badge_repository_big', repo=repo) }})]({{ REPOLOGY_HOME }}{{ url_for('repository', repo=repo) }})
+[![Repository status]({{ REPOLOGY_HOME }}{{ url_for(endpoint='badge_repository_big', repo=repo) }})]({{ REPOLOGY_HOME }}{{ url_for(endpoint='repository', repo=repo) }})
 </pre>
 
 <p>HTML code:</p>
 <pre>
-&lt;a href=&quot;{{ REPOLOGY_HOME }}{{ url_for('repository', repo=repo) }}&quot;&gt;
-    &lt;img src=&quot;{{ REPOLOGY_HOME }}{{ url_for('badge_repository_big', repo=repo)}}&quot; alt=&quot;Repository status&quot;&gt;
+&lt;a href=&quot;{{ REPOLOGY_HOME }}{{ url_for(endpoint='repository', repo=repo) }}&quot;&gt;
+    &lt;img src=&quot;{{ REPOLOGY_HOME }}{{ url_for(endpoint='badge_repository_big', repo=repo)}}&quot; alt=&quot;Repository status&quot;&gt;
 &lt;/a&gt;
 </pre>
 
-<p>Badge header may be changed or removed by <code>header</code> URL parameter, for example: <code>{{ REPOLOGY_HOME }}{{ url_for('badge_repository_big', repo=repo, header=repometadata[repo].desc) }}</code></p>
+<p>Badge header may be changed or removed by <code>header</code> URL parameter, for example: <code>{{ REPOLOGY_HOME }}{{ url_for(endpoint='badge_repository_big', repo=repo, header=repometadata[repo].desc) }}</code></p>
 
 <h2>Graphs</h2>
 <h3>Total projects</h3>
-<img src="{{ url_for('graph_repo_projects_total', repo=repo) }}" alt="Total projects graph">
+<img src="{{ url_for(endpoint='graph_repo_projects_total', repo=repo) }}" alt="Total projects graph">
 
 <h3>Newest projects</h3>
-<img src="{{ url_for('graph_repo_projects_newest', repo=repo) }}" alt="Newest projects graph">
+<img src="{{ url_for(endpoint='graph_repo_projects_newest', repo=repo) }}" alt="Newest projects graph">
 
 <h3>Newest projects percentage</h3>
-<img src="{{ url_for('graph_repo_projects_newest_percent', repo=repo) }}" alt="Newest projects percentage graph">
+<img src="{{ url_for(endpoint='graph_repo_projects_newest_percent', repo=repo) }}" alt="Newest projects percentage graph">
 
 <h3>Outdated projects</h3>
-<img src="{{ url_for('graph_repo_projects_outdated', repo=repo) }}" alt="Outdated projects graph">
+<img src="{{ url_for(endpoint='graph_repo_projects_outdated', repo=repo) }}" alt="Outdated projects graph">
 
 <h3>Outdated projects percentage</h3>
-<img src="{{ url_for('graph_repo_projects_outdated_percent', repo=repo) }}" alt="Outdated projects percentage graph">
+<img src="{{ url_for(endpoint='graph_repo_projects_outdated_percent', repo=repo) }}" alt="Outdated projects percentage graph">
 
 <h3>Unique projects</h3>
-<img src="{{ url_for('graph_repo_projects_unique', repo=repo) }}" alt="Unique projects graph">
+<img src="{{ url_for(endpoint='graph_repo_projects_unique', repo=repo) }}" alt="Unique projects graph">
 
 <h3>Unique projects percentage</h3>
-<img src="{{ url_for('graph_repo_projects_unique_percent', repo=repo) }}" alt="Unique projects percentage graph">
+<img src="{{ url_for(endpoint='graph_repo_projects_unique_percent', repo=repo) }}" alt="Unique projects percentage graph">
 
 <h3>Problematic projects</h3>
-<img src="{{ url_for('graph_repo_projects_problematic', repo=repo) }}" alt="Problematic projects graph">
+<img src="{{ url_for(endpoint='graph_repo_projects_problematic', repo=repo) }}" alt="Problematic projects graph">
 
 <h3>Problematic projects percentage</h3>
-<img src="{{ url_for('graph_repo_projects_problematic_percent', repo=repo) }}" alt="Problematic projects percentage graph">
+<img src="{{ url_for(endpoint='graph_repo_projects_problematic_percent', repo=repo) }}" alt="Problematic projects percentage graph">
 
 <h3>Potentially vulnerable projects</h3>
-<img src="{{ url_for('graph_repo_projects_vulnerable', repo=repo) }}" alt="Potentially vulnerable projects graph">
+<img src="{{ url_for(endpoint='graph_repo_projects_vulnerable', repo=repo) }}" alt="Potentially vulnerable projects graph">
 
 <h3>Potentially vulnerable projects percentage</h3>
-<img src="{{ url_for('graph_repo_projects_vulnerable_percent', repo=repo) }}" alt="Potentially vulnerable projects percentage graph">
+<img src="{{ url_for(endpoint='graph_repo_projects_vulnerable_percent', repo=repo) }}" alt="Potentially vulnerable projects percentage graph">
 
 <h3>Maintainers</h3>
-<img src="{{ url_for('graph_repo_maintainers', repo=repo) }}" alt="Maintainers graph">
+<img src="{{ url_for(endpoint='graph_repo_maintainers', repo=repo) }}" alt="Maintainers graph">
 
 <h3>Problems</h3>
-<img src="{{ url_for('graph_repo_problems', repo=repo) }}" alt="Problems graph">
+<img src="{{ url_for(endpoint='graph_repo_problems', repo=repo) }}" alt="Problems graph">
 
 </div>
 {% endblock %}

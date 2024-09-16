@@ -7,17 +7,17 @@
 <div class="container">
 
 <ul>
-	<li><a href="{{ url_for('maintainers_turnover') }}">Maintainers turnover</a> - lists of maintainers added and removed recently.
+	<li><a href="{{ url_for(endpoint='maintainers_turnover') }}">Maintainers turnover</a> - lists of maintainers added and removed recently.
 		<ul>
 			<li>Needs to gather some history of removed maintainers.</li>
 		</ul>
 	</li>
-	<li><a href="{{ url_for('distromap') }}">Distromap</a> - get a mapping of package names from one distro to another.
+	<li><a href="{{ url_for(endpoint='distromap') }}">Distromap</a> - get a mapping of package names from one distro to another.
 		<ul>
 			<li>Slow, may need a facility for background task execution.</li>
 		</ul>
 	</li>
-	<li><a href="{{ url_for('important_updates') }}">Important updates</a> - 100 most important updates from latest 24h.
+	<li><a href="{{ url_for(endpoint='important_updates') }}">Important updates</a> - 100 most important updates from latest 24h.
 		<ul>
 			<li>May include unexpected items such as version rollbacks after ignoring fakes.</li>
 		</ul>

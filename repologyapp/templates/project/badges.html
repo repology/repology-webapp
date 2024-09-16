@@ -6,17 +6,17 @@
 {% block keywords %}{{ super() }}, badge{% endblock %}
 
 {% macro badge_example(badge_type, alt="Packaging status", badge_args={}) %}
-<p><a href="{{ REPOLOGY_HOME }}{{ url_for('project_versions', name=name) }}"><img src="{{ url_for(badge_type, name=name, **badge_args) }}" alt="{{ alt }}"></a></p>
+<p><a href="{{ REPOLOGY_HOME }}{{ url_for(endpoint='project_versions', name=name) }}"><img src="{{ url_for(endpoint=badge_type, name=name, **badge_args) }}" alt="{{ alt }}"></a></p>
 
 <p>Markdown code:</p>
 <pre>
-[![{{ alt }}]({{ REPOLOGY_HOME }}{{ url_for(badge_type, name=name, **badge_args) }})]({{ REPOLOGY_HOME }}{{ url_for('project_versions', name=name) }})
+[![{{ alt }}]({{ REPOLOGY_HOME }}{{ url_for(endpoint=badge_type, name=name, **badge_args) }})]({{ REPOLOGY_HOME }}{{ url_for(endpoint='project_versions', name=name) }})
 </pre>
 
 <p>HTML code:</p>
 <pre>
-&lt;a href=&quot;{{ REPOLOGY_HOME }}{{ url_for('project_versions', name=name) }}&quot;&gt;
-    &lt;img src=&quot;{{ REPOLOGY_HOME }}{{ url_for(badge_type, name=name, **badge_args)}}&quot; alt=&quot;{{ alt }}&quot;&gt;
+&lt;a href=&quot;{{ REPOLOGY_HOME }}{{ url_for(endpoint='project_versions', name=name) }}&quot;&gt;
+    &lt;img src=&quot;{{ REPOLOGY_HOME }}{{ url_for(endpoint=badge_type, name=name, **badge_args)}}&quot; alt=&quot;{{ alt }}&quot;&gt;
 &lt;/a&gt;
 </pre>
 {% endmacro %}
@@ -36,8 +36,8 @@
 
 <p>HTML code for right-aligned badge (most useful for README.md as it allows other content to flow around it not leading to space waste):</p>
 <pre>
-&lt;a href=&quot;{{ REPOLOGY_HOME }}{{ url_for('project_versions', name=name) }}&quot;&gt;
-    &lt;img src=&quot;{{ REPOLOGY_HOME }}{{ url_for('badge_vertical_allrepos', name=name)}}&quot; alt=&quot;Packaging status&quot; <strong>align=&quot;right&quot;</strong>&gt;
+&lt;a href=&quot;{{ REPOLOGY_HOME }}{{ url_for(endpoint='project_versions', name=name) }}&quot;&gt;
+    &lt;img src=&quot;{{ REPOLOGY_HOME }}{{ url_for(endpoint='badge_vertical_allrepos', name=name)}}&quot; alt=&quot;Packaging status&quot; <strong>align=&quot;right&quot;</strong>&gt;
 &lt;/a&gt;
 </pre>
 
@@ -83,12 +83,12 @@
 	{% for repo in repos %}
 	<tr>
 		<td>
-			<a href="{{ REPOLOGY_HOME }}{{ url_for('project_versions', name=name) }}">
-				<img src="{{ url_for('badge_version_for_repo', name=name, repo=repo) }}" alt="{{ repometadata[repo].singular }}">
+			<a href="{{ REPOLOGY_HOME }}{{ url_for(endpoint='project_versions', name=name) }}">
+				<img src="{{ url_for(endpoint='badge_version_for_repo', name=name, repo=repo) }}" alt="{{ repometadata[repo].singular }}">
 			</a>
 		</td>
-		<td><code>[![{{ repometadata[repo].singular }}]({{ REPOLOGY_HOME }}{{ url_for('badge_version_for_repo', name=name, repo=repo) }})]({{ REPOLOGY_HOME }}{{ url_for('project_versions', name=name) }})</code></td>
-		<td><code>&lt;a href=&quot;{{ REPOLOGY_HOME }}{{ url_for('project_versions', name=name) }}&quot;&gt;<br>&nbsp;&nbsp;&lt;img src=&quot;{{ REPOLOGY_HOME }}{{ url_for('badge_version_for_repo', name=name, repo=repo)}}&quot; alt=&quot;{{ repometadata[repo].singular }}&quot;&gt;<br>&lt;/a&gt;</code></td>
+		<td><code>[![{{ repometadata[repo].singular }}]({{ REPOLOGY_HOME }}{{ url_for(endpoint='badge_version_for_repo', name=name, repo=repo) }})]({{ REPOLOGY_HOME }}{{ url_for(endpoint='project_versions', name=name) }})</code></td>
+		<td><code>&lt;a href=&quot;{{ REPOLOGY_HOME }}{{ url_for(endpoint='project_versions', name=name) }}&quot;&gt;<br>&nbsp;&nbsp;&lt;img src=&quot;{{ REPOLOGY_HOME }}{{ url_for(endpoint='badge_version_for_repo', name=name, repo=repo)}}&quot; alt=&quot;{{ repometadata[repo].singular }}&quot;&gt;<br>&lt;/a&gt;</code></td>
 	</tr>
 	{% endfor %}
 </table>
@@ -109,17 +109,17 @@
 
 <table class="table table-condensed">
 	<tr>
-		{% set url = url_for('badge_version_for_repo', name=name, repo=repos[0]) %}
+		{% set url = url_for(endpoint='badge_version_for_repo', name=name, repo=repos[0]) %}
 		<td><code>{{ REPOLOGY_HOME }}{{ url }}</code></td>
 		<td><img src="{{ REPOLOGY_HOME }}{{ url }}" alt="Version badge example, with default caption"></td>
 	</tr>
 	<tr>
-		{% set url = url_for('badge_version_for_repo', name=name, repo=repos[0], header='') %}
+		{% set url = url_for(endpoint='badge_version_for_repo', name=name, repo=repos[0], header='') %}
 		<td><code>{{ REPOLOGY_HOME }}{{ url }}</code></td>
 		<td><img src="{{ REPOLOGY_HOME }}{{ url }}" alt="Version badge example, with caption removed"></td>
 	</tr>
 	<tr>
-		{% set url = url_for('badge_version_for_repo', name=name, repo=repos[0], header='PACKAGE') %}
+		{% set url = url_for(endpoint='badge_version_for_repo', name=name, repo=repos[0], header='PACKAGE') %}
 		<td><code>{{ REPOLOGY_HOME }}{{ url }}</code></td>
 		<td><img src="{{ REPOLOGY_HOME }}{{ url }}" alt="Version badge example, with custom caption set to &quot;PACKAGE&quot;"></td>
 	</tr>
@@ -131,12 +131,12 @@
 
 <table class="table table-condensed">
 	<tr>
-		{% set url = url_for('badge_version_for_repo', name=name, repo=repos[0]) %}
+		{% set url = url_for(endpoint='badge_version_for_repo', name=name, repo=repos[0]) %}
 		<td><code>{{ REPOLOGY_HOME }}{{ url }}</code></td>
 		<td><img src="{{ REPOLOGY_HOME }}{{ url }}" alt="Version badge example"></td>
 	</tr>
 	<tr>
-		{% set url = url_for('badge_version_for_repo', name=name, repo=repos[0], minversion='999999999') %}
+		{% set url = url_for(endpoint='badge_version_for_repo', name=name, repo=repos[0], minversion='999999999') %}
 		<td><code>{{ REPOLOGY_HOME }}{{ url }}</code></td>
 		<td><img src="{{ REPOLOGY_HOME }}{{ url }}" alt="Version badge example, with minimal version set"></td>
 	</tr>
@@ -146,7 +146,7 @@
 
 <p>By default, when picking the version to show on badge, all <span class="version version-rolling">rolling</span>, <span class="version version-noscheme">noscheme</span>, <span class="version version-incorrect">incorrect</span>, <span class="version version-untrusted">untrusted</span>, <span class="version version-ignored">ignored</span> versions are skipped (so, for instance, rolling <code>9999</code> versions in Gentoo do not hide real stable versions). When <code>allow_ignored</code> parameter is specified (with some non-empty value), the greatest version is always picked regardless of status.</p>
 
-<p><code>{{ REPOLOGY_HOME }}{{ url_for('badge_version_for_repo', name=name, repo=repos[0], allow_ignored=1) }}</code></p>
+<p><code>{{ REPOLOGY_HOME }}{{ url_for(endpoint='badge_version_for_repo', name=name, repo=repos[0], allow_ignored=1) }}</code></p>
 
 </section>
 

@@ -23,7 +23,7 @@
 	{% for update in updates %}
 		<tr>
 			<td class="text-nowrap minimal-column">
-				<a href="{{ url_for('project_versions', name=update.effname) }}">{{ update.effname }}</a>
+				<a href="{{ url_for(endpoint='project_versions', name=update.effname) }}">{{ update.effname }}</a>
 			</td>
 			<td class="text-center text-nowrap minimal-column"><b>{{ update.spread }}</b></td>
 			<td>

@@ -25,7 +25,7 @@ CVEs yet, or it may be an error in NVD which should be fixed.</p>
 	<tbody>
 	{% for item in items %}
 		<tr>
-			<td class="minimal-column"><a href="{{ url_for('project_versions', name=item.effname) }}">{{ item.effname }}</a></td>
+			<td class="minimal-column"><a href="{{ url_for(endpoint='project_versions', name=item.effname) }}">{{ item.effname }}</a></td>
 			<td class="minimal-column"><a href="https://nvd.nist.gov/vuln/detail/{{ item.cve_id }}">{{ item.cve_id }}</a></td>
 			<td class="minimal-column">
 				<span class="version version-big version-rolling }}">

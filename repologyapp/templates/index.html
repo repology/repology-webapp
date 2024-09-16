@@ -44,7 +44,7 @@
 							<li>Keep track of where and how well your project is packaged</li>
 							<li>Keep in touch with your product package maintainers</li>
 							<li>Use packaging badges like this one:
-								<img class="jumbotron-badge" src="{{ url_for("static", filename="demobadge.v1.svg") }}" alt="Repology badge example">
+								<img class="jumbotron-badge" src="{{ url_for_static(file="demobadge.v1.svg") }}" alt="Repology badge example">
 							</li>
 						</ul>
 					</div>
@@ -74,31 +74,31 @@
 			<div class="col-md-4">
 				<ul class="list-unstyled">
 					<li><time class="news-summary-time" datetime="2024-07-23">2024-07-23</time>
-						added <a href="{{ url_for('repository', repo='opam') }}">opam</a> repository</li>
+						added <a href="{{ url_for(endpoint='repository', repo='opam') }}">opam</a> repository</li>
 					<li><time class="news-summary-time" datetime="2024-07-18">2024-07-18</time>
-						added <a href="{{ url_for('repository', repo='serpentos') }}">Serpent OS</a> repository</li>
+						added <a href="{{ url_for(endpoint='repository', repo='serpentos') }}">Serpent OS</a> repository</li>
 					<li><time class="news-summary-time" datetime="2024-07-08">2024-07-08</time>
-						added <a href="{{ url_for('repository', repo='chromebrew') }}">Chromebrew</a> repository</li>
+						added <a href="{{ url_for(endpoint='repository', repo='chromebrew') }}">Chromebrew</a> repository</li>
 				</ul>
 			</div>
 			<div class="col-md-4">
 				<ul class="list-unstyled">
 					<li><time class="news-summary-time" datetime="2024-04-09">2024-04-09</time>
-						added <a href="{{ url_for('repository', repo='chimera') }}">Chimera Linux</a> repository</li>
+						added <a href="{{ url_for(endpoint='repository', repo='chimera') }}">Chimera Linux</a> repository</li>
 					<li><time class="news-summary-time" datetime="2023-08-28">2023-08-28</time>
-						added <a href="{{ url_for('repository', repo='buildroot_master') }}">Buildroot</a> repository</li>
+						added <a href="{{ url_for(endpoint='repository', repo='buildroot_master') }}">Buildroot</a> repository</li>
 					<li><time class="news-summary-time" datetime="2023-06-01">2023-06-01</time>
-						added <a href="{{ url_for('repository', repo='bioarch') }}">BioArch</a> repository</li>
+						added <a href="{{ url_for(endpoint='repository', repo='bioarch') }}">BioArch</a> repository</li>
 				</ul>
 			</div>
 			<div class="col-md-4">
 				<ul class="list-unstyled">
 					<li><time class="news-summary-time" datetime="2023-03-28">2023-03-28</time>
-						added <a href="{{ url_for('repository', repo='wakemeops') }}">WakeMeOps</a> repository</li>
+						added <a href="{{ url_for(endpoint='repository', repo='wakemeops') }}">WakeMeOps</a> repository</li>
 					<li><time class="news-summary-time" datetime="2022-11-07">2022-11-07</time>
-						added <a href="{{ url_for('repository', repo='terra_37') }}">Terra</a> repository</li>
+						added <a href="{{ url_for(endpoint='repository', repo='terra_37') }}">Terra</a> repository</li>
 					<li><time class="news-summary-time" datetime="2022-10-21">2022-10-21</time>
-						added <a href="{{ url_for('repository', repo='glaucus') }}">glaucus</a> repository</li>
+						added <a href="{{ url_for(endpoint='repository', repo='glaucus') }}">glaucus</a> repository</li>
 				</ul>
 			</div>
 		</div>
@@ -114,7 +114,7 @@
 						Search <b>packages</b>
 					</div>
 					<div class="panel-body">
-						<form action="{{ url_for('projects') }}" method="GET">
+						<form action="{{ url_for(endpoint='projects') }}" method="GET">
 							<div class="input-group">
 								<input type="text" class="form-control" name="search" placeholder="e.g. &quot;firefox&quot;">
 								<div class="input-group-btn">
@@ -124,7 +124,7 @@
 						</form>
 					</div>
 					<div class="panel-footer">
-						or <a href="{{ url_for('projects') }}">browse</a> list of all packages
+						or <a href="{{ url_for(endpoint='projects') }}">browse</a> list of all packages
 					</div>
 				</div>
 			</div>
@@ -134,7 +134,7 @@
 						Search <b>maintainers</b>
 					</div>
 					<div class="panel-body">
-						<form action="{{ url_for("maintainers") }}" method="GET">
+						<form action="{{ url_for(endpoint="maintainers") }}" method="GET">
 							<div class="input-group">
 								<input type="text" class="form-control" name="search" placeholder="e.g. &quot;foo@bar.com&quot;">
 								<div class="input-group-btn">
@@ -144,7 +144,7 @@
 						</form>
 					</div>
 					<div class="panel-footer">
-						or <a href="{{ url_for("maintainers") }}">browse</a> list of all maintainers
+						or <a href="{{ url_for(endpoint="maintainers") }}">browse</a> list of all maintainers
 					</div>
 				</div>
 			</div>
@@ -154,8 +154,8 @@
 						...or
 					</div>
 					<div class="panel-body">
-						See some <a href="{{ url_for("maintainers") }}">statistics</a> and a list of all
-						supported <a href="{{ url_for("repositories_statistics") }}">repositories</a>, and navigate
+						See some <a href="{{ url_for(endpoint="maintainers") }}">statistics</a> and a list of all
+						supported <a href="{{ url_for(endpoint="repositories_statistics") }}">repositories</a>, and navigate
 						to per-repository package lists from there.
 					</div>
 				</div>
@@ -177,9 +177,9 @@
 						<ol>
 						{% for topitem in topitems %}
 							{% if topitem.group == repometadata[topitem.name].desc %}
-							<li><a href="{{ url_for('repository', repo=topitem.name) }}">{{ repometadata[topitem.name].desc }}</a> - {{ format.format(topitem.value) }}</li>
+							<li><a href="{{ url_for(endpoint='repository', repo=topitem.name) }}">{{ repometadata[topitem.name].desc }}</a> - {{ format.format(topitem.value) }}</li>
 							{% else %}
-							<li>{{ topitem.group }} (<a href="{{ url_for('repository', repo=topitem.name) }}">{{ repometadata[topitem.name].desc }}</a>) - {{ format.format(topitem.value) }}</li>
+							<li>{{ topitem.group }} (<a href="{{ url_for(endpoint='repository', repo=topitem.name) }}">{{ repometadata[topitem.name].desc }}</a>) - {{ format.format(topitem.value) }}</li>
 							{% endif %}
 						{% endfor %}
 						</ol>

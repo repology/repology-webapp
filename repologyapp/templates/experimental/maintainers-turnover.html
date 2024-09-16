@@ -22,7 +22,7 @@
 				<tr>
 					<td class="text-nowrap">{{ format_time_interval(maintainer.ago) }} ago</td>
 					<td>
-						<a href="{{ url_for("maintainer", maintainer=maintainer.maintainer) }}">{{ maintainer.maintainer }}</a>
+						<a href="{{ url_for(endpoint="maintainer", maintainer=maintainer.maintainer) }}">{{ maintainer.maintainer }}</a>
 					</td>
 				</tr>
 			{% endfor %}

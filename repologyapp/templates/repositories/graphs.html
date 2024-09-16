@@ -14,19 +14,19 @@
 {{ autorefresh_toggler() }}
 
 <h3 id="freshness_map">Repository size/freshness map</h3>
-<img src="{{ url_for('graph_map_repo_size_fresh') }}" alt="Repository size/freshness map">
+<img src="{{ url_for(endpoint='graph_map_repo_size_fresh') }}" alt="Repository size/freshness map">
 
 <p>Zoomed in onto main cluster of repositories:</p>
-<img src="{{ url_for('graph_map_repo_size_fresh', xlimit=40000, ylimit=20000) }}" alt="Repository size/freshness map (zoom in)">
+<img src="{{ url_for(endpoint='graph_map_repo_size_fresh', xlimit=40000, ylimit=20000) }}" alt="Repository size/freshness map (zoom in)">
 
 <p>Zoomed in onto smaller repositories:</p>
-<img src="{{ url_for('graph_map_repo_size_fresh', xlimit=8000, ylimit=4000) }}" alt="Repository size/freshness map (zoom in)">
+<img src="{{ url_for(endpoint='graph_map_repo_size_fresh', xlimit=8000, ylimit=4000) }}" alt="Repository size/freshness map (zoom in)">
 
 <h3 id="projects_graph">Projects</h3>
-<img src="{{ url_for('graph_total_projects') }}" alt="Projects know to Repology versus time">
+<img src="{{ url_for(endpoint='graph_total_projects') }}" alt="Projects know to Repology versus time">
 
 <h3 id="maintainers_graph">Maintainers</h3>
-<img src="{{ url_for('graph_total_maintainers') }}" alt="Maintainers known to Repology versus time">
+<img src="{{ url_for(endpoint='graph_total_maintainers') }}" alt="Maintainers known to Repology versus time">
 
 </div> {#- container #}
 {% endblock %}

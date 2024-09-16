@@ -22,9 +22,9 @@
 				<tr>
 					<td class="text-nowrap">{{ format_time_interval(package.ago) }} ago</td>
 					<td>
-						<a href="{{ url_for('project_versions', name=package.effname) }}">{{ package.effname }}</a>
+						<a href="{{ url_for(endpoint='project_versions', name=package.effname) }}">{{ package.effname }}</a>
 					{%- if package.has_related -%}
-						<a href="{{ url_for('project_related', name=package.effname) }}">∗</a>
+						<a href="{{ url_for(endpoint='project_related', name=package.effname) }}">∗</a>
 					{% endif %}
 					</td>
 				</tr>

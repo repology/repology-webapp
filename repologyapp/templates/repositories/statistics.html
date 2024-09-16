@@ -61,23 +61,23 @@
 	{% for repostat in repostats %}
 		<tr id="{{ repostat.name }}">
 			<th class="text-right">
-				<a href="{{ url_for('repository', repo=repostat.name) }}">{{ repometadata[repostat.name].desc }}</a>
+				<a href="{{ url_for(endpoint='repository', repo=repostat.name) }}">{{ repometadata[repostat.name].desc }}</a>
 			</th>
 
 			<td class="text-center total-cell" title="Total number of projects packaged in this repository">
-				<a href="{{ url_for('projects', inrepo=repostat.name) }}">
+				<a href="{{ url_for(endpoint='projects', inrepo=repostat.name) }}">
 					{{- repostat.num_metapackages -}}
 				</a>
 			</td>
 
 			<td class="text-center total-cell" title="Number of non-unique projects packaged in this repository">
-				<a href="{{ url_for('projects', inrepo=repostat.name, families='2-') }}">
+				<a href="{{ url_for(endpoint='projects', inrepo=repostat.name, families='2-') }}">
 					{{- repostat.num_metapackages - repostat.num_metapackages_unique -}}
 				</a>
 			</td>
 
 			<td class="text-center version-cell version-big version-newest">
-				<a href="{{ url_for('projects', inrepo=repostat.name, newest=1) }}">
+				<a href="{{ url_for(endpoint='projects', inrepo=repostat.name, newest=1) }}">
 					{{- repostat.num_metapackages_newest -}}
 				</a>
 			</td>
@@ -86,7 +86,7 @@
 			</td>
 
 			<td class="text-center version-cell version-big version-outdated">
-				<a href="{{ url_for('projects', inrepo=repostat.name, outdated=1) }}">
+				<a href="{{ url_for(endpoint='projects', inrepo=repostat.name, outdated=1) }}">
 					{{- repostat.num_metapackages_outdated -}}
 				</a>
 			</td>
@@ -98,7 +98,7 @@
 			{% if repometadata[repostat.name].shadow %}
 				<span title="This is a shadow repo, e.g. unique packages in it are ignored">n/a</span>
 			{% else %}
-				<a href="{{ url_for('projects', inrepo=repostat.name, families=1) }}">
+				<a href="{{ url_for(endpoint='projects', inrepo=repostat.name, families=1) }}">
 					{{- repostat.num_metapackages_unique -}}
 				</a>
 			{% endif %}
@@ -112,7 +112,7 @@
 			</td>
 
 			<td class="text-center version-cell version-big version-ignored">
-				<a href="{{ url_for('projects', inrepo=repostat.name, problematic=1) }}">
+				<a href="{{ url_for(endpoint='projects', inrepo=repostat.name, problematic=1) }}">
 					{{- repostat.num_metapackages_problematic -}}
 				</a>
 			</td>
@@ -121,7 +121,7 @@
 			</td>
 
 			<td class="text-center{% if repostat.num_metapackages_vulnerable %} vulnerable-cell{% endif %}">
-				<a href="{{ url_for('projects', inrepo=repostat.name, vulnerable=1) }}">
+				<a href="{{ url_for(endpoint='projects', inrepo=repostat.name, vulnerable=1) }}">
 					{{- repostat.num_metapackages_vulnerable -}}
 				</a>
 			</td>
@@ -139,7 +139,7 @@
 
 			<td class="text-center">
 			{%- if repostat.num_problems -%}
-				<a href="{{ url_for("repository_problems", repo=repostat.name) }}">
+				<a href="{{ url_for(endpoint="repository_problems", repo=repostat.name) }}">
 					{{- repostat.num_problems -}}
 				</a>
 			{%- else -%}

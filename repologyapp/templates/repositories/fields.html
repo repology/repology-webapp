@@ -38,7 +38,7 @@
 	{% endif %}
 		<tr id="{{ reponame }}">
 			<th class="text-right">
-				<a href="{{ url_for('repository', repo=reponame) }}">{{ repometadata[reponame].desc }}</a>
+				<a href="{{ url_for(endpoint='repository', repo=reponame) }}">{{ repometadata[reponame].desc }}</a>
 			</th>
 
 			{% set fields = repometadata[reponame].used_package_fields %}

@@ -81,7 +81,7 @@
 
 {%- macro repository_link(repo) -%}
 	{%- if repo in repometadata.active_names() -%}
-		<a href="{{ url_for('repository', repo=repo) }}">{{ repometadata[repo].desc }}</a>
+		<a href="{{ url_for(endpoint='repository', repo=repo) }}">{{ repometadata[repo].desc }}</a>
 	{%- else -%}
 		<span class="legacy-repository">{{ repometadata[repo].desc }}</span>
 	{%- endif -%}

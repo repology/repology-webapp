@@ -42,9 +42,9 @@
 	{% endif %}
 		<tr>
 			<td class="text-nowrap">
-				<a href="{{ url_for(target_project_endpoint, name=metapackagename) }}">{{ metapackagename }}</a>
+				<a href="{{ url_for(endpoint=target_project_endpoint, name=metapackagename) }}">{{ metapackagename }}</a>
 				{%- if metapackage.has_related -%}
-				<a class="non-selectable" href="{{ url_for("project_related", name=metapackagename) }}">∗</a>
+				<a class="non-selectable" href="{{ url_for(endpoint="project_related", name=metapackagename) }}">∗</a>
 				{% endif %}
 			</td>
 

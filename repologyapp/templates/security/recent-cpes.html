@@ -32,7 +32,7 @@
 	{% for cpe in cpes %}
 		<tr>
 			<td class="minimal-column">{{ format_absolute_time(cpe.added_ts) }}</td>
-			<td class="minimal-column"><a href="{{ url_for('project_versions', name=cpe.effname) }}">{{ cpe.effname }}</a></td>
+			<td class="minimal-column"><a href="{{ url_for(endpoint='project_versions', name=cpe.effname) }}">{{ cpe.effname }}</a></td>
 			<td>{{ cpe_components(cpe) }}</td>
 		</tr>
 	{% endfor %}

@@ -16,7 +16,7 @@
 
 {% if project %}
 
-<h3>Redirects for <a href="{{ url_for('project', name=project) }}">{{ project }}</a></h3>
+<h3>Redirects for <a href="{{ url_for(endpoint='project', name=project) }}">{{ project }}</a></h3>
 
 <table class="table table-striped">
 	{% if redirects %}
@@ -54,7 +54,7 @@
 				<b class="text-danger">unknown</b>
 			{%- endif -%}
 			<td>
-				<a class="btn btn-default btn-xs" href={{ url_for('project', name=redirect.oldname if redirect.newname == project else redirect.oldname) }}>Go to</a>
+				<a class="btn btn-default btn-xs" href={{ url_for(endpoint='project', name=redirect.oldname if redirect.newname == project else redirect.oldname) }}>Go to</a>
 			{%- if redirect.is_manual %}
 				<form class="form-inlinest" action="{{ url_for_self(project=project) }}" method="POST">
 					<input type="hidden" name="oldname" value="{{ redirect.oldname }}">

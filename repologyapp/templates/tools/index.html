@@ -7,8 +7,8 @@
 <div class="container">
 
 <ul>
-	<li><a href="{{ url_for('tool_project_by') }}">Project by package name</a> - generate link to Repology project pages and badges by given package name in specific repository</li>
-	<li><a href="{{ url_for('trending') }}">Trending and declining projects</a> - list of projects added to or removed from a lot of repositories recently</li>
+	<li><a href="{{ url_for(endpoint='tool_project_by') }}">Project by package name</a> - generate link to Repology project pages and badges by given package name in specific repository</li>
+	<li><a href="{{ url_for(endpoint='trending') }}">Trending and declining projects</a> - list of projects added to or removed from a lot of repositories recently</li>
 </ul>
 
 </div> {#- container #}

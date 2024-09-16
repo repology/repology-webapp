@@ -21,7 +21,7 @@
 {% for package in packages_by_repo[reponame] %}
 	<tr{% if loop.first %} id="{{ reponame }}"{% endif %}>
 		<td class="text-right">
-			<a href="{{ url_for('repository', repo=reponame) }}">{{ repometadata[reponame].desc }}</a>
+			<a href="{{ url_for(endpoint='repository', repo=reponame) }}">{{ repometadata[reponame].desc }}</a>
 			{%- if package.subrepo -%}
 				<br><sup>{{ package.subrepo }}</sup>
 			{%- endif -%}
@@ -49,7 +49,7 @@
 				{%- else -%}
 				{{ package.version }}
 				{%- endif -%}
-				{%- if is_vulnerable %} <a href="{{ url_for('project_cves', name=name, version=package.version) }}"><img src="{{ url_for("static", filename="vulnerable.v1.svg") }}" alt="Potentially vulnerable"></a>{% endif -%}
+				{%- if is_vulnerable %} <a href="{{ url_for(endpoint='project_cves', name=name, version=package.version) }}"><img src="{{ url_for_static(file="vulnerable.v1.svg") }}" alt="Potentially vulnerable"></a>{% endif -%}
 			</span>{#- -#}
 		</td>
 		<td class="text-center">
@@ -59,7 +59,7 @@
 		{%- if package.maintainers -%}
 			{%- for maintainer in package.maintainers -%}
 				{%- if not loop.first %}, {% endif -%}
-				<a href="{{ url_for('maintainer', maintainer=maintainer) }}">{{ maintainer }}</a>
+				<a href="{{ url_for(endpoint='maintainer', maintainer=maintainer) }}">{{ maintainer }}</a>
 			{%- endfor -%}
 		{%- else -%}
 			-

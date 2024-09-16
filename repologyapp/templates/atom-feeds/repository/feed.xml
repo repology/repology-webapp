@@ -4,10 +4,10 @@ tag:repology.org,2020-02-27:repository:{{ repo }}
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 	<title>Repology feed for {{ repometadata[repo].desc }}</title>
-	<icon>{{ url_for("static", filename="repology40x40.v1.png", _external=True) }}</icon>
+	<icon>{{ url_for_static(file="repology40x40.v1.png", _external=True) }}</icon>
 	<link href="{{ url_for_self(_external=True) }}" rel="self" type="application/atom+xml" />
-	<link href="{{ url_for('repository_feed', repo=repo, _external=True) }}" rel="alternate" type="text/html" />
-	<author><name>Repology</name><uri>{{ url_for('index', _external=True) }}</uri></author>
+	<link href="{{ url_for(endpoint='repository_feed', repo=repo, _external=True) }}" rel="alternate" type="text/html" />
+	<author><name>Repology</name><uri>{{ url_for(endpoint='index', _external=True) }}</uri></author>
 	<id>{{ feed_id() }}</id>
 {% for entry in history %}
 	{% if loop.first %}
@@ -16,7 +16,7 @@ tag:repology.org,2020-02-27:repository:{{ repo }}
 	<entry>
 		<id>{{ feed_id() }}:{{ entry.id }}</id>
 		<updated>{{ entry.ts.astimezone(tz).isoformat('T', 'seconds') }}</updated>
-		<link href="{{ url_for('project_versions', name=entry.effname, _external=True) }}#{{ repo }}" />
+		<link href="{{ url_for(endpoint='project_versions', name=entry.effname, _external=True) }}#{{ repo }}" />
 		{% if entry.type == 'added' %}
 		<title>{{ entry.effname }} is now tracked</title>
 		<content>Package for {{ entry.effname }} was added to {{ repometadata[repo].desc }}</content>

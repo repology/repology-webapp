@@ -23,18 +23,42 @@ import flask
 __all__ = ['url_for_self']
 
 
+PYTHON_TO_RUST_ENDPOINT_NAMES = {
+    'api_v1_projects': 'ApiV1Project',
+    'badge_tiny_repos': 'BadgeTinyRepos',
+    'badge_version_for_repo': 'BadgeVersionForRepo',
+    'badge_vertical_allrepos': 'BadgeVerticalAllRepos',
+    'badge_latest_versions': 'BadgeLatestVersions',
+}
+
+RUST_TO_PYTHON_ENDPOINT_NAMES = { rust: python for python, rust in PYTHON_TO_RUST_ENDPOINT_NAMES.items() }
+
+
+def url_for(**args: Any) -> Any:
+    if endpoint := RUST_TO_PYTHON_ENDPOINT_NAMES.get(args['endpoint']):
+        args['endpoint'] = endpoint
+    return flask.url_for(**args)
+
+
 def url_for_self(**args: Any) -> Any:
     assert flask.request.endpoint is not None
     return flask.url_for(flask.request.endpoint, **dict(flask.request.view_args, **args))
 
 
+def url_for_static(**args: Any) -> Any:
+    return url_for(endpoint='static', filename=args['file'])
+
+
 def endpoint_like(*variants: str) -> bool:
-    endpoint = flask.request.endpoint
+    python_endpoint = flask.request.endpoint
+    rust_endpoint = PYTHON_TO_RUST_ENDPOINT_NAMES.get(python_endpoint)
 
     for variant in variants:
-        if endpoint == variant:
+        if python_endpoint == variant or rust_endpoint == variant:
             return True
-        elif variant.endswith('*') and endpoint and endpoint.startswith(variant[:-1]):
+        elif variant.endswith('*') and python_endpoint and python_endpoint.startswith(variant[:-1]):
+            return True
+        elif variant.endswith('*') and rust_endpoint and rust_endpoint.startswith(variant[:-1]):
             return True
 
     return False

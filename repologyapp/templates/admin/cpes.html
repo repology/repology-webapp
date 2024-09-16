@@ -55,7 +55,7 @@
 	<tbody>
 	{% for cpe in cpes %}
 		<tr>
-			<td class="minimal-column"><a href="{{ url_for('project_versions', name=cpe.effname) }}">{{ cpe.effname }}</a></td>
+			<td class="minimal-column"><a href="{{ url_for(endpoint='project_versions', name=cpe.effname) }}">{{ cpe.effname }}</a></td>
 			<td class="minimal-column">{{ cpe_components(cpe) }}</td>
 			<td class="text-center minimal-column">
 			{%- if cpe.has_alive_project -%}
