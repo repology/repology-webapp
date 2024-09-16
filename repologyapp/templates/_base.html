@@ -71,7 +71,7 @@
 </div>
 {% endblock %}
 
-{% with flashed_messages = get_flashed_messages(with_categories=true) %}
+{% set flashed_messages = get_flashed_messages(with_categories=true) %}
 {% if flashed_messages or messages %}
 <div class="container">
 {% for category, message in flashed_messages %}
@@ -82,7 +82,6 @@
 {% endfor %}
 </div>
 {% endif %}
-{% endwith %}
 
 {% block content %}
 {% endblock %}
