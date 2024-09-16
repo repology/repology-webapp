@@ -31,13 +31,13 @@ web API. The robot visits a site on each update cycle (~2-3 hours currently) and
 fetches files it needs sequentially (e.g. it never does parallel requests).</p>
 
 <p>You may find metadata on which repositories are fetched
-<a href="{{ config['REPOLOGY_UPDATER_REPO_URL'] }}/tree/master/repos.d">here</a>
+<a href="https://github.com/repology/repology-updater/tree/master/repos.d">here</a>
 and the fetcher code
-<a href="{{ config['REPOLOGY_UPDATER_REPO_URL'] }}/tree/master/repology/fetchers">here</a>.
+<a href="https://github.com/repology/repology-updater/tree/master/repology/fetchers">here</a>.
 </p>
 
 <p>If you think the robot creates excess load on your site, feel free to drop an
-<a href="{{ config['REPOLOGY_UPDATER_REPO_URL'] }}/issues/new">issue</a> in the GitHub.
+<a href="https://github.com/repology/repology-updater/issues/new">issue</a> in the GitHub.
 If Repology gets information on your repository through web API, we'd greatly
 appreciate if you provide a regular dump of package information from your repository
 (data used by Repology include package name, version, one-line summary, list of maintainers,
@@ -64,7 +64,7 @@ using only marginal amount of web traffic. Also, there's a delay of 3 seconds be
 consecutive requests to a single hostname, to ensure no excess site load is generated.</p>
 
 <p>You may see the link checker source code
-<a href="{{ config['REPOLOGY_LINKCHECKER_REPO_URL'] }}">here</a>.</p>
+<a href="https://github.com/repology/repology-linkchecker">here</a>.</p>
 
 <h4>repology-vulnupdater</h4>
 
@@ -77,7 +77,7 @@ request to each feed every 10 minutes, <code>Etag</code> and <code>If-None-Match
 are used to avoid refetching the files if they have not changed since the last request.</p>
 
 <p>You may see the vulnupdater's source code
-<a href="{{ config['REPOLOGY_VULNUPDATER_REPO_URL'] }}">here</a>.</p>
+<a href="https://github.com/repology/repology-vulnupdater">here</a>.</p>
 
 <h3>robots.txt policy</h3>
 
