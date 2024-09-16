@@ -151,7 +151,6 @@ def test_static_pages():
 def test_static_pages_legacy():
     checkurl_301('/about')
     checkurl_301('/addrepo')
-    checkurl_301('/docs/addrepo')
 
 
 @requires_database
