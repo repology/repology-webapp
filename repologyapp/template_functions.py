@@ -32,7 +32,7 @@ PYTHON_TO_RUST_ENDPOINT_NAMES = {
     'badge_latest_versions': 'BadgeLatestVersions',
 }
 
-RUST_TO_PYTHON_ENDPOINT_NAMES = { rust: python for python, rust in PYTHON_TO_RUST_ENDPOINT_NAMES.items() }
+RUST_TO_PYTHON_ENDPOINT_NAMES = {rust: python for python, rust in PYTHON_TO_RUST_ENDPOINT_NAMES.items()}
 
 
 def url_for(**args: Any) -> Any:
