@@ -50,6 +50,7 @@ def _get_projects_args() -> dict[str, str]:
     })
 
 
+# /metapackages/*: logs are poluted by spam requests from huawei cloud, recheck after banning it
 @ViewRegistrar('/metapackages/all/')
 @ViewRegistrar('/metapackages/all/<bound>/')
 def metapackages_all(bound: str | None = None) -> Response:
@@ -125,20 +126,10 @@ def metapackages_outdated_by_maintainer(maintainer: str, bound: str | None = Non
     return flask.redirect(flask.url_for('projects', bound=bound, maintainer=maintainer, outdated=1, search=flask.request.args.to_dict().get('search')), 301)
 
 
-@ViewRegistrar('/repositories/')
-def legacy_repositories() -> Response:
-    return flask.redirect(flask.url_for('repositories_statistics'), 301)
-
-
-@ViewRegistrar('/statistics')
-@ViewRegistrar('/statistics/<sorting>')
-def legacy_statistics(sorting: str | None = None) -> Response:
-    return flask.redirect(flask.url_for('repositories_statistics', sorting=sorting), 301)
-
-
-@ViewRegistrar('/metapackage/<name>')
-def metapackage(name: str) -> Response:
-    return flask.redirect(flask.url_for('project_versions', name=name), 301)
+@ViewRegistrar('/metapackages/')
+@ViewRegistrar('/metapackages/<bound>/')
+def metapackages(bound: str | None = None) -> Response:
+    return flask.redirect(flask.url_for('projects', bound=bound, **_get_projects_args()), 301)
 
 
 @ViewRegistrar('/project/<name>')
@@ -147,10 +138,10 @@ def project(name: str) -> Response:
     return flask.redirect(flask.url_for('project_versions', name=name), 301)
 
 
-@ViewRegistrar('/metapackages/')
-@ViewRegistrar('/metapackages/<bound>/')
-def metapackages(bound: str | None = None) -> Response:
-    return flask.redirect(flask.url_for('projects', bound=bound, **_get_projects_args()), 301)
+# /metapackage/*: logs are poluted by spam requests from huawei cloud, recheck after banning it
+@ViewRegistrar('/metapackage/<name>')
+def metapackage(name: str) -> Response:
+    return flask.redirect(flask.url_for('project_versions', name=name), 301)
 
 
 @ViewRegistrar('/metapackage/<name>/versions')
@@ -188,111 +179,7 @@ def metapackage_report(name: str) -> Response:
     return flask.redirect(flask.url_for('project_report', name=name), 301)
 
 
-@ViewRegistrar('/api/v1/metapackages/')
-@ViewRegistrar('/api/v1/metapackages/<bound>/')
-def api_v1_metapackages(bound: str | None = None) -> Response:
-    return flask.redirect(flask.url_for('api_v1_projects', bound=bound, **_get_projects_args()), 301)
-
-
-@ViewRegistrar('/api/v1/metapackage/<name>')
-def api_v1_metapackage(name: str) -> Response:
-    return flask.redirect(flask.url_for('api_v1_project', name=name), 301)
-
-
-@ViewRegistrar('/api/v1/metapackages/all/')
-@ViewRegistrar('/api/v1/metapackages/all/<bound>/')
-def api_v1_metapackages_all(bound: str | None = None) -> Response:
-    return flask.redirect(flask.url_for('api_v1_projects', bound=bound), 301)
-
-
-@ViewRegistrar('/api/v1/metapackages/unique/')
-@ViewRegistrar('/api/v1/metapackages/unique/<bound>/')
-def api_v1_metapackages_unique(bound: str | None = None) -> Response:
-    return flask.redirect(flask.url_for('api_v1_projects', bound=bound, families=1), 301)
-
-
-@ViewRegistrar('/api/v1/metapackages/in-repo/<repo>/')
-@ViewRegistrar('/api/v1/metapackages/in-repo/<repo>/<bound>/')
-def api_v1_metapackages_in_repo(repo: str, bound: str | None = None) -> Response:
-    return flask.redirect(flask.url_for('api_v1_projects', bound=bound, inrepo=repo), 301)
-
-
-@ViewRegistrar('/api/v1/metapackages/outdated-in-repo/<repo>/')
-@ViewRegistrar('/api/v1/metapackages/outdated-in-repo/<repo>/<bound>/')
-def api_v1_metapackages_outdated_in_repo(repo: str, bound: str | None = None) -> Response:
-    return flask.redirect(flask.url_for('api_v1_projects', bound=bound, inrepo=repo, outdated=1), 301)
-
-
-@ViewRegistrar('/api/v1/metapackages/not-in-repo/<repo>/')
-@ViewRegistrar('/api/v1/metapackages/not-in-repo/<repo>/<bound>/')
-def api_v1_metapackages_not_in_repo(repo: str, bound: str | None = None) -> Response:
-    return flask.redirect(flask.url_for('api_v1_projects', bound=bound, notinrepo=repo), 301)
-
-
-@ViewRegistrar('/api/v1/metapackages/candidates-in-repo/<repo>/')
-@ViewRegistrar('/api/v1/metapackages/candidates-in-repo/<repo>/<bound>/')
-def api_v1_metapackages_candidates_in_repo(repo: str, bound: str | None = None) -> Response:
-    return flask.redirect(flask.url_for('api_v1_projects', bound=bound, inrepo=repo, families='5-'), 301)
-
-
-@ViewRegistrar('/api/v1/metapackages/unique-in-repo/<repo>/')
-@ViewRegistrar('/api/v1/metapackages/unique-in-repo/<repo>/<bound>/')
-def api_v1_metapackages_unique_in_repo(repo: str, bound: str | None = None) -> Response:
-    return flask.redirect(flask.url_for('api_v1_projects', bound=bound, inrepo=repo, families=1), 301)
-
-
-@ViewRegistrar('/api/v1/metapackages/by-maintainer/<maintainer>/')
-@ViewRegistrar('/api/v1/metapackages/by-maintainer/<maintainer>/<bound>/')
-def api_v1_metapackages_by_maintainer(maintainer: str, bound: str | None = None) -> Response:
-    return flask.redirect(flask.url_for('api_v1_projects', bound=bound, maintainer=maintainer), 301)
-
-
-@ViewRegistrar('/api/v1/metapackages/outdated-by-maintainer/<maintainer>/')
-@ViewRegistrar('/api/v1/metapackages/outdated-by-maintainer/<maintainer>/<bound>/')
-def api_v1_metapackages_outdated_by_maintainer(maintainer: str, bound: str | None = None) -> Response:
-    return flask.redirect(flask.url_for('api_v1_projects', bound=bound, maintainer=maintainer, outdated=1), 301)
-
-
-@ViewRegistrar('/graph/total/metapackages.svg')
-def graph_total_metapackages() -> Response:
-    return flask.redirect(flask.url_for('graph_total_projects'), 301)
-
-
-@ViewRegistrar('/graph/repo/<repo>/metapackages_total.svg')
-def graph_repo_metapackages_total(repo: str) -> Response:
-    return flask.redirect(flask.url_for('graph_repo_projects_total', repo=repo), 301)
-
-
-@ViewRegistrar('/graph/repo/<repo>/metapackages_newest.svg')
-def graph_repo_metapackages_newest(repo: str) -> Response:
-    return flask.redirect(flask.url_for('graph_repo_projects_newest', repo=repo), 301)
-
-
-@ViewRegistrar('/graph/repo/<repo>/metapackages_newest_percent.svg')
-def graph_repo_metapackages_newest_percent(repo: str) -> Response:
-    return flask.redirect(flask.url_for('graph_repo_projects_newest_percent', repo=repo), 301)
-
-
-@ViewRegistrar('/graph/repo/<repo>/metapackages_outdated.svg')
-def graph_repo_metapackages_outdated(repo: str) -> Response:
-    return flask.redirect(flask.url_for('graph_repo_projects_outdated', repo=repo), 301)
-
-
-@ViewRegistrar('/graph/repo/<repo>/metapackages_outdated_percent.svg')
-def graph_repo_metapackages_outdated_percent(repo: str) -> Response:
-    return flask.redirect(flask.url_for('graph_repo_projects_outdated_percent', repo=repo), 301)
-
-
-@ViewRegistrar('/graph/repo/<repo>/metapackages_unique.svg')
-def graph_repo_metapackages_unique(repo: str) -> Response:
-    return flask.redirect(flask.url_for('graph_repo_projects_unique', repo=repo), 301)
-
-
-@ViewRegistrar('/graph/repo/<repo>/metapackages_unique_percent.svg')
-def graph_repo_metapackages_unique_percent(repo: str) -> Response:
-    return flask.redirect(flask.url_for('graph_repo_projects_unique_percent', repo=repo), 301)
-
-
+# active badges on smartmontools.org, lyx.org and others
 @ViewRegistrar('/badge/version-only-for-repo/<repo>/<name>.svg')
 def badge_version_only_for_repo(repo: str, name: str) -> Response:
     return flask.redirect(
@@ -307,6 +194,8 @@ def badge_version_only_for_repo(repo: str, name: str) -> Response:
     )
 
 
+# /maintainer/*/problems: logs are poluted by spam requests from huawei cloud, recheck after banning it
+# XXX: don't forget to remove test and get_db import along with this
 @ViewRegistrar('/maintainer/<maintainer>/problems')
 def maintainer_problems_legacy(maintainer: str) -> Response:
     # actual problems listing is tied to repository+maintainer pair,
@@ -339,12 +228,13 @@ def maintainer_problems_legacy(maintainer: str) -> Response:
     )
 
 
+# reposiotry template was pointing here, recheck after this is fixed
 @ViewRegistrar('/addrepo')
-@ViewRegistrar('/docs/addrepo')
 def addrepo() -> Response:
     return flask.redirect(flask.url_for('docs_requirements'), 301)
 
 
+# internal performance testing tool accessed it, recheck after this is fixed
 @ViewRegistrar('/about')
 def about() -> Response:
     return flask.redirect(flask.url_for('docs_about'), 301)
