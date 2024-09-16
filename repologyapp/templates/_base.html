@@ -18,7 +18,7 @@
 </head>
 <body>
 
-{% if now().month == 6 and now().day == 6 and ':' not in request.environ.REMOTE_ADDR and request.endpoint != 'index' %}
+{% if needs_ipv6_notice() %}
 <div class="site-alert-outer">
 	<div class="container site-alert-inner">
 		<img src="{{ url_for_static(file="ipv6.v1.svg") }}" alt="IPv6 logo" height="64">

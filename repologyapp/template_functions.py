@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with repology.  If not, see <http://www.gnu.org/licenses/>.
 
+import datetime
 from typing import Any
 
 import flask
@@ -62,3 +63,8 @@ def endpoint_like(*variants: str) -> bool:
             return True
 
     return False
+
+
+def needs_ipv6_notice(*variants: str) -> bool:
+    now = datetime.datetime.now()
+    return now.month == 6 and now.day == 6 and ':' not in flask.request.environ.REMOTE_ADDR and flask.request.endpoint != 'index'
