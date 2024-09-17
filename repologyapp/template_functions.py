@@ -52,4 +52,4 @@ def url_for_static(**args: Any) -> Any:
 
 def needs_ipv6_notice(*variants: str) -> bool:
     now = datetime.datetime.now()
-    return now.month == 6 and now.day == 6 and ':' not in flask.request.environ.REMOTE_ADDR and flask.request.endpoint != 'index'
+    return now.month == 6 and now.day == 6 and ':' not in flask.request.environ['REMOTE_ADDR'] and flask.request.endpoint != 'index'

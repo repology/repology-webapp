@@ -20,5 +20,5 @@ from typing import Any
 from repologyapp.views import registry as view_registry
 
 
-def current_endpoint_group_in(**args: Any) -> str | None:
+def current_endpoint_group_in(**args: Any) -> bool:
     return view_registry.get_current_endpoint_group() in args['groups']

@@ -111,4 +111,5 @@ class ViewRegistry():
             registrant.register_in_flask(app)
 
     def get_current_endpoint_group(self) -> str | None:
+        assert flask.request.endpoint
         return self._group_by_endpoint.get(flask.request.endpoint)
