@@ -25,8 +25,8 @@ from repologyapp.math import safe_percent
 from repologyapp.view_registry import Response, ViewRegistrar
 
 
-@ViewRegistrar('/repositories/statistics')
-@ViewRegistrar('/repositories/statistics/<sorting>')
+@ViewRegistrar('/repositories/statistics', group='Repositories')
+@ViewRegistrar('/repositories/statistics/<sorting>', group='Repositories')
 def repositories_statistics(sorting: str | None = None) -> Response:
     autorefresh = flask.request.args.to_dict().get('autorefresh')
 
@@ -62,7 +62,7 @@ def repositories_statistics(sorting: str | None = None) -> Response:
     )
 
 
-@ViewRegistrar('/repositories/packages')
+@ViewRegistrar('/repositories/packages', group='Repositories')
 def repositories_packages() -> Response:
     autorefresh = flask.request.args.to_dict().get('autorefresh')
 
@@ -77,7 +77,7 @@ def repositories_packages() -> Response:
     )
 
 
-@ViewRegistrar('/repositories/updates')
+@ViewRegistrar('/repositories/updates', group='Repositories')
 def repositories_updates() -> Response:
     autorefresh = flask.request.args.to_dict().get('autorefresh')
 
@@ -88,7 +88,7 @@ def repositories_updates() -> Response:
     )
 
 
-@ViewRegistrar('/repositories/graphs')
+@ViewRegistrar('/repositories/graphs', group='Repositories')
 def repositories_graphs() -> Response:
     autorefresh = flask.request.args.to_dict().get('autorefresh')
 
@@ -98,7 +98,7 @@ def repositories_graphs() -> Response:
     )
 
 
-@ViewRegistrar('/repositories/fields')
+@ViewRegistrar('/repositories/fields', group='Repositories')
 def repositories_fields() -> Response:
     autorefresh = flask.request.args.to_dict().get('autorefresh')
 

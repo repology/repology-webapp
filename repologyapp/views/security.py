@@ -25,7 +25,7 @@ from repologyapp.db import get_db
 from repologyapp.view_registry import Response, ViewRegistrar
 
 
-@ViewRegistrar('/security/recent-cves')
+@ViewRegistrar('/security/recent-cves', group='Security')
 def security_recent_cves() -> Response:
     autorefresh = flask.request.args.to_dict().get('autorefresh')
 
@@ -42,7 +42,7 @@ def security_recent_cves() -> Response:
     )
 
 
-@ViewRegistrar('/security/recent-cpes')
+@ViewRegistrar('/security/recent-cpes', group='Security')
 def security_recent_cpes() -> Response:
     autorefresh = flask.request.args.to_dict().get('autorefresh')
 

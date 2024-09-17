@@ -74,7 +74,7 @@ _EXTRA_ALLOWED_ARGS = {
 }
 
 
-@ViewRegistrar('/tools/project-by')
+@ViewRegistrar('/tools/project-by', group='Tools')
 def tool_project_by() -> Response:
     repo = flask.request.args.get('repo')
     name_type = flask.request.args.get('name_type')
@@ -139,7 +139,7 @@ def tool_project_by() -> Response:
     )
 
 
-@ViewRegistrar('/tools/trending')
+@ViewRegistrar('/tools/trending', group='Tools')
 def trending() -> Response:
     return flask.render_template(
         'tools/trending.html',
@@ -161,7 +161,7 @@ def trending() -> Response:
     )
 
 
-@ViewRegistrar('/tools/important_updates')
+@ViewRegistrar('/tools/important_updates', group='Experimental')
 def important_updates() -> Response:
     return flask.render_template(
         'tools/important-updates.html',

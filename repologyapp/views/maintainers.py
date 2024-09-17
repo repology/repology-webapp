@@ -28,8 +28,8 @@ from repologyapp.view_registry import Response, ViewRegistrar
 from repologyapp.views.problems import problems_generic
 
 
-@ViewRegistrar('/maintainers/')
-@ViewRegistrar('/maintainers/<bound>/')
+@ViewRegistrar('/maintainers/', group='Maintainers')
+@ViewRegistrar('/maintainers/<bound>/', group='Maintainers')
 def maintainers(bound: str | None = None) -> Response:
     reverse = False
     if bound and bound.startswith('..'):
@@ -81,7 +81,7 @@ def maintainers(bound: str | None = None) -> Response:
     )
 
 
-@ViewRegistrar('/maintainer/<maintainer>')
+@ViewRegistrar('/maintainer/<maintainer>', group='Maintainers')
 def maintainer(maintainer: str) -> Response:
     maintainer = maintainer.lower()
 
@@ -137,7 +137,7 @@ def maintainer(maintainer: str) -> Response:
     )
 
 
-@ViewRegistrar('/maintainer/<maintainer>/problems-for-repo/<repo>')
+@ViewRegistrar('/maintainer/<maintainer>/problems-for-repo/<repo>', group='Maintainers')
 def maintainer_problems(maintainer: str, repo: str) -> Response:
     return problems_generic(
         repo=repo,
@@ -147,7 +147,7 @@ def maintainer_problems(maintainer: str, repo: str) -> Response:
     )
 
 
-@ViewRegistrar('/maintainer/<maintainer>/feed-for-repo/<repo>')
+@ViewRegistrar('/maintainer/<maintainer>/feed-for-repo/<repo>', group='Maintainers')
 def maintainer_repo_feed(maintainer: str, repo: str) -> Response:
     autorefresh = flask.request.args.to_dict().get('autorefresh')
 
@@ -166,7 +166,7 @@ def maintainer_repo_feed(maintainer: str, repo: str) -> Response:
     )
 
 
-@ViewRegistrar('/maintainer/<maintainer>/feed-for-repo/<repo>/atom')
+@ViewRegistrar('/maintainer/<maintainer>/feed-for-repo/<repo>/atom', group='Maintainers')
 def maintainer_repo_feed_atom(maintainer: str, repo: str) -> Response:
     return (
         flask.render_template(

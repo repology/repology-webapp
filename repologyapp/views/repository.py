@@ -27,7 +27,7 @@ from repologyapp.view_registry import Response, ViewRegistrar
 from repologyapp.views.problems import problems_generic
 
 
-@ViewRegistrar('/repository/<repo>')
+@ViewRegistrar('/repository/<repo>', group='Repositories')
 def repository(repo: str) -> Response:
     autorefresh = flask.request.args.to_dict().get('autorefresh')
 
@@ -46,7 +46,7 @@ def repository(repo: str) -> Response:
     )
 
 
-@ViewRegistrar('/repository/<repo>/problems')
+@ViewRegistrar('/repository/<repo>/problems', group='Repositories')
 def repository_problems(repo: str) -> Response:
     return problems_generic(
         repo=repo,
@@ -55,7 +55,7 @@ def repository_problems(repo: str) -> Response:
     )
 
 
-@ViewRegistrar('/repository/<repo>/feed')
+@ViewRegistrar('/repository/<repo>/feed', group='Repositories')
 def repository_feed(repo: str) -> Response:
     autorefresh = flask.request.args.to_dict().get('autorefresh')
 
@@ -72,7 +72,7 @@ def repository_feed(repo: str) -> Response:
     )
 
 
-@ViewRegistrar('/repository/<repo>/feed/atom')
+@ViewRegistrar('/repository/<repo>/feed/atom', group='Repositories')
 def repository_feed_atom(repo: str) -> Response:
     return (
         flask.render_template(

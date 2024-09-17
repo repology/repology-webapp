@@ -27,8 +27,8 @@ from repologyapp.package import PackageDataSummarizable
 from repologyapp.view_registry import Response, ViewRegistrar
 
 
-@ViewRegistrar('/projects/')
-@ViewRegistrar('/projects/<bound>/')
+@ViewRegistrar('/projects/', group='Projects')
+@ViewRegistrar('/projects/<bound>/', group='Projects')
 def projects(bound: str | None = None) -> Response:
     # process search
     filterinfo = MetapackagesFilterInfo()

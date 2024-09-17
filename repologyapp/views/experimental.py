@@ -23,7 +23,7 @@ from repologyapp.template_functions import url_for_self
 from repologyapp.view_registry import Response, ViewRegistrar
 
 
-@ViewRegistrar('/experimental/', methods=['GET', 'POST'])
+@ViewRegistrar('/experimental/', methods=['GET', 'POST'], group='Experimental')
 def experimental() -> Response:
     if flask.request.method == 'POST':
         enabled = flask.request.form.get('experimental') == 'enable'
@@ -34,7 +34,7 @@ def experimental() -> Response:
     return flask.render_template('experimental/index.html')
 
 
-@ViewRegistrar('/experimental/turnover/maintainers')
+@ViewRegistrar('/experimental/turnover/maintainers', group='Experimental')
 def maintainers_turnover() -> Response:
     return flask.render_template(
         'experimental/maintainers-turnover.html',
@@ -43,6 +43,6 @@ def maintainers_turnover() -> Response:
     )
 
 
-@ViewRegistrar('/experimental/distromap')
+@ViewRegistrar('/experimental/distromap', group='Experimental')
 def distromap() -> Response:
     return flask.render_template('experimental/distromap.html')

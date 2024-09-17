@@ -48,6 +48,7 @@ class ViewRegistrant():
     _next: Union['ViewRegistrant', None]
     _route: str
     _options: dict[str, Any]
+    _group: str | None
 
     def __init__(self, f: 'ViewRegistrant' | _ViewFunc, route: str, options: dict[str, Any]) -> None:
         if isinstance(f, ViewRegistrant):
@@ -60,6 +61,9 @@ class ViewRegistrant():
 
         self._route = route
         self._options = options
+        self._group = options.get('group')
+        if self._group:
+            del options['group']
 
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
         return self._f(*args, **kwargs)
@@ -68,6 +72,9 @@ class ViewRegistrant():
         app.add_url_rule(self._route, self._f.__name__, self._f, **self._options)
         if self._next is not None:
             self._next.register_in_flask(app)
+
+    def get_name_to_group(self) -> tuple[str, str | None]:
+        return (self._f.__name__, self._group)
 
 
 class ViewRegistrar():
@@ -84,6 +91,7 @@ class ViewRegistrar():
 
 class ViewRegistry():
     _registrants: list[ViewRegistrant]
+    _groups_by_endpoint: dict[str, str]
 
     def __init__(self, pkgname: str, pkgfile: str) -> None:
         self._registrants = []
@@ -93,6 +101,14 @@ class ViewRegistry():
                 if isinstance(member, ViewRegistrant):
                     self._registrants.append(member)
 
+        self._group_by_endpoint = {}
+        for (name, group) in [registrant.get_name_to_group() for registrant in self._registrants]:
+            if group:
+                self._group_by_endpoint[name] = group
+
     def register_in_flask(self, app: flask.Flask) -> None:
         for registrant in self._registrants:
             registrant.register_in_flask(app)
+
+    def get_current_endpoint_group(self) -> str | None:
+        return self._group_by_endpoint.get(flask.request.endpoint)

@@ -70,8 +70,8 @@ def dump_json(data: Any) -> str:
         return json.dumps(data, separators=(',', ':'))
 
 
-@ViewRegistrar('/api')
-@ViewRegistrar('/api/v1')
+@ViewRegistrar('/api', group='Docs')
+@ViewRegistrar('/api/v1', group='Docs')
 def api_v1() -> Response:
     return flask.render_template('api.html', per_page=config['METAPACKAGES_PER_PAGE'])
 

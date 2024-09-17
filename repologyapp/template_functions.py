@@ -50,21 +50,6 @@ def url_for_static(**args: Any) -> Any:
     return url_for(endpoint='static', filename=args['file'])
 
 
-def endpoint_like(*variants: str) -> bool:
-    python_endpoint = flask.request.endpoint
-    rust_endpoint = PYTHON_TO_RUST_ENDPOINT_NAMES.get(python_endpoint)
-
-    for variant in variants:
-        if python_endpoint == variant or rust_endpoint == variant:
-            return True
-        elif variant.endswith('*') and python_endpoint and python_endpoint.startswith(variant[:-1]):
-            return True
-        elif variant.endswith('*') and rust_endpoint and rust_endpoint.startswith(variant[:-1]):
-            return True
-
-    return False
-
-
 def needs_ipv6_notice(*variants: str) -> bool:
     now = datetime.datetime.now()
     return now.month == 6 and now.day == 6 and ':' not in flask.request.environ.REMOTE_ADDR and flask.request.endpoint != 'index'

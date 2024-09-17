@@ -83,7 +83,7 @@ def handle_nonexisting_project(name: str, metapackage: dict[str, Any]) -> Respon
         )
 
 
-@ViewRegistrar('/project/<name>/versions')
+@ViewRegistrar('/project/<name>/versions', group='Projects')
 def project_versions(name: str) -> Response:
     metapackage = get_db().get_metapackage(name)
 
@@ -112,7 +112,7 @@ def project_versions(name: str) -> Response:
     )
 
 
-@ViewRegistrar('/project/<name>/versions-compact')
+@ViewRegistrar('/project/<name>/versions-compact', group='Projects')
 def project_versions_compact(name: str) -> Response:
     metapackage = get_db().get_metapackage(name)
 
@@ -142,7 +142,7 @@ def project_versions_compact(name: str) -> Response:
     )
 
 
-@ViewRegistrar('/project/<name>/packages')
+@ViewRegistrar('/project/<name>/packages', group='Projects')
 def project_packages(name: str) -> Response:
     metapackage = get_db().get_metapackage(name)
 
@@ -209,7 +209,7 @@ def _link_type_is_raw(link_type: int) -> bool:
 _LinkKey: TypeAlias = tuple[int] | tuple[int, str]  # id, fragment
 
 
-@ViewRegistrar('/project/<name>/information')
+@ViewRegistrar('/project/<name>/information', group='Projects')
 def project_information(name: str) -> Response:
     metapackage = get_db().get_metapackage(name)
 
@@ -308,7 +308,7 @@ def project_information(name: str) -> Response:
     )
 
 
-@ViewRegistrar('/project/<name>/history')
+@ViewRegistrar('/project/<name>/history', group='Projects')
 def project_history(name: str) -> Response:
     def prepare_repos(repos: Collection[str]) -> list[str]:
         if not repos:
@@ -401,7 +401,7 @@ def project_history(name: str) -> Response:
     )
 
 
-@ViewRegistrar('/project/<name>/related')
+@ViewRegistrar('/project/<name>/related', group='Projects')
 def project_related(name: str) -> Response:
     metapackage = get_db().get_metapackage(name)
 
@@ -432,7 +432,7 @@ def project_related(name: str) -> Response:
     )
 
 
-@ViewRegistrar('/project/<name>/badges')
+@ViewRegistrar('/project/<name>/badges', group='Projects')
 def project_badges(name: str) -> Response:
     metapackage = get_db().get_metapackage(name)
 
@@ -453,7 +453,7 @@ def project_badges(name: str) -> Response:
     )
 
 
-@ViewRegistrar('/project/<name>/report', methods=['GET', 'POST'])
+@ViewRegistrar('/project/<name>/report', methods=['GET', 'POST'], group='Projects')
 def project_report(name: str) -> Response:
     metapackage = get_db().get_metapackage(name)
 
@@ -573,7 +573,7 @@ class _CVEAggregation:
     cpe_other: str
 
 
-@ViewRegistrar('/project/<name>/cves')
+@ViewRegistrar('/project/<name>/cves', group='Projects')
 def project_cves(name: str) -> Response:
     metapackage = get_db().get_metapackage(name)
 

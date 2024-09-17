@@ -33,7 +33,7 @@ def unauthorized() -> Response:
     return flask.redirect(flask.url_for('admin'))
 
 
-@ViewRegistrar('/admin', methods=['GET', 'POST'])
+@ViewRegistrar('/admin', methods=['GET', 'POST'], group='Admin')
 def admin() -> Response:
     if flask.request.method == 'GET' and flask.session.get('admin'):
         return flask.redirect(flask.url_for('admin_reports_unprocessed'), 302)
@@ -82,17 +82,17 @@ def admin_reports_generic(report_getter: Callable[[], dict[str, Any]]) -> Respon
     return flask.render_template('admin/reports.html', reports=report_getter())
 
 
-@ViewRegistrar('/admin/reports/unprocessed/', methods=['GET', 'POST'])
+@ViewRegistrar('/admin/reports/unprocessed/', methods=['GET', 'POST'], group='Admin')
 def admin_reports_unprocessed() -> Response:
     return admin_reports_generic(lambda: get_db().get_unprocessed_reports(limit=config['REPORTS_PER_PAGE']))
 
 
-@ViewRegistrar('/admin/reports/recent/', methods=['GET', 'POST'])
+@ViewRegistrar('/admin/reports/recent/', methods=['GET', 'POST'], group='Admin')
 def admin_reports_recent() -> Response:
     return admin_reports_generic(lambda: get_db().get_recently_updated_reports(limit=config['REPORTS_PER_PAGE']))
 
 
-@ViewRegistrar('/admin/updates')
+@ViewRegistrar('/admin/updates', group='Admin')
 def admin_updates() -> Response:
     if not flask.session.get('admin'):
         return unauthorized()
@@ -103,7 +103,7 @@ def admin_updates() -> Response:
     )
 
 
-@ViewRegistrar('/admin/redirects', methods=['GET', 'POST'])
+@ViewRegistrar('/admin/redirects', methods=['GET', 'POST'], group='Admin')
 def admin_redirects() -> Response:
     if not flask.session.get('admin'):
         return unauthorized()
@@ -159,7 +159,7 @@ def admin_redirects() -> Response:
     )
 
 
-@ViewRegistrar('/admin/name_samples')
+@ViewRegistrar('/admin/name_samples', group='Admin')
 def admin_name_samples() -> Response:
     if not flask.session.get('admin'):
         return unauthorized()
@@ -284,7 +284,7 @@ def handle_cpe_request() -> Response | None:
     return flask.redirect(url_for_self(), 302)
 
 
-@ViewRegistrar('/admin/cpes', methods=['GET', 'POST'])
+@ViewRegistrar('/admin/cpes', methods=['GET', 'POST'], group='Admin')
 def admin_cpes() -> Response:
     if not flask.session.get('admin'):
         return unauthorized()
@@ -299,7 +299,7 @@ def admin_cpes() -> Response:
     )
 
 
-@ViewRegistrar('/admin/cve_misses', methods=['GET', 'POST'])
+@ViewRegistrar('/admin/cve_misses', methods=['GET', 'POST'], group='Admin')
 def admin_cve_misses() -> Response:
     if not flask.session.get('admin'):
         return unauthorized()
@@ -314,7 +314,7 @@ def admin_cve_misses() -> Response:
     )
 
 
-@ViewRegistrar('/admin/omni_cves')
+@ViewRegistrar('/admin/omni_cves', group='Admin')
 def admin_omni_cves() -> Response:
     if not flask.session.get('admin'):
         return unauthorized()

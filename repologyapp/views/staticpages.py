@@ -20,32 +20,32 @@ import flask
 from repologyapp.view_registry import Response, ViewRegistrar
 
 
-@ViewRegistrar('/news')
+@ViewRegistrar('/news', group='News')
 def news() -> Response:
     return flask.render_template('news.html')
 
 
-@ViewRegistrar('/docs')
+@ViewRegistrar('/docs', group='Docs')
 def docs() -> Response:
     return flask.render_template('docs/index.html')
 
 
-@ViewRegistrar('/docs/about')
+@ViewRegistrar('/docs/about', group='Docs')
 def docs_about() -> Response:
     return flask.render_template('docs/about.html')
 
 
-@ViewRegistrar('/docs/bots')
+@ViewRegistrar('/docs/bots', group='Docs')
 def docs_bots() -> Response:
     return flask.render_template('docs/bots.html')
 
 
-@ViewRegistrar('/docs/not_supported')
+@ViewRegistrar('/docs/not_supported', group='Docs')
 def docs_not_supported() -> Response:
     return flask.render_template('docs/not_supported.html')
 
 
-@ViewRegistrar('/docs/requirements')
+@ViewRegistrar('/docs/requirements', group='Docs')
 def docs_requirements() -> Response:
     return flask.render_template('docs/requirements.html')
 
@@ -55,6 +55,6 @@ def favicon() -> Response:
     return flask.current_app.send_static_file('repology.v1.ico')
 
 
-@ViewRegistrar('/tools')
+@ViewRegistrar('/tools', group='Tools')
 def tools() -> Response:
     return flask.render_template('tools/index.html')
