@@ -114,6 +114,7 @@ def metapackages_unique_in_repo(repo: str, bound: str | None = None) -> Response
     return flask.redirect(flask.url_for('projects', bound=bound, inrepo=repo, families=1, search=flask.request.args.to_dict().get('search')), 301)
 
 
+# /metapackages/by-maintainer/alicef@gentoo.org/ from https://wiki.gentoo.org/
 @ViewRegistrar('/metapackages/by-maintainer/<maintainer>/')
 @ViewRegistrar('/metapackages/by-maintainer/<maintainer>/<bound>/')
 def metapackages_by_maintainer(maintainer: str, bound: str | None = None) -> Response:
