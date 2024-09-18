@@ -51,7 +51,7 @@
 				<li{% if current_endpoint_group_in(groups=['Repositories']) %} class="active"{% endif %}><a href="{{ url_for(endpoint='repositories_statistics') }}">Repositories</a></li>
 				<li{% if current_endpoint_group_in(groups=['Tools']) %} class="active"{% endif %}><a href="{{ url_for(endpoint='tools') }}">Tools</a></li>
 				<li{% if current_endpoint_group_in(groups=['Security']) %} class="active"{% endif %}><a href="{{ url_for(endpoint='security_recent_cves') }}">Security</a></li>
-				{% if session.admin %}<li{% if current_endpoint_group_in(graoups=['Admin']) %} class="active"{% endif %}><a href="{{ url_for(endpoint='admin') }}">Admin</a></li>{% endif %}
+				{% if session.admin %}<li{% if current_endpoint_group_in(groups=['Admin']) %} class="active"{% endif %}><a href="{{ url_for(endpoint='admin') }}">Admin</a></li>{% endif %}
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				{% if session.experimental %}
