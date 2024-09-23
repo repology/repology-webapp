@@ -490,11 +490,14 @@ def project_report(name: str) -> Response:
         if not need_verignore and not need_split and not need_merge and not need_vuln and not comment:
             errors.append('please fill out the form')
 
-        if comment and '<a href' in comment:
-            errors.append('spammers not welcome, HTML not allowed')
+        if comment:
+            if '<a href' in comment:
+                errors.append('HTML not allowed')
 
-        if comment and 'า' in comment:  # thai spam
-            errors.append('spammers not welcome, HTML not allowed')
+            for keyword in config['SPAM_KEYWORDS']:
+                if keyword in comment:
+                    errors.append('spammers not welcome')
+                    break
 
         if need_verignore and need_split and need_merge and need_vuln and not comment:
             errors.append('spammers not welcome')

@@ -146,6 +146,11 @@ STAFF_AFK = []
 DISABLED_REPORTS = []
 
 #
+# Do not allow reports containing these strings
+#
+SPAM_KEYWORDS = []
+
+#
 # Default timezone to use in the web interface
 # The webapp tries to replace this to user's local timezone with javascript
 #
