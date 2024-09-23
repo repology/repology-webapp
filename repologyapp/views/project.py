@@ -536,7 +536,7 @@ def project_report(name: str) -> Response:
         need_merge=need_merge,
         need_vuln=need_vuln,
         comment=comment,
-        messages=[('danger', f'Could not add report: {error}') for error in errors]
+        messages=[('danger', f'Could not add report: {error}') for error in errors[:1]]
     )
 
 
