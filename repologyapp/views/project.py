@@ -473,10 +473,10 @@ def project_report(name: str) -> Response:
 
     if flask.request.method == 'POST':
         if reports_disabled:
-            errors.append('Could not add report: new reports for this metapackage are disabled')
+            errors.append('new reports for this metapackage are disabled')
 
         if get_db().get_metapackage_reports_count(name) >= config['MAX_REPORTS']:
-            errors.append('Could not add report: too many reports for this metapackage')
+            errors.append('too many reports for this metapackage')
 
         need_verignore = 'need_verignore' in flask.request.form
         need_split = 'need_split' in flask.request.form
