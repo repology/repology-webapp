@@ -19,6 +19,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from datetime import timedelta
 from functools import cmp_to_key
+from ipaddress import ip_address, ip_network
 from typing import Any, Callable, Collection, Iterable, Self, TypeAlias, TypeVar
 
 import flask
@@ -504,6 +505,15 @@ def project_report(name: str) -> Response:
 
         if need_vuln and (comment is None or 'nvd.nist.gov/vuln/detail/CVE-' not in comment):
             errors.append('link to missing NVD CVE entry (e.g. https://nvd.nist.gov/vuln/detail/CVE-*) is required')
+
+        try:
+            address = ip_address(flask.request.remote_addr)
+            for network in config['SPAM_NETWORKS']:
+                if address in ip_network(network):
+                    errors.append('spammers not welcome')
+                    break
+        except ValueError:
+            pass
 
         if not errors:
             get_db().add_report(

@@ -151,6 +151,11 @@ DISABLED_REPORTS = []
 SPAM_KEYWORDS = []
 
 #
+# Do not allow reports from these networks
+#
+SPAM_NETWORKS = []
+
+#
 # Default timezone to use in the web interface
 # The webapp tries to replace this to user's local timezone with javascript
 #
