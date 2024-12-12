@@ -23,7 +23,10 @@
 -- @returns array of dicts
 --
 --------------------------------------------------------------------------------
-SELECT
+
+-- intentionally broken, as repositories_history table is no longer updated
+-- rust repology-webapp uses new repositories_history_new table
+DO NOT SELECT
 	ts AS timestamp,
 	now() - ts AS timedelta,
 	snapshot#>ARRAY[%(repo)s] AS snapshot
