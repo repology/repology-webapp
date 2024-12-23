@@ -52,5 +52,5 @@ class Database:
 def get_db() -> Database:
     # XXX: this is not really a persistent DB connection!
     if not hasattr(flask.g, 'database'):
-        flask.g.database = Database(config['DSN'], _querymgr, readonly=False, autocommit=True, application_name='repology-app')
+        flask.g.database = Database(config['DSN'], _querymgr, readonly=False, autocommit=True, application_name='repology-webapp-python')
     return flask.g.database  # type: ignore
